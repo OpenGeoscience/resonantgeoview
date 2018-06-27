@@ -9,6 +9,7 @@
   "dependencies": {
     "@fortawesome/fontawesome-free": "^5.1.0",
     "@turf/turf": "^5.1.6",
+    "danesfield-client": "file:../../danesfield-app/client",
     "postcss-import": "^11.1.0",
     "postcss-url": "^7.3.2",
     "pug": "^2.0.3",
