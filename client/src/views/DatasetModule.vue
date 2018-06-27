@@ -13,6 +13,7 @@
           </v-list-tile-content>
         </v-list-tile>
         <v-list-tile
+          class="dataset"
           v-for="dataset in datasets"
           :key="dataset.name"
           @click="123"
@@ -29,6 +30,18 @@
           <v-list-tile-content>
             <v-list-tile-title>{{ dataset.name }}</v-list-tile-title>
           </v-list-tile-content>
+          <v-list-tile-action>
+            <v-menu offset-y absolute :nudge-bottom="20" :nudge-left="20">
+              <v-btn class="menu-button" slot="activator" flat icon color="grey darken-2">
+                <v-icon>more_vert</v-icon>
+              </v-btn>
+              <v-list>
+                <v-list-tile @click="123">
+                  <v-list-tile-title>abc</v-list-tile-title>
+                </v-list-tile>
+              </v-list>
+            </v-menu>
+          </v-list-tile-action>
         </v-list-tile>
       </v-list-group>
     </v-list>
@@ -36,6 +49,17 @@
 </template>
 
 <style lang="scss" scoped>
+.dataset {
+  .menu-button {
+    display: none;
+  }
+
+  &:hover {
+    .menu-button {
+      display: initial;
+    }
+  }
+}
 </style>
 
 <script>
@@ -90,6 +114,10 @@ export default {
   }
 };
 </script>
+
+<style lang="scss" scoped>
+</style>
+
 
 <style lang="scss">
 .datasets {
