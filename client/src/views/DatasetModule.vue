@@ -1,10 +1,10 @@
 <template>
   <div class='datasets'>
     <v-list dense expand>
-      <transition-group name="slide-fade" tag="div">
+      <transition-group name="fade" tag="div">
         <v-list-group
-          v-for="(group, i) in groupedDatasets"
-          :key="i"
+          v-for="group in groupedDatasets"
+          :key="group.key"
           prepend-icon="folder"
           no-action>
           <v-list-tile
@@ -57,7 +57,7 @@
                   <v-icon>more_vert</v-icon>
                 </v-btn>
                 <v-list>
-                  <v-list-tile @click="movingDataset=dataset;showAddToGroup=true;">
+                  <v-list-tile @click="selectedDataset=dataset;showAddToGroup=true;">
                     <v-list-tile-title>Add to group</v-list-tile-title>
                   </v-list-tile>
                   <v-list-tile v-if="group.group" @click="removeDatasetFromGroup({group: group.group, dataset})">
@@ -70,31 +70,7 @@
         </v-list-group>
       </transition-group>
     </v-list>
-    <v-dialog v-model="showAddToGroup" max-width="250px">
-      <v-card>
-        <v-card-title class="title">
-          <span>Move to</span>
-        </v-card-title>
-        <v-card-text>
-          <v-list dense>
-            <v-list-tile
-              v-for="group in groups"
-              :key="group._id"
-              :class="{'selected':selectedAddToGroup===group}"
-              @click="selectedAddToGroup=group">
-              <v-list-tile-content>
-                <v-list-tile-title class="body-2" v-text="group.name"></v-list-tile-title>
-              </v-list-tile-content>
-            </v-list-tile>
-          </v-list>
-          <NewWithName name="group" default="group-1" @confirm='addGroup' />
-        </v-card-text>
-        <v-card-actions>
-          <v-spacer></v-spacer>
-          <v-btn color="primary" flat @click.stop="showAddToGroup=false;addDatasetToGroup({group:selectedAddToGroup,dataset:movingDataset})">Ok</v-btn>
-        </v-card-actions>
-      </v-card>
-    </v-dialog>
+    <DatasetGroupDialog v-if='showAddToGroup' v-model='showAddToGroup' :dataset="selectedDataset"/>
   </div>
 </template>
 
@@ -132,18 +108,16 @@ import groupBy from "lodash-es/groupBy";
 import debounce from "lodash-es/debounce";
 import keyBy from "lodash-es/keyBy";
 import mapValues from "lodash-es/mapValues";
-import NewWithName from "danesfield-client/src/components/NewWithName";
 
-import TreeViewItem from "../components/TreeViewItem";
+import DatasetGroupDialog from "./DatasetGroupDialog";
 
 export default {
   name: "DatasetModule",
-  components: { TreeViewItem, NewWithName },
+  components: { DatasetGroupDialog },
   data() {
     return {
       showAddToGroup: false,
-      movingDataset: null,
-      selectedAddToGroup: null
+      selectedDataset: null
     };
   },
   computed: {
@@ -153,6 +127,7 @@ export default {
         return {
           name: group.name,
           group,
+          key: group._id,
           datasets: group.datasetIds
             .filter(id => datasetMap[id])
             .map(id => datasetMap[id])
@@ -163,6 +138,7 @@ export default {
       ).map(([type, datasets]) => {
         return {
           name: type,
+          key: type,
           datasets
         };
       });
@@ -181,9 +157,6 @@ export default {
     this.loadGroups();
   },
   methods: {
-    addGroup(name) {
-      this.createGroup(name);
-    },
     ...mapMutations([
       "setSelectedDataset",
       "addDatasetToWorkspace",
@@ -192,9 +165,7 @@ export default {
     ...mapActions([
       "loadDatasets",
       "loadGroups",
-      "createGroup",
       "deleteGroup",
-      "addDatasetToGroup",
       "removeDatasetFromGroup"
     ])
   }
