@@ -137,29 +137,9 @@ export default {
       "focusedWorkspaceKey"
     ]),
     ...mapGetters(["selectedDatasetPoint"])
-    // ...mapState("workingSet", ["editingWorkingSet"]),
-    // ...mapState("filter", [
-    // "editingFilter",
-    // "annotations",
-    // "selectedCondition"
-    // ]),
-    // ...mapGetters("workingSet", ["datasetBoundsFeature"]),
-    // ...mapGetters("filter", ["editingConditionsGeojson", "heatmapData"])
   },
   created() {},
   methods: {
-    // createNewWorkspace(type) {
-    //   this.workspaces.push({
-    //     type,
-    //     id: Math.random()
-    //       .toString(36)
-    //       .substring(7)
-    //   });
-    // },
-    // close(workspace) {
-    //   var index = this.workspaces.indexOf(workspace);
-    //   this.workspaces.splice(index, 1);
-    // }
     getTileURL(dataset) {
       var url = `${API_URL}/item/${
         dataset._id

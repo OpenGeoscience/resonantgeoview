@@ -6,7 +6,7 @@ import json
 from girder import events
 from girder.models.item import Item
 
-from rest import dataset, workingSet, filter
+from rest import dataset, datasetGroup
 
 def load(info):
 
@@ -16,3 +16,4 @@ def load(info):
 
     # Add API routes
     info['apiRoot'].dataset = dataset.DatasetResource()
+    info['apiRoot'].dataset_group = datasetGroup.DatasetGroupResource()
