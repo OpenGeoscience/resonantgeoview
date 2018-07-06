@@ -98,12 +98,9 @@
 import { mapState, mapGetters, mapMutations } from "vuex";
 
 import { API_URL } from "../constants";
-// import WorkspaceContainer from "./Workspace/Container";
-// import Workspace from "./Workspace/Workspace";
-// import WorkspaceAction from "./Workspace/Action";
-import WorkspaceContainer from "danesfield-client/src/views/Workspace/Container";
-import Workspace from  "danesfield-client/src/views/Workspace/Workspace";
-import WorkspaceAction from  "danesfield-client/src/views/Workspace/Action";
+import WorkspaceContainer from "danesfield-client/src/components/Workspace/Container";
+import Workspace from  "danesfield-client/src/components/Workspace/Workspace";
+import WorkspaceAction from  "danesfield-client/src/components/Workspace/Action";
 import DatasetModule from "./DatasetModule";
 import GeojsGeojsonDatasetLayer from "./GeojsGeojsonDatasetLayer";
 

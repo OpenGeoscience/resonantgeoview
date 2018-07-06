@@ -1,7 +1,6 @@
 <template>
 <v-app>
     <AppToolbar
-    :tabs='tabs'
     title='Minerva'
     :userIcon='userIcon'
     @click-user='loginDialog = true' />
