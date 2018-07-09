@@ -74,34 +74,6 @@
   </div>
 </template>
 
-<style lang="scss" scoped>
-.group {
-  .group-menu-button {
-    display: none;
-    position: relative;
-    left: 30px;
-  }
-
-  &:hover {
-    .group-menu-button {
-      display: initial;
-    }
-  }
-}
-
-.dataset {
-  .dataset-menu-button {
-    display: none;
-  }
-
-  &:hover {
-    .dataset-menu-button {
-      display: initial;
-    }
-  }
-}
-</style>
-
 <script>
 import { mapState, mapMutations, mapActions, mapGetters } from "vuex";
 import groupBy from "lodash-es/groupBy";
@@ -144,9 +116,6 @@ export default {
       });
       return [...typeGroups, ...namedGroups];
     },
-    datasetMap() {
-      return;
-    },
     ...mapState(["datasets", "groups", "datasetSortBy"]),
     ...mapGetters(["focusedWorkspace"])
   },
@@ -173,8 +142,32 @@ export default {
 </script>
 
 <style lang="scss" scoped>
-</style>
+.group {
+  .group-menu-button {
+    display: none;
+    position: relative;
+    left: 30px;
+  }
 
+  &:hover {
+    .group-menu-button {
+      display: initial;
+    }
+  }
+}
+
+.dataset {
+  .dataset-menu-button {
+    display: none;
+  }
+
+  &:hover {
+    .dataset-menu-button {
+      display: initial;
+    }
+  }
+}
+</style>
 
 <style lang="scss">
 .datasets {
@@ -184,7 +177,7 @@ export default {
   }
 
   .list__group__items--no-action .list__tile {
-    padding-left: 12px;
+    padding-left: 15px;
   }
 
   .list__tile__action,

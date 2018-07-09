@@ -59,8 +59,8 @@
     <SidePanel
     class="side-panel"
     :top="64"
+    :bottom="0"
     :toolbar="{title:'Datasets'}"
-    :expanded="true"
     :footer="false"
     >
       <template slot="actions">
@@ -72,42 +72,29 @@
         </SidePanelAction>
       </template>
       <div class="main">
-        <DatasetModule />
+        <DatasetModule class="datasets" />
+        <LayerModule class="layers" v-if="focusedWorkspace &&focusedWorkspace.datasets.length"/>
       </div>
     </SidePanel>
   </FullScreenViewport>
 </template>
 
-<style lang="scss" scoped>
-.map {
-  z-index: 0;
-}
-
-.side-panel {
-  display: flex;
-  flex-direction: column;
-
-  .main {
-    flex: 1;
-    overflow-y: auto;
-    overflow-x: hidden;
-  }
-}
-</style>
 <script>
 import { mapState, mapGetters, mapMutations } from "vuex";
 
 import { API_URL } from "../constants";
 import WorkspaceContainer from "danesfield-client/src/components/Workspace/Container";
-import Workspace from  "danesfield-client/src/components/Workspace/Workspace";
-import WorkspaceAction from  "danesfield-client/src/components/Workspace/Action";
+import Workspace from "danesfield-client/src/components/Workspace/Workspace";
+import WorkspaceAction from "danesfield-client/src/components/Workspace/Action";
 import DatasetModule from "./DatasetModule";
+import LayerModule from "./LayerModule";
 import GeojsGeojsonDatasetLayer from "./GeojsGeojsonDatasetLayer";
 
 export default {
   name: "Explore",
   components: {
     DatasetModule,
+    LayerModule,
     WorkspaceContainer,
     Workspace,
     WorkspaceAction,
@@ -127,13 +114,8 @@ export default {
     actions() {
       return [];
     },
-    ...mapState([
-      "selectedDataset",
-      "workspaces",
-      "focusedWorkspace",
-      "focusedWorkspaceKey"
-    ]),
-    ...mapGetters(["selectedDatasetPoint"])
+    ...mapState(["selectedDataset", "workspaces", "focusedWorkspaceKey"]),
+    ...mapGetters(["selectedDatasetPoint", , "focusedWorkspace"])
   },
   created() {},
   methods: {
@@ -153,3 +135,25 @@ export default {
   }
 };
 </script>
+
+
+<style lang="scss" scoped>
+.map {
+  z-index: 0;
+}
+
+.side-panel {
+  display: flex;
+  flex-direction: column;
+
+  .main {
+    flex: 1;
+    display: flex;
+    flex-direction: column;
+
+    .datasets {
+      overflow-y: auto;
+    }
+  }
+}
+</style>
