@@ -95,13 +95,10 @@ export default new Vuex.Store({
       if (!state.selectedDataset) {
         return null;
       }
-      var point = pointOnFeature(state.selectedDataset.geometa.bounds);
-      return {
-        _id: state.selectedDataset._id,
-        name: state.selectedDataset.name,
-        x: point.geometry.coordinates[0],
-        y: point.geometry.coordinates[1]
-      }
+      var a = pointOnFeature(state.selectedDataset.geometa.bounds).geometry;
+      console.log(a);
+      return a;
+      return pointOnFeature(state.selectedDataset.geometa.bounds).geometry;
     }
   },
   modules: {

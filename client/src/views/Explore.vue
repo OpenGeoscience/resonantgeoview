@@ -41,12 +41,12 @@
           </template>
           <template v-if="selectedDatasetPoint && focusedWorkspaceKey===key">
             <GeojsGeojsonLayer
-              :geojson="{type:'Point',coordinates:[selectedDatasetPoint.x, selectedDatasetPoint.y]}"
+              :geojson="selectedDatasetPoint"
               :featureStyle="{point:{strokeColor:'black',strokeWidth:2,radius:3}}"
               :zIndex="workspace.datasets.length+1">
             </GeojsGeojsonLayer>
             <GeojsWidgetLayer
-              :position="selectedDatasetPoint"
+              :position="selectedDatasetPoint.coordinates"
               :offset="{x:0,y:-20}"
               :zIndex="workspace.datasets.length+2">
               <v-chip small color="green" text-color="white">{{selectedDataset.name}}</v-chip>
