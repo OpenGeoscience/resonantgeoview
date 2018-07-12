@@ -24,31 +24,33 @@
             attribution='© OpenStreetMap contributors, © CARTO'
             :zIndex='0'>
           </GeojsTileLayer>
-          <template v-for="(dataset,i) in workspace.datasets">
+          <template v-for="(layer,i) in workspace.layers">
             <GeojsGeojsonDatasetLayer
-              v-if="dataset.geometa.driver==='GeoJSON'"
-              :key="dataset._id"
-              :dataset="dataset"
-              :zIndex="workspace.datasets.length-i">
+              v-if="layer.dataset.geometa.driver==='GeoJSON'"
+              :key="layer.dataset._id"
+              :dataset="layer.dataset"
+              :zIndex="workspace.layers.length-i"
+              :opacity='layer.opacity'>
             </GeojsGeojsonDatasetLayer>
             <GeojsTileLayer
-              v-if="dataset.geometa.driver==='GeoTIFF'"
-              :key="dataset._id"
-              :url='getTileURL(dataset)'
+              v-if="layer.dataset.geometa.driver==='GeoTIFF'"
+              :key="layer.dataset._id"
+              :url='getTileURL(layer.dataset)'
               :keepLower="false"
-              :zIndex='workspace.datasets.length-i'>
+              :zIndex='workspace.layers.length-i'
+              :opacity='layer.opacity'>
             </GeojsTileLayer>
           </template>
           <template v-if="selectedDatasetPoint && focusedWorkspaceKey===key">
             <GeojsGeojsonLayer
               :geojson="selectedDatasetPoint"
               :featureStyle="{point:{strokeColor:'black',strokeWidth:2,radius:3}}"
-              :zIndex="workspace.datasets.length+1">
+              :zIndex="workspace.layers.length+1">
             </GeojsGeojsonLayer>
             <GeojsWidgetLayer
               :position="selectedDatasetPoint.coordinates"
               :offset="{x:0,y:-20}"
-              :zIndex="workspace.datasets.length+2">
+              :zIndex="workspace.layers.length+2">
               <v-chip small color="green" text-color="white">{{selectedDataset.name}}</v-chip>
             </GeojsWidgetLayer>
           </template>
@@ -73,7 +75,7 @@
       </template>
       <div class="main">
         <DatasetModule class="datasets" />
-        <LayerModule class="layers" v-if="focusedWorkspace &&focusedWorkspace.datasets.length"/>
+        <LayerModule class="layers" v-if="focusedWorkspace &&focusedWorkspace.layers.length"/>
       </div>
     </SidePanel>
   </FullScreenViewport>

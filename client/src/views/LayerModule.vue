@@ -1,25 +1,31 @@
 <template>
   <div class='layers'>
     <v-subheader>Layers</v-subheader>
-    <v-list dense expand>
-      <draggable v-model="datasets" :options="{handle:'.drag-handle'}">
+    <v-list dense expand two-line>
+      <draggable v-model="layers" :options="{handle:'.drag-handle'}">
         <transition-group name="fade-group" tag="div">
           <v-list-tile
-          v-for="dataset in datasets"
-          :key="dataset.name"
-          class="dataset"
+          v-for="layer in layers"
+          :key="layer.dataset._id"
+          class="layer"
           @click="123"
           >
             <v-list-tile-action>
-              <v-btn flat icon key="add" v-if="focusedWorkspace && focusedWorkspace.datasets.indexOf(dataset)===-1" color="grey lighten-2" @click="addDatasetToWorkspace({dataset,workspace:focusedWorkspace})">
-                <v-icon>fa-globe-americas</v-icon>
-              </v-btn>
-              <v-btn flat icon key="remove" v-else color="grey darken-2" @click="removeDatasetFromWorkspace({dataset,workspace:focusedWorkspace})">
+              <v-btn flat icon color="grey darken-2" @click="removeDatasetFromWorkspace({dataset:layer.dataset,workspace:focusedWorkspace})">
                 <v-icon>fa-globe-americas</v-icon>
               </v-btn>
             </v-list-tile-action>
             <v-list-tile-content>
-                <v-list-tile-title v-text="dataset.name"></v-list-tile-title>
+                <v-list-tile-title v-text="layer.dataset.name"></v-list-tile-title>
+                <v-list-tile-sub-title>
+                  <v-slider hide-details class="pt-0 pr-5 mx-3" 
+                    :min="0"
+                    :max="1"
+                    :step="0.01"
+                    :value="layer.opacity" 
+                    @input="setWorkspaceLayerOpacity({layer,opacity:$event})"
+                  ></v-slider>
+                </v-list-tile-sub-title>
             </v-list-tile-content>
             <v-list-tile-action class="drag-handle">
               <v-icon>drag_indicator</v-icon>
@@ -52,14 +58,14 @@ export default {
   },
   computed: {
     // ...mapState(["datasets", "groups", "datasetSortBy"]),
-    datasets: {
+    layers: {
       get() {
-        return this.focusedWorkspace.datasets;
+        return this.focusedWorkspace.layers;
       },
-      set(value) {
-        this.setWorkspaceDatasets({
+      set(layers) {
+        this.setWorkspaceLayers({
           workspace: this.focusedWorkspace,
-          datasets: value
+          layers
         });
       }
     },
@@ -73,7 +79,8 @@ export default {
     ...mapMutations([
       "setSelectedDataset",
       "removeDatasetFromWorkspace",
-      "setWorkspaceDatasets"
+      "setWorkspaceLayers",
+      "setWorkspaceLayerOpacity"
     ]),
     ...mapActions([])
   }
@@ -81,19 +88,6 @@ export default {
 </script>
 
 <style lang="scss" scoped>
-.group {
-  .group-menu-button {
-    display: none;
-    position: relative;
-    left: 30px;
-  }
-
-  &:hover {
-    .group-menu-button {
-      display: initial;
-    }
-  }
-}
 </style>
 
 <style lang="scss">

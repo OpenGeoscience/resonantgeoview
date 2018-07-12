@@ -18,7 +18,7 @@ export default new Vuex.Store({
     selectedDataset: null,
     workspaces: {
       '0': {
-        datasets: []
+        layers: []
       }
     },
     focusedWorkspaceKey: '0'
@@ -32,7 +32,7 @@ export default new Vuex.Store({
     },
     addWorkspace(state) {
       Vue.set(state.workspaces, Math.random().toString(36).substring(7), {
-        datasets: []
+        layers: []
       })
     },
     removeWorkspace(state, key) {
@@ -42,13 +42,16 @@ export default new Vuex.Store({
       state.focusedWorkspaceKey = key;
     },
     addDatasetToWorkspace(state, { dataset, workspace }) {
-      workspace.datasets.push(dataset);
+      workspace.layers.push({ dataset, opacity: 1 });
     },
     removeDatasetFromWorkspace(state, { dataset, workspace }) {
-      workspace.datasets.splice(workspace.datasets.indexOf(dataset), 1);
+      workspace.layers.splice(workspace.layers.map(layers => layers.dataset).indexOf(dataset), 1);
     },
-    setWorkspaceDatasets(state, { workspace, datasets }) {
-      workspace.datasets = datasets;
+    setWorkspaceLayers(state, { workspace, layers }) {
+      workspace.layers = layers;
+    },
+    setWorkspaceLayerOpacity(state, { layer, opacity }) {
+      layer.opacity = opacity;
     },
     setGroup(state, groups) {
       state.groups = groups;
@@ -98,9 +101,6 @@ export default new Vuex.Store({
       if (!state.selectedDataset) {
         return null;
       }
-      var a = pointOnFeature(state.selectedDataset.geometa.bounds).geometry;
-      console.log(a);
-      return a;
       return pointOnFeature(state.selectedDataset.geometa.bounds).geometry;
     }
   },
