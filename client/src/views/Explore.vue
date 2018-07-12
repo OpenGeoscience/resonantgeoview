@@ -29,14 +29,14 @@
               v-if="dataset.geometa.driver==='GeoJSON'"
               :key="dataset._id"
               :dataset="dataset"
-              :zIndex="i+1">
+              :zIndex="workspace.datasets.length-i">
             </GeojsGeojsonDatasetLayer>
             <GeojsTileLayer
               v-if="dataset.geometa.driver==='GeoTIFF'"
               :key="dataset._id"
               :url='getTileURL(dataset)'
               :keepLower="false"
-              :zIndex='i+1'>
+              :zIndex='workspace.datasets.length-i'>
             </GeojsTileLayer>
           </template>
           <template v-if="selectedDatasetPoint && focusedWorkspaceKey===key">

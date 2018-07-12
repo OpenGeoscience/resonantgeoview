@@ -23,53 +23,6 @@ body,
   overflow: hidden;
 }
 
-/* transtion */
-
-/* fade */
-.fade-enter-active,
-.fade-leave-active {
-  transition: opacity 0.15s;
-}
-.fade-enter,
-.fade-leave-to {
-  opacity: 0;
-}
-
-/* slide */
-.slide-fade-enter-active {
-  transition: all 0.15s ease;
-}
-.slide-fade-leave-active {
-  transition: all 0.15s ease;
-}
-.slide-fade-enter {
-  transform: translateX(-10px);
-  opacity: 0;
-}
-
-.slide-fade-leave-to {
-  transform: translateX(10px);
-  opacity: 0;
-}
-
-/* fade-group */
-.fade-group-enter,
-.fade-group-leave-to {
-  opacity: 0;
-}
-
-.fade-group-enter-active,
-.fade-group-leave-active {
-  transition: opacity 0.15s;
-}
-
-.fade-group-leave-active {
-  position: absolute;
-}
-.fade-group-move {
-  transition: transform 0.15s;
-}
-
 /* overwrite */
 .btn {
   min-width: 0;
@@ -77,6 +30,8 @@ body,
 </style>
 
 <script>
+import "danesfield-client/src/transitions.scss";
+
 import Prompt from "./components/prompt/Prompt";
 
 export default {

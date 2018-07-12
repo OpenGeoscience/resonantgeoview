@@ -47,6 +47,9 @@ export default new Vuex.Store({
     removeDatasetFromWorkspace(state, { dataset, workspace }) {
       workspace.datasets.splice(workspace.datasets.indexOf(dataset), 1);
     },
+    setWorkspaceDatasets(state, { workspace, datasets }) {
+      workspace.datasets = datasets;
+    },
     setGroup(state, groups) {
       state.groups = groups;
     },
