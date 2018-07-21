@@ -61,6 +61,7 @@
     <SidePanel
     class="side-panel"
     :top="64"
+    :floating="false"
     :bottom="0"
     :toolbar="{title:'Datasets'}"
     :footer="false"

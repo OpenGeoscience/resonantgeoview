@@ -171,27 +171,27 @@ export default {
 
 <style lang="scss">
 .datasets {
-  .list__group__header .list__group__header__prepend-icon {
+  .v-list__group__header .v-list__group__header__prepend-icon {
     padding: 0 0 0 6px;
     min-width: 0;
   }
 
-  .list__group__items--no-action .list__tile {
+  .v-list__group__items--no-action .v-list__tile {
     padding-left: 15px;
   }
 
-  .list__tile__action,
-  .list__tile__avatar {
+  .v-list__tile__action,
+  .v-list__tile__avatar {
     min-width: 40px;
     padding: 0 9px;
   }
 
-  .list--dense .list__tile .icon.fa {
+  .v-list--dense .v-list__tile .icon.fa {
     font-size: 20px;
   }
 }
 
-.list .selected .list__tile {
+.v-list .selected .v-list__tile {
   background: rgba(103, 103, 103, 0.25) !important;
 }
 </style>

@@ -92,8 +92,8 @@ export default {
 
 <style lang="scss">
 .layers {
-  .list__tile__action,
-  .list__tile__avatar {
+  .v-list__tile__action,
+  .v-list__tile__avatar {
     min-width: 40px;
     padding: 0 9px;
   }
