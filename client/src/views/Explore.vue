@@ -7,7 +7,6 @@
       @update:focused="setFocusedWorkspaceKey($event)"
       :autoResize="true"
       :max="2"
-      :flex-grow-first="5/4"
     >
       <Workspace
         v-for="(workspace, key) in workspaces"
@@ -17,7 +16,7 @@
         @close="removeWorkspace(key)">
         <GeojsMapViewport
           class='map'
-          :viewport.sync='viewport'
+          :viewport='viewport'
         >
           <GeojsTileLayer
             url='https://cartodb-basemaps-{s}.global.ssl.fastly.net/light_all/{z}/{x}/{y}.png'
@@ -41,16 +40,30 @@
               :opacity='layer.opacity'>
             </GeojsTileLayer>
           </template>
+          <GeojsAnnotationLayer
+            :drawing.sync="drawing"
+            :editing.sync="editing"
+            :editable="true"
+            :annotations="annotations"
+            @update:annotations="annotations=$event"
+            :zIndex="workspace.layers.length+1">
+          </GeojsAnnotationLayer>
+          <GeojsGeojsonLayer
+            v-if="filteringGeometry"
+            :geojson="filteringGeometry"
+            :featureStyle="{polygon:{strokeColor:'grey',strokeWidth:1,fillColor:'#1976d2',fillOpacity:0.3}}"
+            :zIndex="workspace.layers.length+2">
+          </GeojsGeojsonLayer>
           <template v-if="selectedDatasetPoint && focusedWorkspaceKey===key">
             <GeojsGeojsonLayer
               :geojson="selectedDatasetPoint"
               :featureStyle="{point:{strokeColor:'black',strokeWidth:2,radius:3}}"
-              :zIndex="workspace.layers.length+1">
+              :zIndex="workspace.layers.length+3">
             </GeojsGeojsonLayer>
             <GeojsWidgetLayer
               :position="selectedDatasetPoint.coordinates"
               :offset="{x:0,y:-20}"
-              :zIndex="workspace.layers.length+2">
+              :zIndex="workspace.layers.length+4">
               <v-chip small color="green" text-color="white">{{selectedDataset.name}}</v-chip>
             </GeojsWidgetLayer>
           </template>
@@ -64,18 +77,19 @@
     :floating="false"
     :bottom="0"
     :toolbar="{title:'Datasets'}"
-    :footer="false"
-    >
+    :footer="false">
       <template slot="actions">
-        <SidePanelAction
-        v-for="action in actions" 
-        :key="action.name"
-        @click.stop="clickAction(action.name)">
-        <v-icon>{{action.icon}}</v-icon>
+        <SidePanelAction @click="drawing = 'rectangle'">
+          <v-icon>aspect_ratio</v-icon>
         </SidePanelAction>
       </template>
       <div class="main">
-        <DatasetModule class="datasets" />
+        <transition name="fade">
+          <div v-if="filteredDatasetIds">
+            <v-switch hide-details label="Filtering" :input-value="!!filteringGeometry" @change="filteringGeometry=null" class="mt-0 mx-1"></v-switch>
+          </div>
+        </transition>
+        <DatasetModule class="datasets" :filteredDatasetIds="filteredDatasetIds" />
         <LayerModule class="layers" v-if="focusedWorkspace &&focusedWorkspace.layers.length"/>
       </div>
     </SidePanel>
@@ -110,15 +124,37 @@ export default {
         zoom: 4
       },
       drawing: false,
-      editing: false
+      editing: false,
+      annotations: [],
+      filteringGeometry: null
     };
   },
   computed: {
-    actions() {
-      return [];
-    },
     ...mapState(["selectedDataset", "workspaces", "focusedWorkspaceKey"]),
-    ...mapGetters(["selectedDatasetPoint", , "focusedWorkspace"])
+    ...mapGetters(["selectedDatasetPoint", "focusedWorkspace"])
+  },
+  asyncComputed: {
+    async filteredDatasetIds() {
+      if (this.filteringGeometry) {
+        var { data: datasets } = await this.$girder.get("item/geometa", {
+          params: {
+            geojson: this.filteringGeometry,
+            relation: "within"
+          }
+        });
+        return datasets.map(dataset => dataset._id);
+      } else {
+        return null;
+      }
+    }
+  },
+  watch: {
+    annotations([annotation]) {
+      if (annotation && annotation.geojson()) {
+        this.filteringGeometry = annotation.geojson().geometry;
+        this.annotations = [];
+      }
+    }
   },
   created() {},
   methods: {

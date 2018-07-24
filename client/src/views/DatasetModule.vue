@@ -49,7 +49,10 @@
               </v-btn>
             </v-list-tile-action>
             <v-list-tile-content>
-              <v-list-tile-title>{{ dataset.name }}</v-list-tile-title>
+              <v-list-tile-title 
+              :class="{
+                'grey--text text--lighten-2':filteredDatasetIds && filteredDatasetIds.indexOf(dataset._id)===-1
+                }">{{dataset.name}}</v-list-tile-title>
             </v-list-tile-content>
             <v-list-tile-action>
               <v-menu offset-y absolute :nudge-bottom="20" :nudge-left="20">
@@ -86,6 +89,7 @@ import DatasetGroupDialog from "./DatasetGroupDialog";
 export default {
   name: "DatasetModule",
   components: { DatasetGroupDialog },
+  props: ["filteredDatasetIds"],
   data() {
     return {
       showAddToGroup: false,
