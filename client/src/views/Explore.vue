@@ -140,7 +140,10 @@ export default {
   },
   computed: {
     ...mapState(["selectedDataset", "workspaces", "focusedWorkspaceKey"]),
-    ...mapGetters(["selectedDatasetPoint", "focusedWorkspace"])
+    ...mapGetters(["selectedDatasetPoint", "focusedWorkspace"]),
+    user() {
+      return this.$girder.user;
+    }
   },
   asyncComputed: {
     async filteredDatasetIds() {
@@ -162,6 +165,11 @@ export default {
       if (annotation && annotation.geojson()) {
         this.filteringGeometry = annotation.geojson().geometry;
         this.annotations = [];
+      }
+    },
+    user(user) {
+      if (!user) {
+        this.$router.push("/login");
       }
     }
   },

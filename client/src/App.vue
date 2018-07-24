@@ -1,13 +1,22 @@
 <template>
 <v-app>
     <AppToolbar
-    title='Minerva'
-    :userIcon='userIcon'
-    @click-user='loginDialog = true' />
+    title='Minerva'>
+      <template slot="right">
+        <GirderUserButton 
+          @login="userForm='login';userDialog=true;"
+          @user="userForm='logout';userDialog=true;" />
+      </template>
+    </AppToolbar>
 
     <transition name="fade" mode='out-in'>
       <router-view></router-view>
     </transition>
+
+    <GirderUserDialog
+      :form.sync='userForm'
+      v-model='userDialog'
+      />
 
     <Prompt />
 </v-app>
@@ -40,29 +49,10 @@ export default {
   data() {
     return {
       title: "Minerva",
-      tabs: [
-        {
-          title: "Explore",
-          route: "/",
-          icon: "explore"
-        }
-      ],
-      userIcon: "account_circle",
-      loginDialog: false,
-      login: {
-        email: "",
-        password: "",
-        rules: [v => !!v || "Field is required"]
-      }
+      userForm: "login",
+      userDialog: false
     };
   },
-  methods: {
-    submitLogin() {
-      if (this.$refs.login.validate()) {
-        console.log(`logged in as ${this.login.email}`);
-        this.loginDialog = false;
-      }
-    }
-  }
+  methods: {}
 };
 </script>
