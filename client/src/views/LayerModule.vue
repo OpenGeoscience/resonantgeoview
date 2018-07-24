@@ -16,7 +16,7 @@
             append-icon="">
             <v-list-tile
               slot="activator"
-              class="hover-show-parent"
+              class="hover-show-parent width-fix"
               @click="123">
               <v-list-tile-action>
                 <v-btn flat icon color="grey darken-2" @click="removeDatasetFromWorkspace({dataset:layer.dataset,workspace:focusedWorkspace})">
@@ -26,6 +26,18 @@
               <v-list-tile-content>
                   <v-list-tile-title v-text="layer.dataset.name"></v-list-tile-title>
               </v-list-tile-content>
+              <v-list-tile-action class="hover-show-child" @click.stop>
+                <v-menu offset-y absolute :nudge-bottom="20" :nudge-left="20">
+                  <v-btn class="group-menu-button" slot="activator" flat icon color="grey darken-2">
+                    <v-icon>more_vert</v-icon>
+                  </v-btn>
+                  <v-list>
+                    <v-list-tile @click="$emit('zoomToDataset',layer.dataset)">
+                      <v-list-tile-title>zoom to</v-list-tile-title>
+                    </v-list-tile>
+                  </v-list>
+                </v-menu>
+              </v-list-tile-action>
               <v-list-tile-action class="drag-handle hover-show-child">
                 <v-icon>drag_indicator</v-icon>
               </v-list-tile-action>
@@ -83,7 +95,6 @@ export default {
     };
   },
   computed: {
-    // ...mapState(["datasets", "groups", "datasetSortBy"]),
     layers: {
       get() {
         return this.focusedWorkspace.layers;
@@ -118,10 +129,9 @@ export default {
 
 <style lang="scss">
 .layers {
-  .v-list__tile__action,
-  .v-list__tile__avatar {
+  .v-list__tile__action {
     min-width: 40px;
-    padding: 0 9px;
+    padding: 0 8px;
   }
 
   .layer {
@@ -134,6 +144,10 @@ export default {
       margin-top: -4px;
     }
   }
+}
+
+.width-fix {
+  width: 100%;
 }
 
 .hover-show-parent {

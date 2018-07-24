@@ -17,6 +17,7 @@
         <GeojsMapViewport
           class='map'
           :viewport='viewport'
+          ref='geojsMapViewport'
         >
           <GeojsTileLayer
             url='https://cartodb-basemaps-{s}.global.ssl.fastly.net/light_all/{z}/{x}/{y}.png'
@@ -89,8 +90,11 @@
             <v-switch hide-details label="Filtering" :input-value="!!filteringGeometry" @change="filteringGeometry=null" class="mt-0 mx-1"></v-switch>
           </div>
         </transition>
-        <DatasetModule class="datasets" :filteredDatasetIds="filteredDatasetIds" />
-        <LayerModule class="layers" v-if="focusedWorkspace &&focusedWorkspace.layers.length"/>
+        <DatasetModule class="datasets"
+          :filteredDatasetIds="filteredDatasetIds" />
+        <LayerModule class="layers" 
+          v-if="focusedWorkspace &&focusedWorkspace.layers.length"
+          @zoomToDataset="zoomToDataset"/>
       </div>
     </SidePanel>
   </FullScreenViewport>
@@ -98,6 +102,11 @@
 
 <script>
 import { mapState, mapGetters, mapMutations } from "vuex";
+import { point } from "@turf/helpers";
+import bbox from "@turf/bbox";
+import bboxPolygon from "@turf/bbox-polygon";
+import buffer from "@turf/buffer";
+import distance from "@turf/distance";
 
 import { API_URL } from "../constants";
 import WorkspaceContainer from "danesfield-client/src/components/Workspace/Container";
@@ -165,6 +174,29 @@ export default {
         "encoding=PNG&projection=EPSG:3857"
       )}`;
       return url;
+    },
+    zoomToDataset(dataset) {
+      var geojsViewport = this.$refs.geojsMapViewport
+        ? this.$refs.geojsMapViewport[0]
+        : null;
+      if (!geojsViewport) {
+        return;
+      }
+      var datasetBBox = bbox(dataset.geometa.bounds);
+      var dist = distance(
+        point([datasetBBox[0], datasetBBox[1]]),
+        point([datasetBBox[2], datasetBBox[3]])
+      );
+      var bufferedBbox = bbox(buffer(bboxPolygon(datasetBBox), dist / 4));
+
+      var zoomAndCenter = geojsViewport.$geojsMap.zoomAndCenterFromBounds({
+        left: bufferedBbox[0],
+        right: bufferedBbox[2],
+        top: bufferedBbox[3],
+        bottom: bufferedBbox[1]
+      });
+      this.viewport.center = zoomAndCenter.center;
+      this.viewport.zoom = zoomAndCenter.zoom;
     },
     ...mapMutations([
       "addWorkspace",
