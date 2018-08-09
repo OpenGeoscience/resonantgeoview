@@ -31,7 +31,7 @@
 <script>
 import { mapState, mapActions } from "vuex";
 
-import NewWithName from "danesfield-client/src/components/NewWithName";
+import NewWithName from "../components/NewWithName";
 
 export default {
   name: "DatasetGroupDialog",

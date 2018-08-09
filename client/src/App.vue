@@ -39,7 +39,7 @@ body,
 </style>
 
 <script>
-import "danesfield-client/src/transitions.scss";
+import "./transitions.scss";
 
 import Prompt from "./components/prompt/Prompt";
 

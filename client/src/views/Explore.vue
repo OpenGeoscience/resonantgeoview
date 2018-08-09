@@ -109,9 +109,9 @@ import buffer from "@turf/buffer";
 import distance from "@turf/distance";
 
 import { API_URL } from "../constants";
-import WorkspaceContainer from "danesfield-client/src/components/Workspace/Container";
-import Workspace from "danesfield-client/src/components/Workspace/Workspace";
-import WorkspaceAction from "danesfield-client/src/components/Workspace/Action";
+import WorkspaceContainer from "../components/Workspace/Container";
+import Workspace from "../components/Workspace/Workspace";
+import WorkspaceAction from "../components/Workspace/Action";
 import DatasetModule from "./DatasetModule";
 import LayerModule from "./LayerModule";
 import GeojsGeojsonDatasetLayer from "./GeojsGeojsonDatasetLayer";
