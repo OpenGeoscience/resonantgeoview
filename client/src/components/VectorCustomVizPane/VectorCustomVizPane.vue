@@ -1,5 +1,5 @@
 <template>
-  <div class="vector-custom-viz-pane">
+  <div class="vector-customize-viz-pane">
     <v-tabs
       grow
       v-model="currentTab"

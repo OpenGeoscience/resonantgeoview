@@ -126,8 +126,6 @@ export default {
   watch: {},
   created() {
     this.debouncedSetSelectedDataset = debounce(this.setSelectedDataset, 200);
-    this.loadDatasets();
-    this.loadGroups();
   },
   methods: {
     ...mapMutations([
@@ -135,8 +133,6 @@ export default {
       "removeDatasetFromWorkspace"
     ]),
     ...mapActions([
-      "loadDatasets",
-      "loadGroups",
       "deleteGroup",
       "addDatasetToWorkspace",
       "removeDatasetFromGroup"

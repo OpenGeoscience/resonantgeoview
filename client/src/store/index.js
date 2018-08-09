@@ -13,11 +13,10 @@ import { getDefaultGeojsonVizProperties } from "../utils/getDefaultGeojsonVizPro
 Vue.use(Vuex);
 
 export default new Vuex.Store({
-  strict: process.env.NODE_ENV !== 'production',
+  strict: false,
   state: {
     datasets: [],
     datasetIdMetaMap: {},
-    customVizDatasetId: null,
     datasetSortBy: 'type',
     groups: [],
     selectedDataset: null,
@@ -78,9 +77,6 @@ export default new Vuex.Store({
     },
     removeDatasetFromGroup(state, { group, dataset }) {
       remove(group.datasetIds, dataset._id);
-    },
-    addDatasetIdMetaMap(state, { datasetId, meta }) {
-      Vue.set(state.datasetIdMetaMap, datasetId, meta);
     }
   },
   actions: {
@@ -106,11 +102,10 @@ export default new Vuex.Store({
       return girder.rest.put(`dataset_group/${group._id}`, group);
     },
     async addDatasetToWorkspace({ state, commit }, { dataset, workspace }) {
-      commit('addDatasetIdMetaMap', {
-        datasetId: dataset._id,
-        meta: await getDatasetMeta(dataset, state.datasetIdMetaMap)
-      });
-      commit("_addDatasetToWorkspace", { dataset, workspace });
+      if (!(dataset._id in state.datasetIdMetaMap)) {
+        Vue.set(state.datasetIdMetaMap, dataset._id, await getDatasetMeta(dataset, state.datasetIdMetaMap));
+      }
+      workspace.layers.push({ dataset, opacity: 1 });
     }
   },
   getters: {
@@ -130,12 +125,12 @@ export default new Vuex.Store({
 });
 
 
-async function getDatasetMeta(dataset, datasetIdMetaMap) {
-  if (!(dataset._id in datasetIdMetaMap)) {
-    if (dataset.geometa.driver === "GeoJSON") {
-      var geojson = await loadDatasetData(dataset);
-      var summary = summarize(geojson);
-      return { geojson, summary };
-    }
+async function getDatasetMeta(dataset) {
+  if (dataset.geometa.driver === "GeoJSON") {
+    var geojson = await loadDatasetData(dataset);
+    var summary = summarize(geojson);
+    return { geojson, summary };
+  } else {
+    return null;
   }
 }

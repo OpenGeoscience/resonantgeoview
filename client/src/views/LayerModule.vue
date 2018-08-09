@@ -32,8 +32,11 @@
                     <v-icon>more_vert</v-icon>
                   </v-btn>
                   <v-list>
+                    <v-list-tile @click="$emit('customDataset',layer.dataset)">
+                      <v-list-tile-title>Customize</v-list-tile-title>
+                    </v-list-tile>
                     <v-list-tile @click="$emit('zoomToDataset',layer.dataset)">
-                      <v-list-tile-title>zoom to</v-list-tile-title>
+                      <v-list-tile-title>Zoom to</v-list-tile-title>
                     </v-list-tile>
                   </v-list>
                 </v-menu>

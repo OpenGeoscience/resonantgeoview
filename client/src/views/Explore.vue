@@ -82,10 +82,10 @@
     :footer="false">
       <template slot="toolbar">
         <v-toolbar flat>
-          <v-btn icon class="hidden-xs-only" v-if="customVizDatasetId" @click="returnFromCustomViz">
+          <v-btn icon class="hidden-xs-only" v-if="customVizDataset" @click="returnFromCustomViz">
             <v-icon>arrow_back</v-icon>
           </v-btn>
-          <v-toolbar-title>{{!customVizDatasetId?"Datasets":"Custom"}}</v-toolbar-title>
+          <v-toolbar-title>{{!customVizDataset?"Datasets":"Customize"}}</v-toolbar-title>
         </v-toolbar>
       </template>
       <template slot="actions">
@@ -95,7 +95,7 @@
       </template>
       <div class="main">
         <transition name="slide-fade" mode="out-in">
-          <div v-if="!customVizDatasetId" class="datasets-layers-pane" key="datasets">
+          <div v-if="!customVizDataset" class="datasets-layers-pane" key="datasets">
             <transition name="fade">
               <div v-if="filteredDatasetIds">
                 <v-switch hide-details label="Filtering" :input-value="!!filteringGeometry" @change="filteringGeometry=null" class="mt-0 mx-1"></v-switch>
@@ -105,12 +105,13 @@
               :filteredDatasetIds="filteredDatasetIds" />
             <LayerModule class="layers" 
               v-if="focusedWorkspace &&focusedWorkspace.layers.length"
-              @zoomToDataset="zoomToDataset" />
+              @zoomToDataset="zoomToDataset"
+              @customDataset="customVizDataset=$event" />
           </div>
           <VectorCustomVizPane
             v-else
-            :dataset="datasets[customVizDatasetId]"
-            :summary="datasetIdMetaMap[customVizDatasetId].summary"
+            :dataset="customVizDataset"
+            :summary="datasetIdMetaMap[customVizDataset._id].summary"
             :preserve.sync="preserveCustomViz"
             />
         </transition>
@@ -120,7 +121,7 @@
 </template>
 
 <script>
-import { mapState, mapGetters, mapMutations } from "vuex";
+import { mapState, mapGetters, mapMutations, mapActions } from "vuex";
 import { point } from "@turf/helpers";
 import bbox from "@turf/bbox";
 import bboxPolygon from "@turf/bbox-polygon";
@@ -135,6 +136,7 @@ import DatasetModule from "./DatasetModule";
 import LayerModule from "./LayerModule";
 import GeojsGeojsonDatasetLayer from "../components/geojs/GeojsGeojsonDatasetLayer";
 import VectorCustomVizPane from "../components/VectorCustomVizPane/VectorCustomVizPane";
+import saveDatasetMetadata from "../utils/saveDatasetMetadata";
 
 export default {
   name: "Explore",
@@ -144,7 +146,8 @@ export default {
     WorkspaceContainer,
     Workspace,
     WorkspaceAction,
-    GeojsGeojsonDatasetLayer
+    GeojsGeojsonDatasetLayer,
+    VectorCustomVizPane
   },
   data() {
     return {
@@ -156,7 +159,7 @@ export default {
       editing: false,
       annotations: [],
       filteringGeometry: null,
-      customVizDatasetId: null,
+      customVizDataset: null,
       preserveCustomViz: false
     };
   },
@@ -200,7 +203,10 @@ export default {
       }
     }
   },
-  created() {},
+  created() {
+    this.loadDatasets();
+    this.loadGroups();
+  },
   methods: {
     getTileURL(dataset) {
       var url = `${API_URL}/item/${
@@ -233,10 +239,21 @@ export default {
       this.viewport.center = zoomAndCenter.center;
       this.viewport.zoom = zoomAndCenter.zoom;
     },
+    returnFromCustomViz() {
+      if (this.preserveCustomViz) {
+        this.preserveCustomViz = false;
+        saveDatasetMetadata(this.customVizDataset);
+      }
+      this.customVizDataset = null;
+    },
     ...mapMutations([
       "addWorkspace",
       "removeWorkspace",
       "setFocusedWorkspaceKey"
+    ]),
+    ...mapActions([
+      "loadDatasets",
+      "loadGroups"
     ])
   }
 };
