@@ -1,7 +1,9 @@
 <template>
 <v-app>
     <AppToolbar
-    title='Minerva'>
+    title='Minerva'
+    :panelButton="true"
+    @click-panel="toggleSidePanel">
       <template slot="right">
         <GirderUserButton 
           @login="userForm='login';userDialog=true;"
@@ -39,9 +41,10 @@ body,
 </style>
 
 <script>
-import "./transitions.scss";
-
 import Prompt from "./components/prompt/Prompt";
+import { mapMutations } from "vuex";
+
+import "./transitions.scss";
 
 export default {
   name: "App",
@@ -53,6 +56,8 @@ export default {
       userDialog: false
     };
   },
-  methods: {}
+  methods: {
+    ...mapMutations(["toggleSidePanel"])
+  }
 };
 </script>

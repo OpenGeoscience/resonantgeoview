@@ -15,6 +15,7 @@ Vue.use(Vuex);
 export default new Vuex.Store({
   strict: false,
   state: {
+    sidePanelExpanded: true,
     datasets: [],
     datasetIdMetaMap: {},
     datasetSortBy: 'type',
@@ -28,6 +29,9 @@ export default new Vuex.Store({
     focusedWorkspaceKey: '0'
   },
   mutations: {
+    toggleSidePanel(state) {
+      state.sidePanelExpanded = !state.sidePanelExpanded;
+    },
     setDatasets(state, datasets) {
       datasets.forEach((dataset) => {
         if (!dataset.meta || !dataset.meta.vizProperties) {

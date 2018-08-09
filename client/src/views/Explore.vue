@@ -78,6 +78,7 @@
     class="side-panel"
     :top="64"
     :floating="false"
+    :expanded="sidePanelExpanded"
     :bottom="0"
     :footer="false">
       <template slot="toolbar">
@@ -165,6 +166,7 @@ export default {
   },
   computed: {
     ...mapState([
+      "sidePanelExpanded",
       "datasetIdMetaMap",
       "selectedDataset",
       "workspaces",
@@ -251,10 +253,7 @@ export default {
       "removeWorkspace",
       "setFocusedWorkspaceKey"
     ]),
-    ...mapActions([
-      "loadDatasets",
-      "loadGroups"
-    ])
+    ...mapActions(["loadDatasets", "loadGroups"])
   }
 };
 </script>
