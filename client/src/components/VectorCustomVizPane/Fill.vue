@@ -64,7 +64,7 @@
         <v-radio-group
           :disabled="!enabled"
           :value="scale"
-          @input="$emit('update:scale',$event)">
+          @change="$emit('update:scale',$event)">
           <v-radio
             label="Linear"
             value="linear"

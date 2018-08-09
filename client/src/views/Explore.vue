@@ -29,6 +29,8 @@
               v-if="layer.dataset.geometa.driver==='GeoJSON'"
               :key="layer.dataset._id"
               :dataset="layer.dataset"
+              :geojson="datasetIdMetaMap[layer.dataset._id].geojson"
+              :summary="datasetIdMetaMap[layer.dataset._id].summary"
               :zIndex="workspace.layers.length-i"
               :opacity='layer.opacity'>
             </GeojsGeojsonDatasetLayer>
@@ -77,24 +79,41 @@
     :top="64"
     :floating="false"
     :bottom="0"
-    :toolbar="{title:'Datasets'}"
     :footer="false">
+      <template slot="toolbar">
+        <v-toolbar flat>
+          <v-btn icon class="hidden-xs-only" v-if="customVizDatasetId" @click="returnFromCustomViz">
+            <v-icon>arrow_back</v-icon>
+          </v-btn>
+          <v-toolbar-title>{{!customVizDatasetId?"Datasets":"Custom"}}</v-toolbar-title>
+        </v-toolbar>
+      </template>
       <template slot="actions">
         <SidePanelAction @click="drawing = 'rectangle'">
           <v-icon>aspect_ratio</v-icon>
         </SidePanelAction>
       </template>
       <div class="main">
-        <transition name="fade">
-          <div v-if="filteredDatasetIds">
-            <v-switch hide-details label="Filtering" :input-value="!!filteringGeometry" @change="filteringGeometry=null" class="mt-0 mx-1"></v-switch>
+        <transition name="slide-fade" mode="out-in">
+          <div v-if="!customVizDatasetId" class="datasets-layers-pane" key="datasets">
+            <transition name="fade">
+              <div v-if="filteredDatasetIds">
+                <v-switch hide-details label="Filtering" :input-value="!!filteringGeometry" @change="filteringGeometry=null" class="mt-0 mx-1"></v-switch>
+              </div>
+            </transition>
+            <DatasetModule class="datasets"
+              :filteredDatasetIds="filteredDatasetIds" />
+            <LayerModule class="layers" 
+              v-if="focusedWorkspace &&focusedWorkspace.layers.length"
+              @zoomToDataset="zoomToDataset" />
           </div>
+          <VectorCustomVizPane
+            v-else
+            :dataset="datasets[customVizDatasetId]"
+            :summary="datasetIdMetaMap[customVizDatasetId].summary"
+            :preserve.sync="preserveCustomViz"
+            />
         </transition>
-        <DatasetModule class="datasets"
-          :filteredDatasetIds="filteredDatasetIds" />
-        <LayerModule class="layers" 
-          v-if="focusedWorkspace &&focusedWorkspace.layers.length"
-          @zoomToDataset="zoomToDataset"/>
       </div>
     </SidePanel>
   </FullScreenViewport>
@@ -114,7 +133,8 @@ import Workspace from "../components/Workspace/Workspace";
 import WorkspaceAction from "../components/Workspace/Action";
 import DatasetModule from "./DatasetModule";
 import LayerModule from "./LayerModule";
-import GeojsGeojsonDatasetLayer from "./GeojsGeojsonDatasetLayer";
+import GeojsGeojsonDatasetLayer from "../components/geojs/GeojsGeojsonDatasetLayer";
+import VectorCustomVizPane from "../components/VectorCustomVizPane/VectorCustomVizPane";
 
 export default {
   name: "Explore",
@@ -135,11 +155,18 @@ export default {
       drawing: false,
       editing: false,
       annotations: [],
-      filteringGeometry: null
+      filteringGeometry: null,
+      customVizDatasetId: null,
+      preserveCustomViz: false
     };
   },
   computed: {
-    ...mapState(["selectedDataset", "workspaces", "focusedWorkspaceKey"]),
+    ...mapState([
+      "datasetIdMetaMap",
+      "selectedDataset",
+      "workspaces",
+      "focusedWorkspaceKey"
+    ]),
     ...mapGetters(["selectedDatasetPoint", "focusedWorkspace"]),
     user() {
       return this.$girder.user;
@@ -232,6 +259,12 @@ export default {
 
     .datasets {
       overflow-y: auto;
+    }
+
+    .datasets-layers-pane {
+      flex: 1;
+      display: flex;
+      flex-direction: column;
     }
   }
 }

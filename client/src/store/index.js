@@ -6,6 +6,9 @@ import girder from '../girder';
 import { remove } from '../utils/array';
 import prompt from '../components/prompt/module';
 import loadDatasets from '../utils/loadDataset';
+import loadDatasetData from "../utils/loadDatasetData";
+import { summarize } from "../utils/geojsonUtil";
+import { getDefaultGeojsonVizProperties } from "../utils/getDefaultGeojsonVizProperties";
 
 Vue.use(Vuex);
 
@@ -13,6 +16,8 @@ export default new Vuex.Store({
   strict: process.env.NODE_ENV !== 'production',
   state: {
     datasets: [],
+    datasetIdMetaMap: {},
+    customVizDatasetId: null,
     datasetSortBy: 'type',
     groups: [],
     selectedDataset: null,
@@ -25,6 +30,11 @@ export default new Vuex.Store({
   },
   mutations: {
     setDatasets(state, datasets) {
+      datasets.forEach((dataset) => {
+        if (!dataset.meta || !dataset.meta.vizProperties) {
+          Object.assign(dataset, { meta: { vizProperties: getDefaultGeojsonVizProperties() } });
+        }
+      });
       state.datasets = datasets;
     },
     setSelectedDataset(state, dataset) {
@@ -41,7 +51,7 @@ export default new Vuex.Store({
     setFocusedWorkspaceKey(state, key) {
       state.focusedWorkspaceKey = key;
     },
-    addDatasetToWorkspace(state, { dataset, workspace }) {
+    _addDatasetToWorkspace(state, { dataset, workspace }) {
       workspace.layers.push({ dataset, opacity: 1 });
     },
     removeDatasetFromWorkspace(state, { dataset, workspace }) {
@@ -69,6 +79,9 @@ export default new Vuex.Store({
     removeDatasetFromGroup(state, { group, dataset }) {
       remove(group.datasetIds, dataset._id);
     },
+    addDatasetIdMetaMap(state, { datasetId, meta }) {
+      Vue.set(state.datasetIdMetaMap, datasetId, meta);
+    }
   },
   actions: {
     async loadDatasets({ commit }) {
@@ -91,6 +104,13 @@ export default new Vuex.Store({
     async removeDatasetFromGroup({ state, commit }, { group, dataset }) {
       commit('removeDatasetFromGroup', { group, dataset });
       return girder.rest.put(`dataset_group/${group._id}`, group);
+    },
+    async addDatasetToWorkspace({ state, commit }, { dataset, workspace }) {
+      commit('addDatasetIdMetaMap', {
+        datasetId: dataset._id,
+        meta: await getDatasetMeta(dataset, state.datasetIdMetaMap)
+      });
+      commit("_addDatasetToWorkspace", { dataset, workspace });
     }
   },
   getters: {
@@ -108,3 +128,14 @@ export default new Vuex.Store({
     prompt
   }
 });
+
+
+async function getDatasetMeta(dataset, datasetIdMetaMap) {
+  if (!(dataset._id in datasetIdMetaMap)) {
+    if (dataset.geometa.driver === "GeoJSON") {
+      var geojson = await loadDatasetData(dataset);
+      var summary = summarize(geojson);
+      return { geojson, summary };
+    }
+  }
+}

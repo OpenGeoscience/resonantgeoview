@@ -67,7 +67,7 @@ import StyleSection from "./StyleSection";
 import { colorbrewerCategories } from "../../utils/palettableColorbrewerMapper";
 
 export default {
-  name: "Fill",
+  name: "Stroke",
   components: { StyleSection, BasicColorPicker, ColorbrewerPicker },
   props: {
     enabled: {

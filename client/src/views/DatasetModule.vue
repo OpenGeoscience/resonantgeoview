@@ -132,13 +132,13 @@ export default {
   methods: {
     ...mapMutations([
       "setSelectedDataset",
-      "addDatasetToWorkspace",
       "removeDatasetFromWorkspace"
     ]),
     ...mapActions([
       "loadDatasets",
       "loadGroups",
       "deleteGroup",
+      "addDatasetToWorkspace",
       "removeDatasetFromGroup"
     ])
   }
