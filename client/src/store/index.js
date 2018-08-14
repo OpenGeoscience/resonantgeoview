@@ -9,6 +9,7 @@ import loadDatasets from '../utils/loadDataset';
 import loadDatasetData from "../utils/loadDatasetData";
 import { summarize } from "../utils/geojsonUtil";
 import { getDefaultGeojsonVizProperties } from "../utils/getDefaultGeojsonVizProperties";
+import getLargeImageMeta from "../utils/getLargeImageMeta";
 
 Vue.use(Vuex);
 
@@ -34,8 +35,17 @@ export default new Vuex.Store({
     },
     setDatasets(state, datasets) {
       datasets.forEach((dataset) => {
-        if (!dataset.meta || !dataset.meta.vizProperties) {
-          Object.assign(dataset, { meta: { vizProperties: getDefaultGeojsonVizProperties() } });
+        switch (dataset.geometa.driver) {
+          case "GeoJSON":
+            if (!dataset.meta || !dataset.meta.vizProperties) {
+              Object.assign(dataset, { meta: { vizProperties: getDefaultGeojsonVizProperties() } });
+            }
+            break;
+          case "GeoTIFF":
+            if (!dataset.meta) {
+              dataset.meta = {};
+            }
+            break;
         }
       });
       state.datasets = datasets;
@@ -130,11 +140,16 @@ export default new Vuex.Store({
 
 
 async function getDatasetMeta(dataset) {
-  if (dataset.geometa.driver === "GeoJSON") {
-    var geojson = await loadDatasetData(dataset);
-    var summary = summarize(geojson);
-    return { geojson, summary };
-  } else {
-    return null;
+  switch (dataset.geometa.driver) {
+    case "GeoJSON":
+      var geojson = await loadDatasetData(dataset);
+      var summary = summarize(geojson);
+      return { geojson, summary };
+      break;
+    case "GeoTIFF":
+      return await getLargeImageMeta(dataset);
+      break;
+    default:
+      return null;
   }
 }

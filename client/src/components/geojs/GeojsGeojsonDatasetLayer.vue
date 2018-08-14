@@ -1,6 +1,5 @@
 <template>
 <GeojsGeojsonLayer
-  v-if="geojson"
   :geojson="geojson"
   :zIndex="zIndex"
   :opacity="opacity"
@@ -54,10 +53,6 @@ export default {
         ...style.polygon,
         ...this.translate("fill", vizProperties.polygon)
       };
-      // vizProperties.polygon.uniformPolygon = true;
-      // vizProperties.polygon.fillColor = () => {
-      //   return Math.random() > 0.5 ? "#00FF00" : "#FF0000";
-      // };
       return style;
     }
   },

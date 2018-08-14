@@ -34,14 +34,15 @@
               :zIndex="workspace.layers.length-i"
               :opacity='layer.opacity'>
             </GeojsGeojsonDatasetLayer>
-            <GeojsTileLayer
+            <StyledGeoTIFFLayer
               v-if="layer.dataset.geometa.driver==='GeoTIFF'"
               :key="layer.dataset._id"
-              :url='getTileURL(layer.dataset)'
+              :dataset="layer.dataset"
+              :tileURL="getTileURL(layer.dataset)"
+              :opacity="layer.opacity"
               :keepLower="false"
-              :zIndex='workspace.layers.length-i'
-              :opacity='layer.opacity'>
-            </GeojsTileLayer>
+              :zIndex="workspace.layers.length-i">
+            </StyledGeoTIFFLayer>
           </template>
           <GeojsAnnotationLayer
             :drawing.sync="drawing"
@@ -110,9 +111,15 @@
               @customDataset="customVizDataset=$event" />
           </div>
           <VectorCustomVizPane
-            v-else
+            v-if="customVizDataset && customVizDataset.geometa.driver === 'GeoJSON'"
             :dataset="customVizDataset"
             :summary="datasetIdMetaMap[customVizDataset._id].summary"
+            :preserve.sync="preserveCustomViz"
+            />
+          <GeotiffCustomVizPane
+            v-if="customVizDataset && customVizDataset.geometa.driver === 'GeoTIFF'"
+            :dataset="customVizDataset"
+            :meta="datasetIdMetaMap[customVizDataset._id]"
             :preserve.sync="preserveCustomViz"
             />
         </transition>
@@ -136,8 +143,11 @@ import WorkspaceAction from "../components/Workspace/Action";
 import DatasetModule from "./DatasetModule";
 import LayerModule from "./LayerModule";
 import GeojsGeojsonDatasetLayer from "../components/geojs/GeojsGeojsonDatasetLayer";
+import StyledGeoTIFFLayer from "../components/geojs/StyledGeoTIFFLayer";
 import VectorCustomVizPane from "../components/VectorCustomVizPane/VectorCustomVizPane";
+import GeotiffCustomVizPane from "../components/GeotiffCustomVizPane";
 import saveDatasetMetadata from "../utils/saveDatasetMetadata";
+
 
 export default {
   name: "Explore",
@@ -148,7 +158,9 @@ export default {
     Workspace,
     WorkspaceAction,
     GeojsGeojsonDatasetLayer,
-    VectorCustomVizPane
+    StyledGeoTIFFLayer,
+    VectorCustomVizPane,
+    GeotiffCustomVizPane
   },
   data() {
     return {
