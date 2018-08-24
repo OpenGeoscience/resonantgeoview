@@ -6,19 +6,22 @@
       :focused="focusedWorkspace"
       @update:focused="setFocusedWorkspaceKey($event)"
       :autoResize="true"
-      :max="2"
-    >
+      :max="2">
       <Workspace
         v-for="(workspace, key) in workspaces"
         :key="key"
         :identifier="key"
         @split="addWorkspace()"
         @close="removeWorkspace(key)">
+        <template slot='actions'>
+          <WorkspaceAction>
+            <v-icon @click="takeScreenshot(key)">camera_alt</v-icon>
+          </WorkspaceAction>
+        </template>
         <GeojsMapViewport
           class='map'
           :viewport='viewport'
-          ref='geojsMapViewport'
-        >
+          :ref='`geojsMapViewport${key}`'>
           <GeojsTileLayer
             url='https://cartodb-basemaps-{s}.global.ssl.fastly.net/light_all/{z}/{x}/{y}.png'
             attribution='© OpenStreetMap contributors, © CARTO'
@@ -125,6 +128,10 @@
         </transition>
       </div>
     </SidePanel>
+
+    <MapScreenshotDialog
+      v-model="mapScreenshotDialog"
+      :map="screenshotMap" />
   </FullScreenViewport>
 </template>
 
@@ -147,7 +154,7 @@ import StyledGeoTIFFLayer from "../components/geojs/StyledGeoTIFFLayer";
 import VectorCustomVizPane from "../components/VectorCustomVizPane/VectorCustomVizPane";
 import GeotiffCustomVizPane from "../components/GeotiffCustomVizPane";
 import saveDatasetMetadata from "../utils/saveDatasetMetadata";
-
+import MapScreenshotDialog from "./MapScreenshotDialog";
 
 export default {
   name: "Explore",
@@ -160,7 +167,8 @@ export default {
     GeojsGeojsonDatasetLayer,
     StyledGeoTIFFLayer,
     VectorCustomVizPane,
-    GeotiffCustomVizPane
+    GeotiffCustomVizPane,
+    MapScreenshotDialog
   },
   data() {
     return {
@@ -173,10 +181,21 @@ export default {
       annotations: [],
       filteringGeometry: null,
       customVizDataset: null,
-      preserveCustomViz: false
+      preserveCustomViz: false,
+      screenshotMap: null
     };
   },
   computed: {
+    mapScreenshotDialog: {
+      get() {
+        return !!this.screenshotMap;
+      },
+      set(value) {
+        if (!value) {
+          this.screenshotMap = null;
+        }
+      }
+    },
     ...mapState([
       "sidePanelExpanded",
       "datasetIdMetaMap",
@@ -231,10 +250,8 @@ export default {
       return url;
     },
     zoomToDataset(dataset) {
-      var geojsViewport = this.$refs.geojsMapViewport
-        ? this.$refs.geojsMapViewport[0]
-        : null;
-      if (!geojsViewport) {
+      var map = this.$refs[`geojsMapViewport${this.focusedWorkspaceKey}`][0].$geojsMap;
+      if (!map) {
         return;
       }
       var datasetBBox = bbox(dataset.geometa.bounds);
@@ -244,7 +261,7 @@ export default {
       );
       var bufferedBbox = bbox(buffer(bboxPolygon(datasetBBox), dist / 4));
 
-      var zoomAndCenter = geojsViewport.$geojsMap.zoomAndCenterFromBounds({
+      var zoomAndCenter = map.zoomAndCenterFromBounds({
         left: bufferedBbox[0],
         right: bufferedBbox[2],
         top: bufferedBbox[3],
@@ -259,6 +276,11 @@ export default {
         saveDatasetMetadata(this.customVizDataset);
       }
       this.customVizDataset = null;
+    },
+    takeScreenshot(key) {
+      var map = this.$refs[`geojsMapViewport${key}`][0].$geojsMap;
+      this.screenshotMap = map;
+      this.mapScreenshotDialog = true;
     },
     ...mapMutations([
       "addWorkspace",

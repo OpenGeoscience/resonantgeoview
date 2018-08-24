@@ -2,6 +2,7 @@
 <FullScreenViewport>
   <v-container>
     <GirderUserDialog
+      appName='Minerva'
       :form.sync='form'
       :value='userDialog'
       />

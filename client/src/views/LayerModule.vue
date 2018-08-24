@@ -87,11 +87,9 @@ import keyBy from "lodash-es/keyBy";
 import mapValues from "lodash-es/mapValues";
 import draggable from "vuedraggable";
 
-import DatasetGroupDialog from "./DatasetGroupDialog";
-
 export default {
   name: "LayerModule",
-  components: { DatasetGroupDialog, draggable },
+  components: { draggable },
   data() {
     return {
       showAddToGroup: false,

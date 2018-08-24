@@ -16,6 +16,7 @@
     </transition>
 
     <GirderUserDialog
+      appName='Minerva'
       :form.sync='userForm'
       v-model='userDialog'
       />
