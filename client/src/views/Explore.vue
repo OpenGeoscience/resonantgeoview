@@ -35,7 +35,8 @@
               :geojson="datasetIdMetaMap[layer.dataset._id].geojson"
               :summary="datasetIdMetaMap[layer.dataset._id].summary"
               :zIndex="workspace.layers.length-i"
-              :opacity='layer.opacity'>
+              :opacity='layer.opacity'
+              @click='layerClicked(layer, $event)'>
             </GeojsGeojsonDatasetLayer>
             <StyledGeoTIFFLayer
               v-if="layer.dataset.geometa.driver==='GeoTIFF'"
@@ -44,7 +45,8 @@
               :tileURL="getTileURL(layer.dataset)"
               :opacity="layer.opacity"
               :keepLower="false"
-              :zIndex="workspace.layers.length-i">
+              :zIndex="workspace.layers.length-i"
+              @click='layerClicked(layer, $event)'>
             </StyledGeoTIFFLayer>
           </template>
           <GeojsAnnotationLayer
@@ -128,10 +130,12 @@
         </transition>
       </div>
     </SidePanel>
-
     <MapScreenshotDialog
       v-model="mapScreenshotDialog"
       :map="screenshotMap" />
+    <ClickInfoDialog
+      v-model="clickInfoDialog"
+      :datasetClickEvents="datasetClickEvents" />
   </FullScreenViewport>
 </template>
 
@@ -142,6 +146,7 @@ import bbox from "@turf/bbox";
 import bboxPolygon from "@turf/bbox-polygon";
 import buffer from "@turf/buffer";
 import distance from "@turf/distance";
+import debounce from "lodash-es/debounce";
 
 import { API_URL } from "../constants";
 import WorkspaceContainer from "../components/Workspace/Container";
@@ -155,6 +160,7 @@ import VectorCustomVizPane from "../components/VectorCustomVizPane/VectorCustomV
 import GeotiffCustomVizPane from "../components/GeotiffCustomVizPane";
 import saveDatasetMetadata from "../utils/saveDatasetMetadata";
 import MapScreenshotDialog from "./MapScreenshotDialog";
+import ClickInfoDialog from "./ClickInfoDialog";
 
 export default {
   name: "Explore",
@@ -168,7 +174,8 @@ export default {
     StyledGeoTIFFLayer,
     VectorCustomVizPane,
     GeotiffCustomVizPane,
-    MapScreenshotDialog
+    MapScreenshotDialog,
+    ClickInfoDialog
   },
   data() {
     return {
@@ -182,7 +189,8 @@ export default {
       filteringGeometry: null,
       customVizDataset: null,
       preserveCustomViz: false,
-      screenshotMap: null
+      screenshotMap: null,
+      datasetClickEvents: []
     };
   },
   computed: {
@@ -193,6 +201,16 @@ export default {
       set(value) {
         if (!value) {
           this.screenshotMap = null;
+        }
+      }
+    },
+    clickInfoDialog: {
+      get() {
+        return !!this.datasetClickEvents.length;
+      },
+      set(value) {
+        if (!value) {
+          this.datasetClickEvents = [];
         }
       }
     },
@@ -237,6 +255,11 @@ export default {
     }
   },
   created() {
+    this.debounceSetdatasetClickEvents = debounce(() => {
+      this.datasetClickEvents = this.datasetClickEventsAggregator;
+      this.datasetClickEventsAggregator = [];
+    }, 0);
+    this.datasetClickEventsAggregator = [];
     this.loadDatasets();
     this.loadGroups();
   },
@@ -250,7 +273,8 @@ export default {
       return url;
     },
     zoomToDataset(dataset) {
-      var map = this.$refs[`geojsMapViewport${this.focusedWorkspaceKey}`][0].$geojsMap;
+      var map = this.$refs[`geojsMapViewport${this.focusedWorkspaceKey}`][0]
+        .$geojsMap;
       if (!map) {
         return;
       }
@@ -281,6 +305,15 @@ export default {
       var map = this.$refs[`geojsMapViewport${key}`][0].$geojsMap;
       this.screenshotMap = map;
       this.mapScreenshotDialog = true;
+    },
+    layerClicked(layer, clickEvent) {
+      if (layer.opacity) {
+        this.datasetClickEventsAggregator.push({
+          dataset: layer.dataset,
+          clickEvent: clickEvent
+        });
+        this.debounceSetdatasetClickEvents();
+      }
     },
     ...mapMutations([
       "addWorkspace",

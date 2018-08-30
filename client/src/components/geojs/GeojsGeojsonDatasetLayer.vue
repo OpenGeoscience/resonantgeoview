@@ -3,11 +3,13 @@
   :geojson="geojson"
   :zIndex="zIndex"
   :opacity="opacity"
-  :featureStyle="style">
+  :featureStyle="style"
+  ref="geojsGeojsonLayer">
 </GeojsGeojsonLayer>
 </template>
 
 <script>
+import geo from "geojs";
 import * as d3 from "d3";
 import isObject from "lodash-es/isObject";
 import size from "lodash-es/size";
@@ -54,6 +56,19 @@ export default {
         ...this.translate("fill", vizProperties.polygon)
       };
       return style;
+    }
+  },
+  mounted() {
+    if (this.$listeners.click) {
+      this.$refs.geojsGeojsonLayer.$features.forEach(feature => {
+        feature.selectionAPI(true);
+        feature.geoOn(geo.event.feature.mouseclick, e => {
+          this.$emit("click", {
+            geo: [e.mouse.geo],
+            data: e.data
+          });
+        });
+      });
     }
   },
   methods: {

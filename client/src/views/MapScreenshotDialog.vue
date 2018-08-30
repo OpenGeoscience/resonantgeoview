@@ -1,5 +1,5 @@
 <template>
-<v-dialog :value="value" @input="$emit('input', $event)" max-width="650px">
+<v-dialog v-show="image" :value="value" @input="$emit('input', $event)" max-width="650px">
   <v-card>
     <div class="image-container">
       <img :src="image" />
@@ -26,24 +26,21 @@ export default {
     map: {}
   },
   data() {
-    return {
-      image: null
-    };
+    return {};
   },
-  computed: {},
-  created() {},
-  watch: {
-    map(map) {
-      if (map) {
-        var layers = this.map.layers();
-        map.screenshot({ layers }).then(image => {
-          this.image = image;
+  asyncComputed: {
+    image() {
+      if (!this.map) {
+        return new Promise((resolve, reject) => {
+          setTimeout(() => {
+            resolve(null);
+          }, 300);
         });
+      } else {
+        var layers = this.map.layers();
+        return this.map.screenshot({ layers });
       }
     }
-  },
-  methods: {
-    download() {}
   }
 };
 </script>

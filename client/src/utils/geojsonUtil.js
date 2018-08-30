@@ -49,7 +49,7 @@ function merge(value, accumulated) {
  * geojson 
  * var summarize.
  */
-var ignored_properties = [
+var ignoreProperties = [
     'cluster',
     'clusterDistance',
     'clusterFillColor',
@@ -81,7 +81,7 @@ function accumulate(features) {
 
     for (let feature of features) {
         for (let key in feature) {
-            if (feature.hasOwnProperty(key) && ignored_properties.indexOf(key) === -1) {
+            if (feature.hasOwnProperty(key) && ignoreProperties.indexOf(key) === -1) {
                 accumulated[key] = merge(feature[key], accumulated[key]);
             }
         }
@@ -323,5 +323,6 @@ export default geojsonUtil;
 export {
     normalize,
     summarize,
-    accumulate
+    accumulate,
+    ignoreProperties
 }

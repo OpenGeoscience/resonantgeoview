@@ -3,11 +3,14 @@
   :url="styledURL"
   :opacity="opacity"
   :keepLower="keepLower"
-  :zIndex="zIndex">
+  :zIndex="zIndex"
+  ref="geojsTileLayer">
 </GeojsTileLayer>
 </template>
 
 <script>
+import geo from "geojs";
+
 import { toPalettable } from "../../utils/palettableColorbrewerMapper";
 
 export default {
@@ -31,6 +34,16 @@ export default {
         );
         return this.tileURL + `&style=${style}`;
       }
+    }
+  },
+  mounted() {
+    if (this.$listeners.click) {
+      this.$refs.geojsTileLayer.$geojsLayer.selectionAPI(true);
+      this.$refs.geojsTileLayer.$geojsLayer.geoOn(geo.event.mouseclick, e => {
+        this.$emit("click", {
+          geo: e.geo
+        });
+      });
     }
   }
 };
