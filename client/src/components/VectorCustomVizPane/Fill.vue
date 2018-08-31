@@ -35,11 +35,11 @@
           :disabled="!enabled"
           :color="color"
           @update:color="$emit('update:color', $event)" />
-        <ColorbrewerPicker
+        <PalettePicker
           v-else
           :disabled="!enabled"
-          :scheme="scheme"
-          @update:scheme="$emit('update:scheme', $event)" />
+          :palette="palette"
+          @update:palette="$emit('update:palette', $event)" />
       </v-flex>
     </v-layout>
     <v-layout align-center>
@@ -85,14 +85,17 @@
 </template>
 
 <script>
-import ColorbrewerPicker from "./ColorbrewerPicker";
+import PalettePicker from "./PalettePicker";
 import BasicColorPicker from "./BasicColorPicker";
 import StyleSection from "./StyleSection";
-import { colorbrewerCategories } from "../../utils/palettableColorbrewerMapper";
+import {
+  colorbrewerCategories,
+  toPaletteColors
+} from "../../utils/palettableColorbrewerMapper";
 
 export default {
   name: "Fill",
-  components: { StyleSection, BasicColorPicker, ColorbrewerPicker },
+  components: { StyleSection, BasicColorPicker, PalettePicker },
   props: {
     enabled: {
       type: Boolean,
@@ -109,8 +112,8 @@ export default {
       type: Object,
       required: true
     },
-    scheme: {
-      type: String
+    palette: {
+      type: Array
     },
     opacity: {
       type: Number,
@@ -138,17 +141,19 @@ export default {
   watch: {
     property(newValue) {
       if (newValue) {
-        if (!this.scheme) {
+        if (!this.palette) {
           this.$emit(
-            "update:scheme",
-            colorbrewerCategories[Object.keys(colorbrewerCategories)[0]][0]
+            "update:palette",
+            toPaletteColors(
+              colorbrewerCategories[Object.keys(colorbrewerCategories)[0]][0]
+            )
           );
         }
         if (!this.scale && !this.properties[newValue].values) {
           this.$emit("update:scale", "linear");
         }
       } else {
-        this.$emit("update:scheme", null);
+        this.$emit("update:palette", null);
         this.$emit("update:scale", null);
       }
     }

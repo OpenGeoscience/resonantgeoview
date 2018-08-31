@@ -15,11 +15,6 @@ import isObject from "lodash-es/isObject";
 import size from "lodash-es/size";
 import sortedIndex from "lodash-es/sortedIndex";
 
-import {
-  toScheme,
-  toSchemeColors
-} from "../../utils/palettableColorbrewerMapper";
-
 export default {
   name: "GeojsGeojsonDatasetLayer",
   components: {},
@@ -78,10 +73,10 @@ export default {
         [prefix]: styles[prefix],
         [prefix + "Color"]: styles[prefix + "Color"]
       };
-      if (styles[prefix + "Property"] && styles[prefix + "Scheme"]) {
+      if (styles[prefix + "Property"] && styles[prefix + "Palette"]) {
         subStyle[prefix + "Color"] = this.getColorScaleFunc(
           styles[prefix + "Property"],
-          styles[prefix + "Scheme"],
+          styles[prefix + "Palette"],
           this.summary.properties[styles[prefix + "Property"]],
           styles[prefix + "Scale"],
           styles[prefix + "MinClamp"],
@@ -95,32 +90,20 @@ export default {
     },
     getColorScaleFunc(
       property,
-      schemeName,
+      palette,
       propertySummary,
       scale,
       minClamp,
       maxClamp
     ) {
-      var scheme = toScheme(schemeName);
-      var colors = toSchemeColors(schemeName);
-      // for an invalid scheme, just return black
-      if (!scheme || !colors) {
-        return "#ffffff";
-      }
-
       var scaleFunc = null;
       if (isObject(propertySummary.values)) {
         // categorical
-        let indices = Object.keys(scheme).map(v => {
-          return parseInt(v, 10);
-        });
-        let n = sortedIndex(indices, size(propertySummary.values));
-        n = Math.min(n, indices.length - 1);
 
         scaleFunc = d3.scale
           .ordinal()
           .domain(Object.keys(propertySummary.values))
-          .range(scheme[indices[n]]);
+          .range(palette);
       } else {
         // continuous
         // handle the case when all values are the same
@@ -133,7 +116,7 @@ export default {
           let s = d3.scale
             .quantize()
             .domain([Math.log(min), Math.log(max)])
-            .range(colors);
+            .range(palette);
           scaleFunc = value => {
             return s(Math.log(value));
           };
@@ -145,13 +128,13 @@ export default {
           scaleFunc = d3.scale
             .quantile()
             .domain(data)
-            .range(colors);
+            .range(palette);
         } else {
           // linear scaling
           scaleFunc = d3.scale
             .quantize()
             .domain([minClamp ? minClamp : min, maxClamp ? maxClamp : max])
-            .range(colors);
+            .range(palette);
         }
       }
       return (...args) => {

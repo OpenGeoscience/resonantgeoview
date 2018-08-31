@@ -11,8 +11,6 @@
 <script>
 import geo from "geojs";
 
-import { toPalettable } from "../../utils/palettableColorbrewerMapper";
-
 export default {
   name: "StyledGeoTIFFLayer",
   components: {},
@@ -23,10 +21,10 @@ export default {
       if (!vizProperties) {
         return this.tileURL;
       } else {
-        var style = encodeURI(
+        var style = encodeURIComponent(
           JSON.stringify({
             band: parseInt(vizProperties.band),
-            palette: toPalettable(vizProperties.scheme),
+            palette: vizProperties.palette,
             scheme: vizProperties.type,
             min: vizProperties.range[0],
             max: vizProperties.range[1]

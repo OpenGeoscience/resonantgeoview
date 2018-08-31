@@ -25,8 +25,8 @@
       </v-layout>
       <v-layout>
         <v-flex xs6>
-          <ColorbrewerPicker
-            :scheme.sync="vizProperties.scheme" />
+          <PalettePicker
+            :palette.sync="vizProperties.palette" />
         </v-flex>
         <v-flex xs6>
           <v-select
@@ -91,12 +91,15 @@
 import cloneDeep from "lodash-es/cloneDeep";
 import debounce from "lodash-es/debounce";
 
-import ColorbrewerPicker from "./VectorCustomVizPane/ColorbrewerPicker";
-import { colorbrewerCategories } from "../utils/palettableColorbrewerMapper";
+import PalettePicker from "./VectorCustomVizPane/PalettePicker";
+import {
+  colorbrewerCategories,
+  toPaletteColors
+} from "../utils/palettableColorbrewerMapper";
 
 export default {
   name: "GeotiffCustomVizPane",
-  components: { ColorbrewerPicker },
+  components: { PalettePicker },
   props: {
     dataset: {
       type: Object,
@@ -109,6 +112,9 @@ export default {
     preserve: {
       type: Boolean,
       default: null
+    },
+    palettePickerExtras: {
+      type: Object
     }
   },
   computed: {
@@ -144,8 +150,9 @@ export default {
             var band = this.bands[0];
             this.vizProperties = {
               band: this.bands[0],
-              scheme:
-                colorbrewerCategories[Object.keys(colorbrewerCategories)[0]][0],
+              palette: toPaletteColors(
+                colorbrewerCategories[Object.keys(colorbrewerCategories)[0]][0]
+              ),
               type: "linear",
               range: null
             };
@@ -154,6 +161,11 @@ export default {
         }
       }
     }
+  },
+  provide() {
+    return {
+      palettePickerExtras: this.palettePickerExtras
+    };
   },
   data() {
     return {

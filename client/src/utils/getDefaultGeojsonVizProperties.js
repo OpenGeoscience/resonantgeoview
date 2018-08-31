@@ -11,11 +11,11 @@ function getDefaultGeojsonVizProperties() {
             "fillMinClamp": null,
             "fillMaxClamp": null,
             "strokeWidth": 2,
-            "fillScheme": null,
+            "fillPalette": null,
             "fillOpacity": 0.75,
             "strokeColor": "#999999",
             "fillProperty": null,
-            "strokeScheme": null
+            "strokePalette": null
         },
         "line": {
             "strokeOpacity": 1,
@@ -23,7 +23,7 @@ function getDefaultGeojsonVizProperties() {
             "stroke": true,
             "strokeWidth": 2,
             "strokeColor": "#999999",
-            "strokeScheme": null
+            "strokePalette": null
         },
         "polygon": {
             "strokeOpacity": 1,
@@ -35,11 +35,11 @@ function getDefaultGeojsonVizProperties() {
             "fillMinClamp": null,
             "fillMaxClamp": null,
             "strokeWidth": 1,
-            "fillScheme": null,
+            "fillPalette": null,
             "fillOpacity": 0.75,
             "strokeColor": "#999999",
             "fillProperty": null,
-            "strokeScheme": null
+            "strokePalette": null
         }
     }
 }

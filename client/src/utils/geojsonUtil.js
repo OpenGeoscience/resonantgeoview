@@ -239,21 +239,21 @@ geojsonUtil.style = function style(geojson, visProperties) {
 
 /**
  * Generate a d3-like scale function out of a colorbrewer
- * scheme name and a geojson summary object.
+ * palette name and a geojson summary object.
  *
- * @param {string} scheme
+ * @param {string} palette
  * @param {object} summary
  * @param {Boolean} logFlag
  * @returns {function}
  */
 geojsonUtil.colorScale = function colorScale(
-    scheme, summary,
+    palette, summary,
     logFlag, quantileFlag, clampingFlag, minClamp, maxClamp,
     data) {
     var scale, s, colors, n, indices;
 
-    colors = colorbrewer[scheme];
-    // for an invalid scheme, just return black
+    colors = colorbrewer[palette];
+    // for an invalid palette, just return black
     if (!colors) {
         return function () { // eslint-disable-line underscore/prefer-constant
             return '#ffffff';

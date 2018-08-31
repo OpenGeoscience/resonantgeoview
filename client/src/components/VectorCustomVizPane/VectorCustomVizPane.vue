@@ -12,14 +12,14 @@
           :property.sync="vizProperties.point.strokeProperty"
           :properties="summary.properties"
           :color.sync="vizProperties.point.strokeColor"
-          :scheme.sync="vizProperties.point.strokeScheme"
+          :palette.sync="vizProperties.point.strokePalette"
           :opacity.sync="vizProperties.point.strokeOpacity"
           :width.sync="vizProperties.point.strokeWidth" />
         <Fill :enabled.sync="vizProperties.point.fill"
           :property.sync="vizProperties.point.fillProperty"
           :properties="summary.properties"
           :color.sync="vizProperties.point.fillColor"
-          :scheme.sync="vizProperties.point.fillScheme"
+          :palette.sync="vizProperties.point.fillPalette"
           :opacity.sync="vizProperties.point.fillOpacity"
           :scale.sync="vizProperties.point.fillScale"
           :radius.sync="vizProperties.point.radius" />
@@ -29,7 +29,7 @@
           :property.sync="vizProperties.line.strokeProperty"
           :properties="summary.properties"
           :color.sync="vizProperties.line.strokeColor"
-          :scheme.sync="vizProperties.line.strokeScheme"
+          :palette.sync="vizProperties.line.strokePalette"
           :opacity.sync="vizProperties.line.strokeOpacity"
           :width.sync="vizProperties.line.strokeWidth" />
       </v-tab-item>
@@ -38,14 +38,14 @@
           :property.sync="vizProperties.polygon.strokeProperty"
           :properties="summary.properties"
           :color.sync="vizProperties.polygon.strokeColor"
-          :scheme.sync="vizProperties.polygon.strokeScheme"
+          :palette.sync="vizProperties.polygon.strokePalette"
           :opacity.sync="vizProperties.polygon.strokeOpacity"
           :width.sync="vizProperties.polygon.strokeWidth" />
         <Fill :enabled.sync="vizProperties.polygon.fill"
           :property.sync="vizProperties.polygon.fillProperty"
           :properties="summary.properties"
           :color.sync="vizProperties.polygon.fillColor"
-          :scheme.sync="vizProperties.polygon.fillScheme"
+          :palette.sync="vizProperties.polygon.fillPalette"
           :opacity.sync="vizProperties.polygon.fillOpacity"
           :scale.sync="vizProperties.polygon.fillScale" />
       </v-tab-item>

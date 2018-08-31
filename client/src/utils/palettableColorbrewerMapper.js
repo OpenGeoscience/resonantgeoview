@@ -6,35 +6,35 @@ const colorbrewerCategories = {
     qualitative: ['Accent_8', 'Dark2_8', 'Paired_12', 'Pastel1_9', 'Pastel2_8', 'Set1_9', 'Set2_8', 'Set3_12']
 };
 
-function toScheme(palettable) {
+function toPalette(palettable) {
     if (!palettable) {
         return null;
     }
     return colorbrewer[palettable.split('.').slice(-1)[0].split('_')[0]];
 }
 
-function toSchemeColors(palettable) {
+function toPaletteColors(palettable) {
     if (!palettable) {
         return null;
     }
-    var [scheme, number] = palettable.split('.').slice(-1)[0].split('_');
-    return colorbrewer[scheme][number];
+    var [palette, number] = palettable.split('.').slice(-1)[0].split('_');
+    return colorbrewer[palette][number];
 }
 
-function toPalettable(schemeName) {
-    if (!schemeName) {
+function toPalettable(paletteName) {
+    if (!paletteName) {
         return null;
     }
-    let out_category, out_scheme;
-    for (let [category, scheme] of Object.entries(colorbrewerCategories)) {
-        for (let schemeWithNumber of scheme) {
-            if (schemeWithNumber === schemeName) {
+    let out_category, out_palette;
+    for (let [category, palette] of Object.entries(colorbrewerCategories)) {
+        for (let paletteWithNumber of palette) {
+            if (paletteWithNumber === paletteName) {
                 out_category = category;
-                out_scheme = schemeWithNumber;
+                out_palette = paletteWithNumber;
             }
         }
     }
-    return `colorbrewer.${out_category}.${out_scheme}`;
+    return `colorbrewer.${out_category}.${out_palette}`;
 }
 
-export { colorbrewerCategories, toScheme, toSchemeColors, toPalettable };
+export { colorbrewerCategories, toPalette, toPaletteColors, toPalettable };
