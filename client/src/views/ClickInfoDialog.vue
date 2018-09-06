@@ -139,13 +139,13 @@ export default {
 
     .row-key {
       border-right: 1px solid #d0d0d0;
-      width: 25%;
+      width: 30%;
       white-space: normal;
       padding: 1px 8px 1px 12px;
     }
 
     .row-value {
-      width: 75%;
+      width: 70%;
       white-space: normal;
       padding: 1px 12px 1px 8px;
     }

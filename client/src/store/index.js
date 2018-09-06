@@ -7,7 +7,7 @@ import { remove } from '../utils/array';
 import prompt from '../components/prompt/module';
 import loadDatasets from '../utils/loadDataset';
 import loadDatasetData from "../utils/loadDatasetData";
-import { summarize } from "../utils/geojsonUtil";
+import { summarize, normalize } from "../utils/geojsonUtil";
 import { getDefaultGeojsonVizProperties } from "../utils/getDefaultGeojsonVizProperties";
 import getLargeImageMeta from "../utils/getLargeImageMeta";
 
@@ -142,7 +142,7 @@ export default new Vuex.Store({
 async function getDatasetMeta(dataset) {
   switch (dataset.geometa.driver) {
     case "GeoJSON":
-      var geojson = await loadDatasetData(dataset);
+      var geojson = normalize(await loadDatasetData(dataset));
       var summary = summarize(geojson);
       return { geojson, summary };
       break;

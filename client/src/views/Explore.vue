@@ -22,6 +22,9 @@
           class='map'
           :viewport='viewport'
           :ref='`geojsMapViewport${key}`'>
+          <AdaptedColorLegendLayer
+            :layers="workspace.layers"
+            :datasetIdMetaMap="datasetIdMetaMap" />
           <GeojsTileLayer
             url='https://cartodb-basemaps-{s}.global.ssl.fastly.net/light_all/{z}/{x}/{y}.png'
             attribution='© OpenStreetMap contributors, © CARTO'
@@ -156,6 +159,7 @@ import DatasetModule from "./DatasetModule";
 import LayerModule from "./LayerModule";
 import GeojsGeojsonDatasetLayer from "../components/geojs/GeojsGeojsonDatasetLayer";
 import StyledGeoTIFFLayer from "../components/geojs/StyledGeoTIFFLayer";
+import AdaptedColorLegendLayer from "../components/geojs/AdaptedColorLegendLayer";
 import VectorCustomVizPane from "../components/VectorCustomVizPane/VectorCustomVizPane";
 import GeotiffCustomVizPane from "../components/GeotiffCustomVizPane";
 import saveDatasetMetadata from "../utils/saveDatasetMetadata";
@@ -175,7 +179,8 @@ export default {
     VectorCustomVizPane,
     GeotiffCustomVizPane,
     MapScreenshotDialog,
-    ClickInfoDialog
+    ClickInfoDialog,
+    AdaptedColorLegendLayer
   },
   data() {
     return {
