@@ -6,6 +6,8 @@
 </template>
 
 <script>
+import range from "lodash-es/range";
+
 export default {
   name: "AdaptedColorLegendLayer",
   props: {
@@ -127,6 +129,14 @@ function generateCategoryForGeoTIFF(dataset) {
     colors: vizProperties.palette,
     domain: [vizProperties.range[0], vizProperties.range[1]]
   };
+  if (
+    vizProperties.range[1] + 1 - vizProperties.range[0] ===
+    vizProperties.palette.length
+  ) {
+    category.type = "discrete";
+    category.scale = "ordinal";
+    category.domain = range(vizProperties.range[0], vizProperties.range[1] + 1);
+  }
   return [category];
 }
 </script>
