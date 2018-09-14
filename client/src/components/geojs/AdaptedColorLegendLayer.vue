@@ -141,12 +141,21 @@ function generateCategoryForGeoTIFF(dataset) {
 }
 </script>
 
-<style>
-/* A fix until GeoJS rename the title class name */
-.color-legend-container .legends .legend .title {
-  text-align: center;
-  font-size: inherit !important;
-  line-height: inherit !important;
-  letter-spacing: inherit !important;
+<style lang="scss">
+.color-legend-container {
+  border: none !important;
+  border-radius: 2px !important;
+  box-shadow: 2px 2px 11px 2px #c7c7c7 !important;
+
+  .legends .legend .title {
+    text-align: center;
+    font-size: inherit !important;
+    line-height: inherit !important;
+    letter-spacing: inherit !important;
+    max-width: 300px;
+    overflow: hidden;
+    text-overflow: ellipsis;
+    white-space: nowrap;
+  }
 }
 </style>
