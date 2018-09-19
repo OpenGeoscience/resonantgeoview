@@ -88,16 +88,9 @@ export default {
     };
   },
   watch: {
-    maximizedWorkspace(value) {
-      this.$emit("workspaceMaximized", value);
-    },
     workspaces(value) {
       this.maximizedWorkspace = null;
       this.setDefaultFocus();
-      this.$emit("workspacesChanged", value);
-    },
-    max(value) {
-      this.$emit("maxChanged", value);
     }
   },
   created() {

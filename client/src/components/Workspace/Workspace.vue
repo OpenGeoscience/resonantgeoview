@@ -6,7 +6,7 @@
     <div class="bottom-bar">
       <div class="focus-indicator" v-if="!onlyWorkspace && focused"></div>
       <v-toolbar dark :class="{unfocused:!onlyWorkspace && !focused}">
-        <v-select class="state-selector" v-if="states"
+        <v-select class="state-selector pt-0" v-if="states"
           :value="selectedState"
           @input="$emit('stateChange', $event)"
           :items="states"
@@ -87,20 +87,25 @@ export default {
     }
   },
   created() {
-    this.container.$on("workspaceMaximized", this.workspaceMaximized);
-    this.container.$on("workspacesChanged", this.workspacesChanged);
     this.workspacesChanged(this.container.workspaces);
     this.container.$on("update:focused", this.focusChanged);
     this.focusChanged(this.container.focused);
-    this.container.$on("maxChanged", this.maxChanged);
     this.maxChanged(this.container.max);
   },
   beforeDestroy() {
-    this.container.$off("workspaceMaximized", this.workspaceMaximized);
-    this.container.$off("workspacesChanged", this.workspacesChanged);
     this.container.$off("update:focused", this.focusChanged);
   },
-  watch: {},
+  watch: {
+    "container.workspaces"(newValue) {
+      this.workspacesChanged(newValue);
+    },
+    "container.maximizedWorkspace"(newValue) {
+      this.maximizedWorkspace = newValue;
+    },
+    "container.max"(newValue) {
+      this.maxChanged(newValue);
+    }
+  },
   methods: {
     focus() {
       if (!this.focused) {
@@ -122,9 +127,6 @@ export default {
       if (!this.onlyWorkspace) {
         this.$emit("close");
       }
-    },
-    workspaceMaximized(identifier) {
-      this.maximizedWorkspace = identifier;
     },
     focusChanged(identifier) {
       this.focusedWorkspace = identifier;
