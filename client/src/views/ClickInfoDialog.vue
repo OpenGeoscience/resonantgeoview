@@ -1,9 +1,8 @@
 <template>
-<PositionedDialog 
-  v-show="value"
-  :value="value"
+<PositionedDialog
+  :value="show"
   scrollable
-  @input="$emit('input', $event)"
+  @input="show=false"
   :right="this.right"
   :left="this.left"
   :top="this.top"
@@ -15,20 +14,22 @@
     <v-card-title>
       <span class="title">Info</span>
       <v-spacer></v-spacer>
-      <v-btn icon @click="$emit('input', false)">
+      <v-btn icon @click="show=false">
           <v-icon>close</v-icon>
       </v-btn>
     </v-card-title>
     <v-card-text>
-      <div class="dataset" v-for="(datasetInfo,index) of datasetsInfo" :key="index">
-        <div class="subheading">{{datasetInfo.dataset.name}}</div>
-        <div class="info-table">
-          <div class="table-row" v-for="(value, key) in datasetInfo.info" :key="key">
-            <div class="row-key">{{key}}</div>
-            <div class="row-value">{{value}}</div>
+      <transition-group name="fade" tag="div">
+        <div class="dataset" v-for="(datasetInfo,index) of datasetsInfo" :key="index">
+          <div class="subheading">{{datasetInfo.dataset.name}}</div>
+          <div class="info-table">
+            <div class="table-row" v-for="(value, key) in datasetInfo.info" :key="key">
+              <div class="row-key">{{key}}</div>
+              <div class="row-value">{{value}}</div>
+            </div>
           </div>
         </div>
-      </div>
+      </transition-group>
     </v-card-text>
   </v-card>
 </PositionedDialog>
@@ -46,13 +47,7 @@ export default {
     PositionedDialog
   },
   props: {
-    value: {
-      type: Boolean,
-      required: true
-    },
-    datasetClickEvents: {
-      type: Array
-    },
+    datasetClickEvents: Array,
     left: String,
     right: String,
     top: String,
@@ -60,17 +55,26 @@ export default {
   },
   data() {
     return {
-      image: null
+      datasetsInfo: null
     };
   },
-  computed: {},
-  asyncComputed: {
-    async datasetsInfo() {
+  computed: {
+    show: {
+      get() {
+        return !!this.datasetsInfo;
+      },
+      set(value) {
+        if (!value) {
+          this.datasetsInfo = null;
+        }
+      }
+    }
+  },
+  watch: {
+    async datasetClickEvents() {
       if (!this.datasetClickEvents.length) {
         return new Promise((resolve, reject) => {
-          setTimeout(() => {
-            resolve(null);
-          }, 300);
+          this.datasetsInfo = null;
         });
       } else {
         var datasetsInfo = await Promise.all(
@@ -93,14 +97,14 @@ export default {
         );
         datasetsInfo = datasetsInfo.filter(data => data.info);
         if (!datasetsInfo.length) {
-          return null;
+          this.datasetsInfo = null;
+          return;
         }
-        return datasetsInfo;
+        this.datasetsInfo = datasetsInfo;
       }
     }
   },
   created() {},
-  watch: {},
   methods: {
     getGeojsonLayersInfo(datasetClickEvent) {
       var geojson = datasetClickEvent.clickEvent.data;

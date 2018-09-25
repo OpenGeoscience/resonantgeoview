@@ -139,7 +139,6 @@
     <ClickInfoDialog
       right="15px"
       bottom="60px"
-      v-model="clickInfoDialog"
       :datasetClickEvents="datasetClickEvents" />
   </FullScreenViewport>
 </template>
@@ -208,16 +207,6 @@ export default {
       set(value) {
         if (!value) {
           this.screenshotMap = null;
-        }
-      }
-    },
-    clickInfoDialog: {
-      get() {
-        return !!this.datasetClickEvents.length;
-      },
-      set(value) {
-        if (!value) {
-          this.datasetClickEvents = [];
         }
       }
     },
