@@ -1,7 +1,24 @@
 <template>
-<v-dialog :value="datasetsInfo" @input="$emit('input', $event)" max-width="400px" scrollable>
+<PositionedDialog 
+  v-show="value"
+  :value="value"
+  scrollable
+  @input="$emit('input', $event)"
+  :right="this.right"
+  :left="this.left"
+  :top="this.top"
+  :bottom="this.bottom"
+  hide-overlay
+  persistent
+  max-width="400px">
   <v-card>
-    <v-card-title class="headline">Info</v-card-title>
+    <v-card-title>
+      <span class="title">Info</span>
+      <v-spacer></v-spacer>
+      <v-btn icon @click="$emit('input', false)">
+          <v-icon>close</v-icon>
+      </v-btn>
+    </v-card-title>
     <v-card-text>
       <div class="dataset" v-for="(datasetInfo,index) of datasetsInfo" :key="index">
         <div class="subheading">{{datasetInfo.dataset.name}}</div>
@@ -13,23 +30,21 @@
         </div>
       </div>
     </v-card-text>
-    <v-card-actions>
-      <v-spacer></v-spacer>
-      <v-btn color="primary" @click="$emit('input', false)">
-        OK
-      </v-btn>
-    </v-card-actions>
   </v-card>
-</v-dialog>
+</PositionedDialog>
 </template>
 
 <script>
 import groupBy from "lodash-es/groupBy";
 
+import PositionedDialog from "../components/PositionedDialog";
 import { ignoreProperties } from "../utils/geojsonUtil";
 
 export default {
   name: "ClickInfoDialog",
+  components: {
+    PositionedDialog
+  },
   props: {
     value: {
       type: Boolean,
@@ -37,7 +52,11 @@ export default {
     },
     datasetClickEvents: {
       type: Array
-    }
+    },
+    left: String,
+    right: String,
+    top: String,
+    bottom: String
   },
   data() {
     return {

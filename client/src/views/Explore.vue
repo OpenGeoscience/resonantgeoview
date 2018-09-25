@@ -137,6 +137,8 @@
       v-model="mapScreenshotDialog"
       :map="screenshotMap" />
     <ClickInfoDialog
+      right="15px"
+      bottom="60px"
       v-model="clickInfoDialog"
       :datasetClickEvents="datasetClickEvents" />
   </FullScreenViewport>
