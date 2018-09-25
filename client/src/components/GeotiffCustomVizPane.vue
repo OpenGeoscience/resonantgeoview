@@ -28,7 +28,8 @@
         <v-layout>
           <v-flex xs6>
             <PalettePicker
-              :palette.sync="vizProperties.palette" />
+              :palette.sync="vizProperties.palette"
+              :continuous="vizProperties.type==='linear'" />
           </v-flex>
           <v-flex xs6>
             <v-select

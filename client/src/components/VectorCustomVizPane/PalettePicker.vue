@@ -9,16 +9,17 @@
     :value="palette"
     @input="$emit('update:palette', $event)">
     <template slot="item" slot-scope="{item}">
-      <div class="d-flex palette item">
-        <div class="flex1 color" v-for="color of item" :key='color' :style="{background:color}">
-        </div>
+      <div v-if="!continuous" class="d-flex palette item">
+        <div class="flex1 color" v-for="color of item" :key='color' :style="{background:color}"></div>
       </div>
+      <div v-else class="palette item" :style="{background:`linear-gradient(to right,${item.join(',')})`}"></div>
     </template>
     <template slot="selection" slot-scope="{item}">
-      <div class="d-flex palette" :class="{disabled}">
+      <div v-if="!continuous" class="d-flex palette" :class="{disabled}">
         <div class="flex1 color" v-for="color of item" :key='color' :style="{background:color}">
         </div>
       </div>
+      <div v-else class="palette" :style="{background:`linear-gradient(to right,${item.join(',')})`}"></div>
     </template>
   </v-select>
 </template>
@@ -38,6 +39,10 @@ export default {
     disabled: {
       type: Boolean,
       default: false
+    },
+    continuous: {
+      type: Boolean,
+      defualt: false
     },
     extras: {
       type: Object,
@@ -81,19 +86,10 @@ export default {
 .palette {
   height: 20px;
   width: 100%;
+  border: 1px solid #c3c3c3;
 
   .color {
     max-width: 22%;
-    border-top: 1px solid #c3c3c3;
-    border-bottom: 1px solid #c3c3c3;
-
-    &:first-child {
-      border-left: 1px solid #c3c3c3;
-    }
-
-    &:last-child {
-      border-right: 1px solid #c3c3c3;
-    }
   }
 
   &.disabled {
