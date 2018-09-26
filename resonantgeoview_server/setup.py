@@ -16,7 +16,7 @@ with open('requirements.txt') as f:
             else:
                 requires.append(line)
 
-setup(name='minerva-server',
+setup(name='resonantgeoview_server',
       version='0.0.0.dev1',
       description='',
       url='',

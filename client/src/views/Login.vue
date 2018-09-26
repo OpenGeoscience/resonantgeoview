@@ -2,7 +2,7 @@
 <FullScreenViewport>
   <v-container>
     <GirderUserDialog
-      appName='Minerva'
+      appName='ResonantGeoView'
       :form.sync='form'
       :value='userDialog'
       />

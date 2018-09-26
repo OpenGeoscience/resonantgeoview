@@ -1,7 +1,7 @@
 <template>
 <v-app>
     <AppToolbar
-    title='Minerva'
+    title='ResonantGeoView'
     :panelButton="true"
     @click-panel="toggleSidePanel">
       <template slot="right">
@@ -16,7 +16,7 @@
     </transition>
 
     <GirderUserDialog
-      appName='Minerva'
+      appName='ResonantGeoView'
       :form.sync='userForm'
       v-model='userDialog'
       />
@@ -52,7 +52,6 @@ export default {
   components: { Prompt },
   data() {
     return {
-      title: "Minerva",
       userForm: "login",
       userDialog: false
     };
