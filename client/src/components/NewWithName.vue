@@ -11,6 +11,7 @@
       </v-btn>
       <v-text-field
         class="mx-2"
+        style="margin-bottom:2px"
         v-if="adding"
         name="Name"
         label="Name"
