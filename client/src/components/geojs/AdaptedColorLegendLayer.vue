@@ -79,8 +79,8 @@ function generateCategoryForGeoJSON(dataset, data, summary) {
     // categorical
     if (summary.properties[viz[property]].values) {
       var domain = Object.keys(summary.properties[viz[property]].values);
-      // To many to fit the size
-      if (domain.length > 7) {
+      // Too few or too many to fit the size
+      if (domain.length === 1 || domain.length > 7) {
         return;
       } else {
         category.scale = "ordinal";

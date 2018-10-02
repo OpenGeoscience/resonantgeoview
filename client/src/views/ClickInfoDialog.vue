@@ -108,8 +108,8 @@ export default {
   methods: {
     getGeojsonLayersInfo(datasetClickEvent) {
       var geojson = datasetClickEvent.clickEvent.data;
-      if (!geojson.properties) {
-        Promise.resolve(null);
+      if (!geojson || !geojson.properties) {
+        return Promise.resolve(null);
       }
       var output = {};
       var filtered = Object.entries(geojson.properties).forEach(

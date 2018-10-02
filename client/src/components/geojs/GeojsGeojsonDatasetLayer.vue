@@ -64,6 +64,11 @@ export default {
           });
         });
       });
+      this.$refs.geojsGeojsonLayer.$geojsLayer.geoOn(geo.event.mouseclick, e => {
+        this.$emit("click", {
+          geo: e.geo
+        });
+      });
     }
   },
   methods: {
