@@ -28,6 +28,7 @@
           </v-list-tile>
           <v-list-tile v-if="!group.datasets.length">
             <v-list-tile-action>
+              <span><!-- v-list-tile-action can't take empty child --></span>
             </v-list-tile-action>
             <v-list-tile-content>
               <v-list-tile-title>Empty Group</v-list-tile-title>

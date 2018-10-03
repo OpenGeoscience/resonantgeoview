@@ -25,7 +25,7 @@
 </v-app>
 </template>
 
-<style>
+<style lang="scss">
 /* global */
 html,
 body,
@@ -38,6 +38,13 @@ body,
 /* overwrite */
 .btn {
   min-width: 0;
+}
+
+.v-toolbar {
+  // This is a wierd fix needed for the login label
+  button .v-btn__content {
+    height: inherit;
+  }
 }
 </style>
 

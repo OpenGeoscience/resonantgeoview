@@ -25,9 +25,9 @@ class DatasetResource(Resource):
         return self._getAll()
 
     def _getAll(self):
-        datasetItems = list(Item().find({'geometa.driver': {'$in': ['GeoJSON', 'GeoTIFF']}}))
-        # datasetItems = list(Item().find({'$or': [{'geometa.driver': {'$in': ['GeoJSON', 'GeoTIFF']}}, {'meta.type': 'pointcloud'}]}))
-        return datasetItems
+        cursor = Item().find({'geometa.driver': {'$in': ['GeoJSON', 'GeoTIFF']}})
+        return list(Item().filterResultsByPermission(
+            cursor, self.getCurrentUser(), AccessType.READ, 0, 0))
 
     @autoDescribeRoute(
         Description('')
