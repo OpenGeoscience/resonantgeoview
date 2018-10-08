@@ -1,6 +1,8 @@
 import Vue from 'vue';
 import Vuex from 'vuex';
 import pointOnFeature from '@turf/point-on-feature';
+import bbox from "@turf/bbox";
+import bboxPolygon from "@turf/bbox-polygon";
 
 import girder from '../girder';
 import { remove } from '../utils/array';
@@ -50,6 +52,24 @@ export default new Vuex.Store({
         }
       });
       state.datasets = datasets;
+    },
+    addAdhocGeojsonDataset(state, { name, geojson }) {
+      var dataset = {
+        _id: 'adhoc_' + Math.random().toString(36).substring(7),
+        name,
+        geometa: {
+          type_: 'vector',
+          driver: 'GeoJSON',
+          bounds: bboxPolygon(bbox(geojson)).geometry
+        },
+        meta: {
+          vizProperties: getDefaultGeojsonVizProperties()
+        }
+      };
+      geojson = normalize(geojson);
+      var summary = summarize(geojson);
+      Vue.set(state.datasetIdMetaMap, dataset._id, { geojson, summary });
+      state.datasets.push(dataset);
     },
     setSelectedDataset(state, dataset) {
       state.selectedDataset = dataset;

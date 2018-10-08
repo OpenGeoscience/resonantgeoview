@@ -55,7 +55,7 @@
                 'grey--text text--lighten-2':filteredDatasetIds && filteredDatasetIds.indexOf(dataset._id)===-1
                 }">{{dataset.name}}</v-list-tile-title>
             </v-list-tile-content>
-            <v-list-tile-action>
+            <v-list-tile-action v-if="!dataset._id.startsWith('adhoc_')">
               <v-menu offset-y absolute :nudge-bottom="20" :nudge-left="20">
                 <v-btn class="dataset-menu-button" slot="activator" flat icon color="grey darken-2">
                   <v-icon>more_vert</v-icon>
@@ -123,7 +123,12 @@ export default {
         };
       });
       var typeGroups = Object.entries(
-        groupBy(this.datasets, dataset => dataset.geometa.type_)
+        groupBy(
+          this.datasets.filter(
+            dataset => !dataset._id.startsWith("adhoc_")
+          ),
+          dataset => dataset.geometa.type_
+        )
       ).map(([type, datasets]) => {
         return {
           name: type,
@@ -131,6 +136,16 @@ export default {
           datasets
         };
       });
+      let adhocDatasets = this.datasets.filter(dataset =>
+        dataset._id.startsWith("adhoc_")
+      );
+      if (adhocDatasets.length) {
+        typeGroups.unshift({
+          name: "ad-hoc",
+          key: "ad-hoc",
+          datasets: adhocDatasets
+        });
+      }
       return [...typeGroups, ...namedGroups];
     },
     ...mapState(["datasets", "groups", "datasetSortBy"]),
