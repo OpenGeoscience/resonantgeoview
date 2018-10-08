@@ -1,5 +1,3 @@
-
-
 <template>
   <FullScreenViewport>
     <WorkspaceContainer
@@ -96,6 +94,22 @@
             <v-icon>arrow_back</v-icon>
           </v-btn>
           <v-toolbar-title>{{!customVizDataset?"Datasets":"Customize"}}</v-toolbar-title>
+          <v-spacer></v-spacer>
+          <v-menu offset-y>
+            <v-btn
+              slot="activator"
+              icon>
+              <v-icon>more_vert</v-icon>
+            </v-btn>
+            <v-list>
+              <v-list-tile
+                @click="uploadDialog=true">
+                <v-list-tile-content>
+                  <v-list-tile-title>Upload</v-list-tile-title>
+                </v-list-tile-content>
+              </v-list-tile>
+            </v-list>
+          </v-menu>
         </v-toolbar>
       </template>
       <template slot="actions">
@@ -140,6 +154,11 @@
       right="15px"
       bottom="60px"
       :datasetClickEvents="datasetClickEvents" />
+    <v-dialog v-model="uploadDialog" scrollable max-width="250px">
+      <GirderUpload v-if="datasetFolder"
+      :dest="datasetFolder"
+      @done="loadDatasets();uploadDialog=false;" />
+    </v-dialog>
   </FullScreenViewport>
 </template>
 
@@ -151,6 +170,7 @@ import bboxPolygon from "@turf/bbox-polygon";
 import buffer from "@turf/buffer";
 import distance from "@turf/distance";
 import debounce from "lodash-es/debounce";
+import { Upload as GirderUpload } from "@girder/components/src/components";
 
 import { API_URL } from "../constants";
 import WorkspaceContainer from "../components/Workspace/Container";
@@ -181,8 +201,10 @@ export default {
     GeotiffCustomVizPane,
     MapScreenshotDialog,
     ClickInfoDialog,
-    AdaptedColorLegendLayer
+    AdaptedColorLegendLayer,
+    GirderUpload
   },
+  inject: ["girderRest"],
   data() {
     return {
       viewport: {
@@ -196,7 +218,8 @@ export default {
       customVizDataset: null,
       preserveCustomViz: false,
       screenshotMap: null,
-      datasetClickEvents: []
+      datasetClickEvents: [],
+      uploadDialog: false
     };
   },
   computed: {
@@ -215,17 +238,15 @@ export default {
       "datasetIdMetaMap",
       "selectedDataset",
       "workspaces",
-      "focusedWorkspaceKey"
+      "focusedWorkspaceKey",
+      "datasetFolder"
     ]),
-    ...mapGetters(["selectedDatasetPoint", "focusedWorkspace"]),
-    user() {
-      return this.$girder.user;
-    }
+    ...mapGetters(["selectedDatasetPoint", "focusedWorkspace"])
   },
   asyncComputed: {
     async filteredDatasetIds() {
       if (this.filteringGeometry) {
-        var { data: datasets } = await this.$girder.get("item/geometa", {
+        var { data: datasets } = await this.girderRest.get("item/geometa", {
           params: {
             geojson: this.filteringGeometry,
             relation: "within"
@@ -244,7 +265,7 @@ export default {
         this.annotations = [];
       }
     },
-    user(user) {
+    'girderRest.user'(user) {
       if (!user) {
         this.$router.push("/login");
       }
@@ -258,6 +279,7 @@ export default {
     this.datasetClickEventsAggregator = [];
     this.loadDatasets();
     this.loadGroups();
+    this.setDatasetFolder();
   },
   methods: {
     getTileURL(dataset) {
@@ -316,7 +338,7 @@ export default {
       "removeWorkspace",
       "setFocusedWorkspaceKey"
     ]),
-    ...mapActions(["loadDatasets", "loadGroups"])
+    ...mapActions(["loadDatasets", "loadGroups", "setDatasetFolder"])
   }
 };
 </script>

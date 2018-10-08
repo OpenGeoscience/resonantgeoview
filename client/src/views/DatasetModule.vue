@@ -37,7 +37,7 @@
           <v-list-tile
             class="dataset"
             v-for="dataset in group.datasets"
-            :key="dataset.name"
+            :key="dataset._id"
             @click="123"
             @mouseenter.native="debouncedSetSelectedDataset(dataset)"
             @mouseleave.native="debouncedSetSelectedDataset.cancel(),setSelectedDataset(null)">
@@ -67,6 +67,15 @@
                   <v-list-tile v-if="group.group" @click="removeDatasetFromGroup({group: group.group, dataset})">
                     <v-list-tile-title>Remove from group</v-list-tile-title>
                   </v-list-tile>
+                  <v-divider />
+                  <v-list-tile @click="deleteDataset(dataset)">
+                    <v-list-tile-title>Delete</v-list-tile-title>
+                  </v-list-tile>
+                  <v-list-tile
+                    :href="`${API_URL}/item/${dataset._id}/download`"
+                    target="_blank">
+                    <v-list-tile-title>Download</v-list-tile-title>
+                  </v-list-tile>
                 </v-list>
               </v-menu>
             </v-list-tile-action>
@@ -85,14 +94,17 @@ import debounce from "lodash-es/debounce";
 import keyBy from "lodash-es/keyBy";
 import mapValues from "lodash-es/mapValues";
 
+import { API_URL } from "../constants";
 import DatasetGroupDialog from "./DatasetGroupDialog";
 
 export default {
   name: "DatasetModule",
   components: { DatasetGroupDialog },
+  inject: ["girderRest"],
   props: ["filteredDatasetIds"],
   data() {
     return {
+      API_URL,
       showAddToGroup: false,
       selectedDataset: null
     };
@@ -129,12 +141,10 @@ export default {
     this.debouncedSetSelectedDataset = debounce(this.setSelectedDataset, 200);
   },
   methods: {
-    ...mapMutations([
-      "setSelectedDataset",
-      "removeDatasetFromWorkspace"
-    ]),
+    ...mapMutations(["setSelectedDataset", "removeDatasetFromWorkspace"]),
     ...mapActions([
       "deleteGroup",
+      "deleteDataset",
       "addDatasetToWorkspace",
       "removeDatasetFromGroup"
     ])

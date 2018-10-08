@@ -3,6 +3,7 @@ from girder.api.describe import autoDescribeRoute, Description
 from girder.constants import AccessType
 from girder.api.rest import Resource
 from girder.models.item import Item
+from ..util.utility import findUserDatasetFolder
 
 
 class DatasetResource(Resource):
@@ -14,6 +15,7 @@ class DatasetResource(Resource):
         self.route('GET', (), self.getAll)
         self.route('GET', (':id',), self.get)
         self.route('GET', ('bounds',), self.getAllBounds)
+        self.route('GET', ('folder',),self.folder)
 
     @autoDescribeRoute(
         Description('')
@@ -52,3 +54,11 @@ class DatasetResource(Resource):
             'bounds': item['geometa']['bounds']
         } for item in datasetItems]
         return datasetBounds
+
+    @autoDescribeRoute(
+        Description('')
+        .errorResponse()
+    )
+    @access.user
+    def folder(self, params):
+        return findUserDatasetFolder(self.getCurrentUser())

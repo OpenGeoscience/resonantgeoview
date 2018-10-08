@@ -1,8 +1,7 @@
 import Vue from 'vue';
 import ResonantGeo from 'resonantgeo/src';
-import { Session } from 'resonantgeo/src/rest';
+import Girder, { RestClient } from '@girder/components/src';
 import { API_URL } from './constants';
-import eventstream from './utils/eventstream';
 import AsyncComputed from 'vue-async-computed';
 import '@fortawesome/fontawesome-free/css/all.css';
 
@@ -11,18 +10,19 @@ import router from './router';
 import store from './store';
 import girder from './girder';
 
-
 Vue.use(AsyncComputed);
+Vue.use(Girder);
 
-eventstream.open();
-girder.rest = new Session({ apiRoot: API_URL });
+girder.rest = new RestClient({ apiRoot: API_URL });
+console.log(girder.rest);
 Vue.use(ResonantGeo, {
   girder: girder.rest,
 });
-girder.rest.$refresh().then(() => {
+girder.rest.fetchUser().then(() => {
   new Vue({
     router,
     store,
-    render: h => h(App)
+    render: h => h(App),
+    provide: { girderRest: girder.rest },
   }).$mount('#app');
 });

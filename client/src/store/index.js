@@ -27,7 +27,8 @@ export default new Vuex.Store({
         layers: []
       }
     },
-    focusedWorkspaceKey: '0'
+    focusedWorkspaceKey: '0',
+    datasetFolder: null
   },
   mutations: {
     toggleSidePanel(state) {
@@ -120,7 +121,15 @@ export default new Vuex.Store({
         Vue.set(state.datasetIdMetaMap, dataset._id, await getDatasetMeta(dataset, state.datasetIdMetaMap));
       }
       workspace.layers.push({ dataset, opacity: 1 });
-    }
+    },
+    async setDatasetFolder({ state, commit }) {
+      var { data: folder } = await girder.rest.get('dataset/folder');
+      state.datasetFolder = folder;
+    },
+    async deleteDataset({ state }, dataset) {
+      await girder.rest.delete(`item/${dataset._id}`);
+      remove(state.datasets, dataset);
+    },
   },
   getters: {
     focusedWorkspace(state) {

@@ -46,6 +46,7 @@ export default {
   components: {
     PositionedDialog
   },
+  inject: ["girderRest"],
   props: {
     datasetClickEvents: Array,
     left: String,
@@ -124,7 +125,7 @@ export default {
     getGeotiffLayersInfo(datasetClickEvent) {
       let itemId = datasetClickEvent.dataset._id;
       let coord = datasetClickEvent.clickEvent.geo;
-      return this.$girder
+      return this.girderRest
         .get(`item/${itemId}/tiles/pixel`, {
           params: {
             top: coord.y,
