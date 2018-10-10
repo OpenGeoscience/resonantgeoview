@@ -6,7 +6,7 @@
     </div>
     <v-card-actions>
       <v-spacer></v-spacer>
-      <v-btn color="primary">
+      <v-btn color="primary" :disabled="!image">
         <a class="download-link" :href="image"
           download="screenshot.png">Download</a>
       </v-btn>
