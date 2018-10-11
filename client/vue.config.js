@@ -13,6 +13,9 @@ module.exports = {
     useLocalIp: true,
     public: "localhost:8080"
   },
+  baseUrl: process.env.NODE_ENV === 'production'
+    ? '/static/external/'
+    : '/',
   chainWebpack: config => {
     config.module
       .rule('js')
