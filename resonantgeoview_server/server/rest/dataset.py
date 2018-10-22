@@ -15,7 +15,7 @@ class DatasetResource(Resource):
         self.route('GET', (), self.getAll)
         self.route('GET', (':id',), self.get)
         self.route('GET', ('bounds',), self.getAllBounds)
-        self.route('GET', ('folder',),self.folder)
+        self.route('GET', ('folder',), self.folder)
 
     @autoDescribeRoute(
         Description('')
@@ -26,8 +26,10 @@ class DatasetResource(Resource):
     def getAll(self, params):
         return self._getAll()
 
+    supportedDriver = ['GeoJSON', 'GeoTIFF']
+
     def _getAll(self):
-        cursor = Item().find({'geometa.driver': {'$in': ['GeoJSON', 'GeoTIFF']}})
+        cursor = Item().find({'geometa.driver': {'$in': DatasetResource.supportedDriver}})
         return list(Item().filterResultsByPermission(
             cursor, self.getCurrentUser(), AccessType.READ, 0, 0))
 
