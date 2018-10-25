@@ -89,7 +89,10 @@ export default new Vuex.Store({
       workspace.layers.push({ dataset, opacity: 1 });
     },
     removeDatasetFromWorkspace(state, { dataset, workspace }) {
-      workspace.layers.splice(workspace.layers.map(layers => layers.dataset).indexOf(dataset), 1);
+      var index = workspace.layers.map(layers => layers.dataset).indexOf(dataset);
+      if (index !== -1) {
+        workspace.layers.splice(index, 1);
+      }
     },
     setWorkspaceLayers(state, { workspace, layers }) {
       workspace.layers = layers;
@@ -146,7 +149,10 @@ export default new Vuex.Store({
       var { data: folder } = await girder.rest.get('dataset/folder');
       state.datasetFolder = folder;
     },
-    async deleteDataset({ state }, dataset) {
+    async deleteDataset({ state, commit }, dataset) {
+      Object.values(state.workspaces).forEach(workspace => {
+        commit('removeDatasetFromWorkspace', { dataset, workspace });
+      });
       await girder.rest.delete(`item/${dataset._id}`);
       remove(state.datasets, dataset);
     },

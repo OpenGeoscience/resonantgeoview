@@ -26,7 +26,7 @@ class DatasetResource(Resource):
     def getAll(self, params):
         return self._getAll()
 
-    supportedDriver = ['GeoJSON', 'GeoTIFF']
+    supportedDriver = ['GeoJSON', 'GeoTIFF', "WMS"]
 
     def _getAll(self):
         cursor = Item().find({'geometa.driver': {'$in': DatasetResource.supportedDriver}})

@@ -216,8 +216,4 @@ export default {
     font-size: 20px;
   }
 }
-
-.v-list .selected .v-list__tile {
-  background: rgba(103, 103, 103, 0.25) !important;
-}
 </style>

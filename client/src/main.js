@@ -14,7 +14,6 @@ Vue.use(AsyncComputed);
 Vue.use(Girder);
 
 girder.rest = new RestClient({ apiRoot: API_URL });
-console.log(girder.rest);
 Vue.use(ResonantGeo, {
   girder: girder.rest,
 });

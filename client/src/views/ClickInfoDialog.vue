@@ -15,7 +15,7 @@
       <span class="title">Info</span>
       <v-spacer></v-spacer>
       <v-btn icon @click="show=false">
-          <v-icon>close</v-icon>
+        <v-icon>close</v-icon>
       </v-btn>
     </v-card-title>
     <v-card-text>
@@ -96,7 +96,7 @@ export default {
             }
           })
         );
-        datasetsInfo = datasetsInfo.filter(data => data.info);
+        datasetsInfo = datasetsInfo.filter(data => data && data.info);
         if (!datasetsInfo.length) {
           this.datasetsInfo = null;
           return;

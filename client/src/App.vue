@@ -27,6 +27,10 @@ body,
   overflow: hidden;
 }
 
+.v-list .selected .v-list__tile {
+  background: rgba(103, 103, 103, 0.2) !important;
+}
+
 /* overwrite */
 .btn {
   min-width: 0;

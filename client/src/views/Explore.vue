@@ -49,6 +49,14 @@
               :zIndex="workspace.layers.length-i"
               @click='layerClicked(layer, $event)'>
             </StyledGeoTIFFLayer>
+            <WMSLayer
+              v-if="layer.dataset.geometa.driver==='WMS'"
+              :key="layer.dataset._id"
+              :dataset="layer.dataset"
+              :opacity="layer.opacity"
+              :zIndex="workspace.layers.length-i"
+              @click='layerClicked(layer, $event)'>
+            </WMSLayer>
           </template>
           <GeojsAnnotationLayer
             :drawing.sync="drawing"
@@ -108,6 +116,13 @@
                   <v-list-tile-title>Upload</v-list-tile-title>
                 </v-list-tile-content>
               </v-list-tile>
+              <v-divider />
+              <v-list-tile
+                @click="addWMSDialog=true">
+                <v-list-tile-content>
+                  <v-list-tile-title>Add WMS dataset</v-list-tile-title>
+                </v-list-tile-content>
+              </v-list-tile>
             </v-list>
           </v-menu>
         </v-toolbar>
@@ -159,11 +174,13 @@
       :dest="datasetFolder"
       @done="loadDatasets();uploadDialog=false;" />
     </v-dialog>
+    <AddWMSDatasetDialog v-model="addWMSDialog" @dataset="createWMSdataset" />
   </FullScreenViewport>
 </template>
 
 <script>
 import { mapState, mapGetters, mapMutations, mapActions } from "vuex";
+import { stringify } from "qs";
 import { point } from "@turf/helpers";
 import bbox from "@turf/bbox";
 import bboxPolygon from "@turf/bbox-polygon";
@@ -181,11 +198,13 @@ import LayerModule from "./LayerModule";
 import GeojsGeojsonDatasetLayer from "../components/geojs/GeojsGeojsonDatasetLayer";
 import StyledGeoTIFFLayer from "../components/geojs/StyledGeoTIFFLayer";
 import AdaptedColorLegendLayer from "../components/geojs/AdaptedColorLegendLayer";
+import WMSLayer from "../components/geojs/WMSLayer";
 import VectorCustomVizPane from "../components/VectorCustomVizPane/VectorCustomVizPane";
 import GeotiffCustomVizPane from "../components/GeotiffCustomVizPane";
 import saveDatasetMetadata from "../utils/saveDatasetMetadata";
 import MapScreenshotDialog from "./MapScreenshotDialog";
 import ClickInfoDialog from "./ClickInfoDialog";
+import AddWMSDatasetDialog from "../components/AddWMSDatasetDialog";
 
 export default {
   name: "Explore",
@@ -197,11 +216,13 @@ export default {
     WorkspaceAction,
     GeojsGeojsonDatasetLayer,
     StyledGeoTIFFLayer,
+    AdaptedColorLegendLayer,
+    WMSLayer,
     VectorCustomVizPane,
     GeotiffCustomVizPane,
     MapScreenshotDialog,
     ClickInfoDialog,
-    AdaptedColorLegendLayer,
+    AddWMSDatasetDialog,
     GirderUpload
   },
   inject: ["girderRest"],
@@ -219,7 +240,8 @@ export default {
       preserveCustomViz: false,
       screenshotMap: null,
       datasetClickEvents: [],
-      uploadDialog: false
+      uploadDialog: false,
+      addWMSDialog: false
     };
   },
   computed: {
@@ -265,7 +287,7 @@ export default {
         this.annotations = [];
       }
     },
-    'girderRest.user'(user) {
+    "girderRest.user"(user) {
       if (!user) {
         this.$router.push("/login");
       }
@@ -332,6 +354,23 @@ export default {
         });
         this.debounceSetdatasetClickEvents();
       }
+    },
+    async createWMSdataset({ name, geometa }) {
+      var { data: item } = await this.girderRest.post(
+        "/item",
+        stringify({
+          name,
+          folderId: this.datasetFolder._id
+        })
+      );
+      console.log(geometa);
+      var { data: item } = await this.girderRest.put(
+        `/item/${item._id}/geometa`,
+        stringify({
+          geometa: JSON.stringify(geometa)
+        })
+      );
+      this.loadDatasets();
     },
     ...mapMutations([
       "addWorkspace",
