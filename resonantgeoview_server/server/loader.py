@@ -7,6 +7,7 @@ from girder import events
 from girder.models.item import Item
 
 from rest import dataset, datasetGroup
+from rest.gaia.processing import ProcessingResource
 from .client_webroot import ClientWebroot
 
 def load(info):
@@ -20,3 +21,6 @@ def load(info):
     # Add API routes
     info['apiRoot'].dataset = dataset.DatasetResource()
     info['apiRoot'].dataset_group = datasetGroup.DatasetGroupResource()
+
+    # Add gaia processing
+    info['apiRoot'].gaia = ProcessingResource()

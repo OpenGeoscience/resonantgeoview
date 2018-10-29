@@ -169,7 +169,7 @@
       right="15px"
       bottom="60px"
       :datasetClickEvents="datasetClickEvents" />
-    <v-dialog v-model="uploadDialog" scrollable max-width="250px">
+    <v-dialog v-model="uploadDialog" scrollable max-width="400px">
       <GirderUpload v-if="datasetFolder"
       :dest="datasetFolder"
       @done="loadDatasets();uploadDialog=false;" />

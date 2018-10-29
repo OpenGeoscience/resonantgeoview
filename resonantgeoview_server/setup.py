@@ -1,27 +1,20 @@
 import re
 from setuptools import setup, find_packages
 
-requires = []
-dep_links = []
-# parse requirements file
-with open('requirements.txt') as f:
-    comment = re.compile('(^#.*$|\s+#.*$)')
-    for line in f.readlines():
-        line = line.strip()
-        line = comment.sub('', line)
-        if line:
-            if line.startswith('git+') and '#egg=' in line:
-                dep_links.append(line)
-                requires.append(line.split('#egg=', 1)[1].replace('-', '=='))
-            else:
-                requires.append(line)
-
 setup(name='resonantgeoview_server',
       version='0.0.0.dev1',
       description='',
       url='',
-      install_requires=requires,
-      dependency_links=dep_links,
+      install_requires=[
+          'girder_worker',
+          'girder_worker_utils'
+      ],
+      extras_require={
+          'worker': [
+            # TODO: gaia
+          ]
+      },
+      include_package_data=True,
       author='Kitware Inc',
       author_email='',
       license='',
@@ -33,5 +26,10 @@ setup(name='resonantgeoview_server',
           'Natural Language :: English',
           'Programming Language :: Python'
       ],
+      entry_points={
+          'girder_worker_plugins': [
+              'gaia_task = gaia_task:GaiaTasks',
+          ]
+      },
       packages=find_packages(exclude=['tests*', 'server*', 'docs']),
       zip_safe=False)
