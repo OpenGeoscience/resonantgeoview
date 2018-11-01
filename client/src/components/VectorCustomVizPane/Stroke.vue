@@ -26,6 +26,7 @@
           label="Property"
           placeholder=" "
           :value="property"
+          menu-props="lazy"
           @input="$emit('update:property', $event)">
         </v-select>
       </v-flex>

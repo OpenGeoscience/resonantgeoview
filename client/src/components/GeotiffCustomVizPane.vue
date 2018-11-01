@@ -22,6 +22,7 @@
               hide-details
               label="Band"
               placeholder=" "
+              menu-props="lazy"
               v-model="vizProperties.band" />
           </v-flex>
         </v-layout>
@@ -39,6 +40,7 @@
               hide-details
               label="Type"
               placeholder=" "
+              menu-props="lazy"
               v-model="vizProperties.type" />
           </v-flex>
         </v-layout>

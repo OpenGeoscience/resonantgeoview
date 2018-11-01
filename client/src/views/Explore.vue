@@ -103,7 +103,7 @@
           </v-btn>
           <v-toolbar-title>{{!customVizDataset?"Datasets":"Customize"}}</v-toolbar-title>
           <v-spacer></v-spacer>
-          <v-menu offset-y>
+          <v-menu lazy offset-y>
             <v-btn
               slot="activator"
               icon>
@@ -116,11 +116,17 @@
                   <v-list-tile-title>Upload</v-list-tile-title>
                 </v-list-tile-content>
               </v-list-tile>
-              <v-divider />
               <v-list-tile
                 @click="addWMSDialog=true">
                 <v-list-tile-content>
                   <v-list-tile-title>Add WMS dataset</v-list-tile-title>
+                </v-list-tile-content>
+              </v-list-tile>
+              <v-divider />
+              <v-list-tile
+                @click="jobsDialog=true">
+                <v-list-tile-content>
+                  <v-list-tile-title>Jobs</v-list-tile-title>
                 </v-list-tile-content>
               </v-list-tile>
             </v-list>
@@ -130,6 +136,9 @@
       <template slot="actions">
         <SidePanelAction @click="drawing = 'rectangle'">
           <v-icon>aspect_ratio</v-icon>
+        </SidePanelAction>
+        <SidePanelAction @click="processingDialog = true">
+          <v-icon>fa-cogs</v-icon>
         </SidePanelAction>
       </template>
       <div class="main">
@@ -162,6 +171,11 @@
         </transition>
       </div>
     </SidePanel>
+    <v-dialog v-model="uploadDialog" scrollable max-width="400px" lazy>
+      <GirderUpload
+      v-if="datasetFolder"
+      :dest="datasetFolder"
+      @done="loadDatasets();uploadDialog=false;" />
     <MapScreenshotDialog
       v-model="mapScreenshotDialog"
       :map="screenshotMap" />
@@ -169,12 +183,14 @@
       right="15px"
       bottom="60px"
       :datasetClickEvents="datasetClickEvents" />
-    <v-dialog v-model="uploadDialog" scrollable max-width="400px">
-      <GirderUpload v-if="datasetFolder"
-      :dest="datasetFolder"
-      @done="loadDatasets();uploadDialog=false;" />
     </v-dialog>
     <AddWMSDatasetDialog v-model="addWMSDialog" @dataset="createWMSdataset" />
+    <GaiaProcessingDialog 
+      v-if="datasetFolder"
+      :dest="datasetFolder"
+      v-model="processingDialog"
+      @processJobCreated="afterProcess" />
+    <JobsDialog v-model="jobsDialog" />
   </FullScreenViewport>
 </template>
 
@@ -205,6 +221,8 @@ import saveDatasetMetadata from "../utils/saveDatasetMetadata";
 import MapScreenshotDialog from "./MapScreenshotDialog";
 import ClickInfoDialog from "./ClickInfoDialog";
 import AddWMSDatasetDialog from "../components/AddWMSDatasetDialog";
+import GaiaProcessingDialog from "./GaiaProcessingDialog";
+import JobsDialog from "../components/girder/JobsDialog";
 
 export default {
   name: "Explore",
@@ -220,12 +238,14 @@ export default {
     WMSLayer,
     VectorCustomVizPane,
     GeotiffCustomVizPane,
+    GirderUpload,
     MapScreenshotDialog,
     ClickInfoDialog,
     AddWMSDatasetDialog,
-    GirderUpload
+    GaiaProcessingDialog,
+    JobsDialog
   },
-  inject: ["girderRest"],
+  inject: ["girderRest", "notificationBus"],
   data() {
     return {
       viewport: {
@@ -241,7 +261,9 @@ export default {
       screenshotMap: null,
       datasetClickEvents: [],
       uploadDialog: false,
-      addWMSDialog: false
+      jobsDialog: false,
+      addWMSDialog: false,
+      processingDialog: false
     };
   },
   computed: {
@@ -302,6 +324,10 @@ export default {
     this.loadDatasets();
     this.loadGroups();
     this.setDatasetFolder();
+    this.notificationBus.$on("message:job_status", this.jobStatusChange);
+  },
+  beforeDestroy() {
+    this.notificationBus.$off("message:job_status", this.jobStatusChange);
   },
   methods: {
     getTileURL(dataset) {
@@ -371,6 +397,14 @@ export default {
         })
       );
       this.loadDatasets();
+    },
+    afterProcess(e) {
+      console.log(e);
+    },
+    jobStatusChange(e) {
+      if (e.data.status === 3) {
+        this.loadDatasets();
+      }
     },
     ...mapMutations([
       "addWorkspace",

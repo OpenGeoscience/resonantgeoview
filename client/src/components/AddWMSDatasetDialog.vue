@@ -196,7 +196,7 @@ export default {
 </script>
 
 <template>
-<v-dialog :value="value" @input="$emit('input', $event)" scrollable max-width="650px" persistent>
+<v-dialog :value="value" @input="$emit('input', $event)" scrollable max-width="650px" persistent lazy>
   <v-card>
     <v-form @submit.prevent="emitWMSDataset">
       <v-card-title class="title">

@@ -14,7 +14,7 @@
               <v-list-tile-title>{{ group.name }}</v-list-tile-title>
             </v-list-tile-content>
             <v-list-tile-action v-if="group.group" @click.stop>
-              <v-menu offset-y absolute :nudge-bottom="20" :nudge-left="20">
+              <v-menu lazy offset-y absolute :nudge-bottom="20" :nudge-left="20">
                 <v-btn class="group-menu-button" slot="activator" flat icon color="grey darken-2">
                   <v-icon>more_vert</v-icon>
                 </v-btn>
@@ -56,7 +56,7 @@
                 }">{{dataset.name}}</v-list-tile-title>
             </v-list-tile-content>
             <v-list-tile-action v-if="!dataset._id.startsWith('adhoc_')">
-              <v-menu offset-y absolute :nudge-bottom="20" :nudge-left="20">
+              <v-menu lazy offset-y absolute :nudge-bottom="20" :nudge-left="20">
                 <v-btn class="dataset-menu-button" slot="activator" flat icon color="grey darken-2">
                   <v-icon>more_vert</v-icon>
                 </v-btn>

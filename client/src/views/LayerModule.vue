@@ -27,7 +27,7 @@
                   <v-list-tile-title v-text="layer.dataset.name"></v-list-tile-title>
               </v-list-tile-content>
               <v-list-tile-action class="hover-show-child" @click.stop>
-                <v-menu offset-y absolute :nudge-bottom="20" :nudge-left="20">
+                <v-menu lazy offset-y absolute :nudge-bottom="20" :nudge-left="20">
                   <v-btn class="group-menu-button" slot="activator" flat icon color="grey darken-2">
                     <v-icon>more_vert</v-icon>
                   </v-btn>

@@ -7,6 +7,7 @@
     dense
     label="Color"
     :value="palette"
+    menu-props="lazy"
     @input="$emit('update:palette', $event)">
     <template slot="item" slot-scope="{item}">
       <div v-if="!continuous" class="d-flex palette item">

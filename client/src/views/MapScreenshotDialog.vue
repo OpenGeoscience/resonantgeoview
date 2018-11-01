@@ -1,5 +1,5 @@
 <template>
-<v-dialog v-show="image" :value="value" @input="$emit('input', $event)" max-width="650px">
+<v-dialog v-show="image" :value="value" @input="$emit('input', $event)" lazy max-width="650px">
   <v-card>
     <div class="image-container">
       <img :src="image" />

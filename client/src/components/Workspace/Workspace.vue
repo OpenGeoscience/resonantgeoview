@@ -13,6 +13,7 @@
           hide-details
           item-text="name"
           item-value='value'
+          menu-props="lazy"
         ></v-select>
         <slot name="actions"></slot>
         <v-spacer />

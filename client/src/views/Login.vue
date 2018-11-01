@@ -29,6 +29,7 @@ export default {
   <v-dialog
     :value="userDialog"
     persistent
+    lazy
     max-width="500px"
     >
     <GirderAuth
