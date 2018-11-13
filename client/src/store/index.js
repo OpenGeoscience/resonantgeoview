@@ -143,7 +143,7 @@ export default new Vuex.Store({
       if (!(dataset._id in state.datasetIdMetaMap)) {
         Vue.set(state.datasetIdMetaMap, dataset._id, await getDatasetMeta(dataset, state.datasetIdMetaMap));
       }
-      workspace.layers.push({ dataset, opacity: 1 });
+      workspace.layers.unshift({ dataset, opacity: 1 });
     },
     async setDatasetFolder({ state, commit }) {
       var { data: folder } = await girder.rest.get('dataset/folder');
