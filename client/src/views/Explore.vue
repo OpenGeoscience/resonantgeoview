@@ -183,8 +183,7 @@
     <GaiaProcessingDialog 
       v-if="datasetFolder"
       :dest="datasetFolder"
-      v-model="processingDialog"
-      @processJobCreated="afterProcess" />
+      v-model="processingDialog" />
     <JobsDialog v-model="jobsDialog" />
   </FullScreenViewport>
 </template>
@@ -386,7 +385,6 @@ export default {
           folderId: this.datasetFolder._id
         })
       );
-      console.log(geometa);
       var { data: item } = await this.girderRest.put(
         `/item/${item._id}/geometa`,
         stringify({
@@ -394,9 +392,6 @@ export default {
         })
       );
       this.loadDatasets();
-    },
-    afterProcess(e) {
-      console.log(e);
     },
     jobStatusChange(e) {
       if (e.data.status === 3) {
