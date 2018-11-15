@@ -5,7 +5,7 @@
       v-if="!adding"
       color="primary"
       class="button"
-      @click="adding = true">
+      @click="add">
         <v-icon class="mr-2">add_circle</v-icon>
         New {{name}}
       </v-btn>
@@ -45,6 +45,10 @@ export default {
     default: {
       type: String,
       default: ""
+    },
+    noConfirm: {
+      type: Boolean,
+      defualt: false
     }
   },
   data() {
@@ -54,6 +58,13 @@ export default {
     };
   },
   methods: {
+    add() {
+      if (!this.noConfirm) {
+        this.adding = true;
+      } else {
+        this.confirm();
+      }
+    },
     confirm() {
       this.adding = false;
       this.$emit("confirm", this.value);
