@@ -94,7 +94,6 @@ export default {
     }
   },
   created() {
-    window.container = this;
     setTimeout(() => {
       this.setDefaultFocus();
     }, 0);
