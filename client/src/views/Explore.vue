@@ -88,59 +88,54 @@
         </GeojsMapViewport>
       </Workspace>
     </WorkspaceContainer>
-
-    <SidePanel
-    class="side-panel"
-    :top="64"
-    :floating="false"
-    :expanded="sidePanelExpanded"
-    :bottom="0"
-    :footer="false">
-      <template slot="toolbar">
-        <v-toolbar flat>
-          <v-btn icon class="hidden-xs-only" v-if="customVizDataset" @click="returnFromCustomViz">
-            <v-icon>arrow_back</v-icon>
+    <ResizableVNavigationDrawer
+      app
+      clipped
+      class="side-panel"
+      :value="sidePanelExpanded">
+      <v-toolbar flat>
+        <v-btn icon class="hidden-xs-only" v-if="customVizDataset" @click="returnFromCustomViz">
+          <v-icon>arrow_back</v-icon>
+        </v-btn>
+        <v-toolbar-title>{{!customVizDataset?"Datasets":"Customize"}}</v-toolbar-title>
+        <v-spacer></v-spacer>
+        <v-menu lazy offset-y>
+          <v-btn
+            slot="activator"
+            icon>
+            <v-icon>more_vert</v-icon>
           </v-btn>
-          <v-toolbar-title>{{!customVizDataset?"Datasets":"Customize"}}</v-toolbar-title>
-          <v-spacer></v-spacer>
-          <v-menu lazy offset-y>
-            <v-btn
-              slot="activator"
-              icon>
-              <v-icon>more_vert</v-icon>
-            </v-btn>
-            <v-list>
-              <v-list-tile
-                @click="uploadDialog=true">
-                <v-list-tile-content>
-                  <v-list-tile-title>Upload</v-list-tile-title>
-                </v-list-tile-content>
-              </v-list-tile>
-              <v-list-tile
-                @click="addWMSDialog=true">
-                <v-list-tile-content>
-                  <v-list-tile-title>Add WMS dataset</v-list-tile-title>
-                </v-list-tile-content>
-              </v-list-tile>
-              <v-divider />
-              <v-list-tile
-                @click="jobsDialog=true">
-                <v-list-tile-content>
-                  <v-list-tile-title>Jobs</v-list-tile-title>
-                </v-list-tile-content>
-              </v-list-tile>
-            </v-list>
-          </v-menu>
-        </v-toolbar>
-      </template>
-      <template slot="actions">
+          <v-list>
+            <v-list-tile
+              @click="uploadDialog=true">
+              <v-list-tile-content>
+                <v-list-tile-title>Upload</v-list-tile-title>
+              </v-list-tile-content>
+            </v-list-tile>
+            <v-list-tile
+              @click="addWMSDialog=true">
+              <v-list-tile-content>
+                <v-list-tile-title>Add WMS dataset</v-list-tile-title>
+              </v-list-tile-content>
+            </v-list-tile>
+            <v-divider />
+            <v-list-tile
+              @click="jobsDialog=true">
+              <v-list-tile-content>
+                <v-list-tile-title>Jobs</v-list-tile-title>
+              </v-list-tile-content>
+            </v-list-tile>
+          </v-list>
+        </v-menu>
+      </v-toolbar>
+      <v-container class="action-buttons pa-0">
         <SidePanelAction @click="drawing = 'rectangle'">
           <v-icon>aspect_ratio</v-icon>
         </SidePanelAction>
         <SidePanelAction @click="processingDialog = true">
           <v-icon>fa-cogs</v-icon>
         </SidePanelAction>
-      </template>
+      </v-container>
       <div class="main">
         <transition name="slide-fade" mode="out-in">
           <div v-if="!customVizDataset" class="datasets-layers-pane" key="datasets">
@@ -170,7 +165,7 @@
             />
         </transition>
       </div>
-    </SidePanel>
+    </ResizableVNavigationDrawer>
     <v-dialog v-model="uploadDialog" scrollable max-width="400px" lazy>
       <GirderUpload
       v-if="datasetFolder"
@@ -223,6 +218,7 @@ import ClickInfoDialog from "./ClickInfoDialog";
 import AddWMSDatasetDialog from "../components/AddWMSDatasetDialog";
 import GaiaProcessingDialog from "./GaiaProcessingDialog";
 import JobsDialog from "../components/girder/JobsDialog";
+import ResizableVNavigationDrawer from "../components/ResizableVNavigationDrawer";
 
 export default {
   name: "Explore",
@@ -243,7 +239,8 @@ export default {
     ClickInfoDialog,
     AddWMSDatasetDialog,
     GaiaProcessingDialog,
-    JobsDialog
+    JobsDialog,
+    ResizableVNavigationDrawer
   },
   inject: ["girderRest", "notificationBus"],
   data() {
@@ -421,10 +418,17 @@ export default {
 .map {
   z-index: 0;
 }
-
 .side-panel {
   display: flex;
   flex-direction: column;
+  overflow: visible;
+
+  .action-buttons {
+    position: fixed;
+    top: 64px;
+    width: 50px;
+    right: -50px;
+  }
 
   .main {
     flex: 1;
