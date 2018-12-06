@@ -33,7 +33,7 @@
                   </v-btn>
                   <v-list>
                     <v-list-tile 
-                      v-if="['GeoTIFF', 'GeoJSON'].indexOf(layer.dataset.geometa.driver)!==-1"
+                      v-if="['GeoTIFF', 'GeoJSON', 'Network Common Data Format'].indexOf(getDatasetDriver(layer.dataset))!==-1"
                       @click="$emit('customDataset',layer.dataset)">
                       <v-list-tile-title>Customize</v-list-tile-title>
                     </v-list-tile>
@@ -87,11 +87,14 @@ import keyBy from "lodash-es/keyBy";
 import mapValues from "lodash-es/mapValues";
 import draggable from "vuedraggable";
 
+import getDatasetDriver from "../utils/getDatasetDriver";
+
 export default {
   name: "LayerModule",
   components: { draggable },
   data() {
     return {
+      getDatasetDriver,
       showAddToGroup: false,
       selectedDataset: null,
       transitionName: "fade-group"

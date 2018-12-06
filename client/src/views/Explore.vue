@@ -30,7 +30,7 @@
           </GeojsTileLayer>
           <template v-for="(layer,i) in workspace.layers">
             <GeojsGeojsonDatasetLayer
-              v-if="layer.dataset.geometa.driver==='GeoJSON'"
+              v-if="getDatasetDriver(layer.dataset)==='GeoJSON'"
               :key="layer.dataset._id"
               :dataset="layer.dataset"
               :geojson="datasetIdMetaMap[layer.dataset._id].geojson"
@@ -40,7 +40,17 @@
               @click='layerClicked(layer, $event)'>
             </GeojsGeojsonDatasetLayer>
             <StyledGeoTIFFLayer
-              v-if="layer.dataset.geometa.driver==='GeoTIFF'"
+              v-if="getDatasetDriver(layer.dataset)==='GeoTIFF'"
+              :key="layer.dataset._id"
+              :dataset="layer.dataset"
+              :tileURL="getTileURL(layer.dataset)"
+              :opacity="layer.opacity"
+              :keepLower="false"
+              :zIndex="workspace.layers.length-i"
+              @click='layerClicked(layer, $event)'>
+            </StyledGeoTIFFLayer>
+            <StyledGeoTIFFLayer
+              v-if="getDatasetDriver(layer.dataset)==='Network Common Data Format'"
               :key="layer.dataset._id"
               :dataset="layer.dataset"
               :tileURL="getTileURL(layer.dataset)"
@@ -50,7 +60,7 @@
               @click='layerClicked(layer, $event)'>
             </StyledGeoTIFFLayer>
             <WMSLayer
-              v-if="layer.dataset.geometa.driver==='WMS'"
+              v-if="getDatasetDriver(layer.dataset)==='WMS'"
               :key="layer.dataset._id"
               :dataset="layer.dataset"
               :opacity="layer.opacity"
@@ -152,13 +162,19 @@
               @customDataset="customVizDataset=$event" />
           </div>
           <VectorCustomVizPane
-            v-if="customVizDataset && customVizDataset.geometa.driver === 'GeoJSON'"
+            v-if="customVizDataset && getDatasetDriver(customVizDataset) === 'GeoJSON'"
             :dataset="customVizDataset"
             :summary="datasetIdMetaMap[customVizDataset._id].summary"
             :preserve.sync="preserveCustomViz"
             />
           <GeotiffCustomVizPane
-            v-if="customVizDataset && customVizDataset.geometa.driver === 'GeoTIFF'"
+            v-if="customVizDataset && getDatasetDriver(customVizDataset) === 'GeoTIFF'"
+            :dataset="customVizDataset"
+            :meta="datasetIdMetaMap[customVizDataset._id]"
+            :preserve.sync="preserveCustomViz"
+            />
+          <GeotiffCustomVizPane
+            v-if="customVizDataset && getDatasetDriver(customVizDataset) === 'Network Common Data Format'"
             :dataset="customVizDataset"
             :meta="datasetIdMetaMap[customVizDataset._id]"
             :preserve.sync="preserveCustomViz"
@@ -218,6 +234,7 @@ import AddWMSDatasetDialog from "../components/AddWMSDatasetDialog";
 import GaiaProcessingDialog from "./GaiaProcessingDialog";
 import JobsDialog from "../components/girder/JobsDialog";
 import ResizableVNavigationDrawer from "../components/ResizableVNavigationDrawer";
+import getDatasetDriver from "../utils/getDatasetDriver";
 
 export default {
   name: "Explore",
@@ -244,6 +261,7 @@ export default {
   inject: ["girderRest", "notificationBus"],
   data() {
     return {
+      getDatasetDriver,
       viewport: {
         center: [-100, 30],
         zoom: 4

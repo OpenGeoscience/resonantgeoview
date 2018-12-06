@@ -26,10 +26,13 @@ class DatasetResource(Resource):
     def getAll(self, params):
         return self._getAll()
 
-    supportedDriver = ['GeoJSON', 'GeoTIFF', "WMS"]
+    supportedDriver = ['GeoJSON', 'GeoTIFF', "WMS", "Network Common Data Format"]
 
     def _getAll(self):
-        cursor = Item().find({'geometa.driver': {'$in': DatasetResource.supportedDriver}})
+        cursor = Item().find({'$or':
+               [{'geometa.driver': {'$in': DatasetResource.supportedDriver}},
+                {'geometa.subDatasets.driver': 
+                {'$in': DatasetResource.supportedDriver}}]})
         return list(Item().filterResultsByPermission(
             cursor, self.getCurrentUser(), AccessType.READ, 0, 0))
 

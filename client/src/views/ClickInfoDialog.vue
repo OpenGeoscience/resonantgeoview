@@ -40,6 +40,7 @@ import groupBy from "lodash-es/groupBy";
 
 import PositionedDialog from "../components/PositionedDialog";
 import { ignoreProperties } from "../utils/geojsonUtil";
+import getDatasetDriver from "../utils/getDatasetDriver";
 
 export default {
   name: "ClickInfoDialog",
@@ -80,7 +81,7 @@ export default {
       } else {
         var datasetsInfo = await Promise.all(
           this.datasetClickEvents.map(async datasetClickEvent => {
-            switch (datasetClickEvent.dataset.geometa.driver) {
+            switch (getDatasetDriver(datasetClickEvent.dataset)) {
               case "GeoJSON":
                 return {
                   dataset: datasetClickEvent.dataset,

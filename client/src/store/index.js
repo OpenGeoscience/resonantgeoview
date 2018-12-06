@@ -12,6 +12,7 @@ import loadDatasetData from "../utils/loadDatasetData";
 import { summarize, normalize } from "../utils/geojsonUtil";
 import { getDefaultGeojsonVizProperties } from "../utils/getDefaultGeojsonVizProperties";
 import getLargeImageMeta from "../utils/getLargeImageMeta";
+import getDatasetDriver from "../utils/getDatasetDriver";
 
 Vue.use(Vuex);
 
@@ -38,13 +39,13 @@ export default new Vuex.Store({
     },
     setDatasets(state, datasets) {
       datasets.forEach((dataset) => {
-        switch (dataset.geometa.driver) {
+        switch (getDatasetDriver(dataset)) {
           case "GeoJSON":
             if (!dataset.meta || !dataset.meta.vizProperties) {
               Object.assign(dataset, { meta: { vizProperties: getDefaultGeojsonVizProperties() } });
             }
             break;
-          case "GeoTIFF":
+          default:
             if (!dataset.meta) {
               dataset.meta = {};
             }
@@ -175,13 +176,16 @@ export default new Vuex.Store({
 
 
 async function getDatasetMeta(dataset) {
-  switch (dataset.geometa.driver) {
+  switch (getDatasetDriver(dataset)) {
     case "GeoJSON":
       var geojson = normalize(await loadDatasetData(dataset));
       var summary = summarize(geojson);
       return { geojson, summary };
       break;
     case "GeoTIFF":
+      return await getLargeImageMeta(dataset);
+      break;
+    case "Network Common Data Format":
       return await getLargeImageMeta(dataset);
       break;
     default:
