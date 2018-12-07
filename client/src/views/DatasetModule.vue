@@ -42,7 +42,12 @@
             @mouseenter.native="debouncedSetSelectedDataset(dataset)"
             @mouseleave.native="debouncedSetSelectedDataset.cancel(),setSelectedDataset(null)">
             <v-list-tile-action>
-              <v-btn flat icon key="add" v-if="focusedWorkspace && focusedWorkspace.layers.map(layer=>layer.dataset).indexOf(dataset)===-1" color="grey lighten-2" @click="addDatasetToWorkspace({dataset,workspace:focusedWorkspace})">
+              <v-btn flat icon
+                key="add"
+                v-if="focusedWorkspace && focusedWorkspace.layers.map(layer=>layer.dataset).indexOf(dataset)===-1" color="grey lighten-2"
+                @click="addDatasetToWorkspace({dataset,workspace:focusedWorkspace})"
+                :loading="loadingDatasetIds[dataset._id]"
+                :disabled="loadingDatasetIds[dataset._id]">
                 <v-icon>fa-globe-americas</v-icon>
               </v-btn>
               <v-btn flat icon key="remove" v-else color="grey darken-2" @click="removeDatasetFromWorkspace({dataset,workspace:focusedWorkspace})">
@@ -148,7 +153,7 @@ export default {
       }
       return [...typeGroups, ...namedGroups];
     },
-    ...mapState(["datasets", "groups", "datasetSortBy"]),
+    ...mapState(["datasets", "groups", "datasetSortBy","loadingDatasetIds"]),
     ...mapGetters(["focusedWorkspace"])
   },
   watch: {},

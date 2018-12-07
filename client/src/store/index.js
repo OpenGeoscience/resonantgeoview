@@ -25,6 +25,7 @@ export default new Vuex.Store({
     datasetSortBy: 'type',
     groups: [],
     selectedDataset: null,
+    loadingDatasetIds: {},
     workspaces: {
       '0': {
         layers: []
@@ -141,10 +142,12 @@ export default new Vuex.Store({
       return girder.rest.put(`dataset_group/${group._id}`, group);
     },
     async addDatasetToWorkspace({ state, commit }, { dataset, workspace }) {
+      Vue.set(state.loadingDatasetIds, dataset._id, true);
       if (!(dataset._id in state.datasetIdMetaMap)) {
         Vue.set(state.datasetIdMetaMap, dataset._id, await getDatasetMeta(dataset, state.datasetIdMetaMap));
       }
       workspace.layers.unshift({ dataset, opacity: 1 });
+      Vue.delete(state.loadingDatasetIds, dataset._id);
     },
     async setDatasetFolder({ state, commit }) {
       var { data: folder } = await girder.rest.get('dataset/folder');
