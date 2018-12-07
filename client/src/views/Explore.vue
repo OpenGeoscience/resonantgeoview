@@ -53,7 +53,7 @@
               v-if="getDatasetDriver(layer.dataset)==='Network Common Data Format'"
               :key="layer.dataset._id"
               :dataset="layer.dataset"
-              :tileURL="getTileURL(layer.dataset)"
+              :tileURL="getTileURL({_id:layer.dataset.concreteItemId})"
               :opacity="layer.opacity"
               :keepLower="false"
               :zIndex="workspace.layers.length-i"

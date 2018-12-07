@@ -1,9 +1,10 @@
 import girder from '../girder';
 
-export default () => {
-    return girder.rest.get('dataset').then(({ data }) => {
-        return data;
-    });
+export default async () => {
+    return (await Promise.all([
+        girder.rest.get('globus').then(({ data }) => data),
+        girder.rest.get('dataset').then(({ data }) => data)
+    ])).reduce((all, datasets) => ([...all, ...datasets]), []);
 }
 
 export const loadDatasetById = (ids) => {

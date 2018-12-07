@@ -144,7 +144,17 @@ export default new Vuex.Store({
     async addDatasetToWorkspace({ state, commit }, { dataset, workspace }) {
       Vue.set(state.loadingDatasetIds, dataset._id, true);
       if (!(dataset._id in state.datasetIdMetaMap)) {
-        Vue.set(state.datasetIdMetaMap, dataset._id, await getDatasetMeta(dataset, state.datasetIdMetaMap));
+        if (dataset._id.startsWith('globus')) {
+          let { data: item } = await girder.rest.get('globus/prepare', {
+            params: {
+              id: dataset._id
+            }
+          });
+          dataset.concreteItemId = item._id;
+          Vue.set(state.datasetIdMetaMap, dataset._id, await getDatasetMeta(item));
+        } else {
+          Vue.set(state.datasetIdMetaMap, dataset._id, await getDatasetMeta(dataset));
+        }
       }
       workspace.layers.unshift({ dataset, opacity: 1 });
       Vue.delete(state.loadingDatasetIds, dataset._id);

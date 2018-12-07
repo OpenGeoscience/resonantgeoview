@@ -7,7 +7,8 @@ setup(name='resonantgeoview_server',
       url='',
       install_requires=[
           'girder_worker',
-          'girder_worker_utils'
+          'girder_worker_utils',
+          'globus_sdk'
       ],
       extras_require={
           'worker': [
