@@ -20,7 +20,7 @@
     </v-card-title>
     <v-card-text>
       <transition-group name="fade" tag="div">
-        <div class="dataset" v-for="(datasetInfo,index) of datasetsInfo" :key="index">
+        <div class="dataset" v-for="(datasetInfo) of datasetsInfo" :key="Math.random(datasetInfo)">
           <div class="subheading">{{datasetInfo.dataset.name}}</div>
           <div class="info-table">
             <div class="table-row" v-for="(value, key) in datasetInfo.info" :key="key">

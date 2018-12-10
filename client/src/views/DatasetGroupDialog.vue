@@ -1,5 +1,5 @@
 <template>
-<v-dialog :value="value" @input="$emit('input', $event)" scrollable max-width="250px" lazy>
+<v-dialog :value="value" @input="$emit('input', $event)" scrollable max-width="250px">
   <v-card>
     <v-card-title class="title">
       <span>Move to</span>
