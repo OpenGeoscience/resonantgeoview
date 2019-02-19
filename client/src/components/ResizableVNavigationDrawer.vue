@@ -1,5 +1,6 @@
 <script>
 import debounce from "lodash-es/debounce";
+// TODO: This method doesn't work with latest version of vuetify
 import { VNavigationDrawer } from "vuetify/es5/components/VNavigationDrawer";
 
 export default {

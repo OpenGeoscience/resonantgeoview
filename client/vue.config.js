@@ -1,19 +1,16 @@
 module.exports = {
   devServer: {
+    port: 8081,
+    useLocalIp: true,
+    public: process.env.PUBLIC_ADDRESS,
     proxy: {
       '/api': {
         target: process.env.API_PROXY,
         secure: false
-      },
-      '/girder': {
-        target: "http://localhost:8080",
-        secure: false
       }
-    },
-    useLocalIp: true,
-    public: "localhost:8080"
+    }
   },
-  baseUrl: process.env.NODE_ENV === 'production'
+  publicPath: process.env.NODE_ENV === 'production'
     ? '/static/external/'
     : '/',
   chainWebpack: config => {

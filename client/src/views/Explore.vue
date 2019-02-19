@@ -98,7 +98,7 @@
         </GeojsMapViewport>
       </Workspace>
     </WorkspaceContainer>
-    <ResizableVNavigationDrawer
+    <VNavigationDrawer
       app
       clipped
       class="side-panel"
@@ -181,7 +181,7 @@
             />
         </transition>
       </div>
-    </ResizableVNavigationDrawer>
+    </VNavigationDrawer>
     <v-dialog v-model="uploadDialog" scrollable max-width="400px" lazy>
       <GirderUpload
       v-if="datasetFolder"
@@ -233,7 +233,7 @@ import ClickInfoDialog from "./ClickInfoDialog";
 import AddWMSDatasetDialog from "../components/AddWMSDatasetDialog";
 import GaiaProcessingDialog from "./GaiaProcessingDialog";
 import JobsDialog from "../components/girder/JobsDialog";
-import ResizableVNavigationDrawer from "../components/ResizableVNavigationDrawer";
+// import ResizableVNavigationDrawer from "../components/ResizableVNavigationDrawer";
 import getDatasetDriver from "../utils/getDatasetDriver";
 
 export default {
@@ -256,7 +256,7 @@ export default {
     AddWMSDatasetDialog,
     GaiaProcessingDialog,
     JobsDialog,
-    ResizableVNavigationDrawer
+    // ResizableVNavigationDrawer
   },
   inject: ["girderRest", "notificationBus"],
   data() {
