@@ -1,18 +1,25 @@
 <template>
-<v-dialog v-show="image" :value="value" @input="$emit('input', $event)" lazy max-width="650px">
-  <v-card>
-    <div class="image-container">
-      <img :src="image" />
-    </div>
-    <v-card-actions>
-      <v-spacer></v-spacer>
-      <v-btn color="primary" :disabled="!image">
-        <a class="download-link" :href="image"
-          download="screenshot.png">Download</a>
-      </v-btn>
-    </v-card-actions>
-  </v-card>
-</v-dialog>
+  <v-dialog
+    v-show="image"
+    :value="value"
+    @input="$emit('input', $event)"
+    lazy
+    max-width="650px"
+  >
+    <v-card>
+      <div class="image-container">
+        <img :src="image" />
+      </div>
+      <v-card-actions>
+        <v-spacer></v-spacer>
+        <v-btn color="primary" :disabled="!image">
+          <a class="download-link" :href="image" download="screenshot.png"
+            >Download</a
+          >
+        </v-btn>
+      </v-card-actions>
+    </v-card>
+  </v-dialog>
 </template>
 
 <script>
@@ -31,7 +38,7 @@ export default {
   asyncComputed: {
     image() {
       if (!this.map) {
-        return new Promise((resolve, reject) => {
+        return new Promise(resolve => {
           setTimeout(() => {
             resolve(null);
           }, 300);

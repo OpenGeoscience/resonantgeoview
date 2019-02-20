@@ -1,8 +1,5 @@
 <template>
-  <GeojsColorLegendWidget
-    :zIndex='100'
-    :categories='categories'
-    />
+  <GeojsColorLegendWidget :zIndex="100" :categories="categories" />
 </template>
 
 <script>
@@ -95,7 +92,7 @@ function generateCategoryForGeoJSON(dataset, data, summary) {
           break;
         case "quantile":
           category.scale = "quantile";
-          category.domain = data.features.map(function(feature, index, array) {
+          category.domain = data.features.map(feature => {
             return feature.properties[viz[property]];
           });
           break;

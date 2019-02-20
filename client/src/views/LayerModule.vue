@@ -1,43 +1,79 @@
 <template>
-  <div class='layers'>
+  <div class="layers">
     <v-subheader>Layers</v-subheader>
     <v-list dense expand>
-      <draggable v-model="layers" :options="{
-          draggable:'.layer',
-          handle:'.drag-handle'
+      <draggable
+        v-model="layers"
+        :options="{
+          draggable: '.layer',
+          handle: '.drag-handle'
         }"
-        @start="transitionName=''"
-        @end="transitionName='fade-group'">
+        @start="transitionName = ''"
+        @end="transitionName = 'fade-group'"
+      >
         <transition-group :name="transitionName" tag="div">
           <v-list-group
             v-for="layer in layers"
             :key="layer.dataset._id"
             class="layer"
-            append-icon="">
+            append-icon=""
+          >
             <v-list-tile
               slot="activator"
               class="hover-show-parent width-fix"
-              @click="123">
+              @click="123"
+            >
               <v-list-tile-action>
-                <v-btn flat icon color="grey darken-2" @click="removeDatasetFromWorkspace({dataset:layer.dataset,workspace:focusedWorkspace})">
+                <v-btn
+                  flat
+                  icon
+                  color="grey darken-2"
+                  @click="
+                    removeDatasetFromWorkspace({
+                      dataset: layer.dataset,
+                      workspace: focusedWorkspace
+                    })
+                  "
+                >
                   <v-icon>fa-globe-americas</v-icon>
                 </v-btn>
               </v-list-tile-action>
               <v-list-tile-content>
-                  <v-list-tile-title v-text="layer.dataset.name"></v-list-tile-title>
+                <v-list-tile-title
+                  v-text="layer.dataset.name"
+                ></v-list-tile-title>
               </v-list-tile-content>
               <v-list-tile-action class="hover-show-child" @click.stop>
-                <v-menu lazy offset-y absolute :nudge-bottom="20" :nudge-left="20">
-                  <v-btn class="group-menu-button" slot="activator" flat icon color="grey darken-2">
+                <v-menu
+                  lazy
+                  offset-y
+                  absolute
+                  :nudge-bottom="20"
+                  :nudge-left="20"
+                >
+                  <v-btn
+                    class="group-menu-button"
+                    slot="activator"
+                    flat
+                    icon
+                    color="grey darken-2"
+                  >
                     <v-icon>more_vert</v-icon>
                   </v-btn>
                   <v-list>
-                    <v-list-tile 
-                      v-if="['GeoTIFF', 'GeoJSON', 'Network Common Data Format'].indexOf(getDatasetDriver(layer.dataset))!==-1"
-                      @click="$emit('customDataset',layer.dataset)">
+                    <v-list-tile
+                      v-if="
+                        [
+                          'GeoTIFF',
+                          'GeoJSON',
+                          'Network Common Data Format'
+                        ].indexOf(getDatasetDriver(layer.dataset)) !== -1
+                      "
+                      @click="$emit('customDataset', layer.dataset)"
+                    >
                       <v-list-tile-title>Customize</v-list-tile-title>
                     </v-list-tile>
-                    <v-list-tile @click="$emit('zoomToDataset',layer.dataset)">
+                    <v-list-tile @click="$emit('zoomToDataset', layer.dataset)">
                       <v-list-tile-title>Zoom to</v-list-tile-title>
                     </v-list-tile>
                   </v-list>
@@ -48,9 +84,7 @@
               </v-list-tile-action>
             </v-list-tile>
 
-            <v-list-tile
-              @click="123"
-            >
+            <v-list-tile @click="123">
               <v-list-tile-content>
                 <v-list-tile-title>
                   <v-layout>
@@ -58,15 +92,20 @@
                       Opacity
                     </v-flex>
                     <v-flex>
-                      <v-slider hide-details class="opacity-slider pr-3"
+                      <v-slider
+                        hide-details
+                        class="opacity-slider pr-3"
                         :min="0"
                         :max="1"
                         :step="0.01"
                         :value="layer.opacity"
-                        @input="setWorkspaceLayerOpacity({layer,opacity:$event})"></v-slider>
+                        @input="
+                          setWorkspaceLayerOpacity({ layer, opacity: $event })
+                        "
+                      ></v-slider>
                     </v-flex>
                     <v-flex>
-                      {{layer.opacity.toFixed(2)}}
+                      {{ layer.opacity.toFixed(2) }}
                     </v-flex>
                   </v-layout>
                 </v-list-tile-title>
@@ -80,11 +119,8 @@
 </template>
 
 <script>
-import { mapState, mapMutations, mapActions, mapGetters } from "vuex";
-import groupBy from "lodash-es/groupBy";
+import { mapMutations, mapActions, mapGetters } from "vuex";
 import debounce from "lodash-es/debounce";
-import keyBy from "lodash-es/keyBy";
-import mapValues from "lodash-es/mapValues";
 import draggable from "vuedraggable";
 
 import getDatasetDriver from "../utils/getDatasetDriver";
@@ -130,8 +166,7 @@ export default {
 };
 </script>
 
-<style lang="scss" scoped>
-</style>
+<style lang="scss" scoped></style>
 
 <style lang="scss">
 .layers {

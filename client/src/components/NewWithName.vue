@@ -1,13 +1,16 @@
 <template>
   <div class="new-with-name">
     <transition name="fade" mode="out-in">
-      <v-btn flat block
-      v-if="!adding"
-      color="primary"
-      class="button"
-      @click="add">
+      <v-btn
+        flat
+        block
+        v-if="!adding"
+        color="primary"
+        class="button"
+        @click="add"
+      >
         <v-icon class="mr-2">add_circle</v-icon>
-        New {{name}}
+        New {{ name }}
       </v-btn>
       <v-text-field
         class="mx-2"
@@ -20,7 +23,7 @@
         append-icon="add_circle"
         @click:append="confirm"
         prepend-icon="cancel"
-        @click:prepend="adding=false"
+        @click:prepend="adding = false"
       ></v-text-field>
     </transition>
   </div>

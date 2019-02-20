@@ -11,16 +11,16 @@ export default {
     }
   },
   actions: {
-    prompt({ commit, state }, prompt) {
-      return new Promise((resolve, reject) => {
+    prompt({ commit }, prompt) {
+      return new Promise(resolve => {
         setTimeout(() => {
           resolve();
         }, prompt.timeout || 3000);
-        commit('set', { prompt, resolve });
-      }).then((value) => {
-        commit('set', { prompt: null, resolve: null });
+        commit("set", { prompt, resolve });
+      }).then(value => {
+        commit("set", { prompt: null, resolve: null });
         return value;
       });
     }
   }
-}
+};

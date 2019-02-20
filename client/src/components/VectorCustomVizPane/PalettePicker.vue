@@ -8,19 +8,37 @@
     label="Color"
     :value="palette"
     menu-props="lazy"
-    @input="$emit('update:palette', $event)">
-    <template slot="item" slot-scope="{item}">
+    @input="$emit('update:palette', $event)"
+  >
+    <template slot="item" slot-scope="{ item }">
       <div v-if="!continuous" class="d-flex palette item">
-        <div class="flex1 color" v-for="color of item" :key='color' :style="{background:color}"></div>
+        <div
+          class="flex1 color"
+          v-for="color of item"
+          :key="color"
+          :style="{ background: color }"
+        ></div>
       </div>
-      <div v-else class="palette item" :style="{background:`linear-gradient(to right,${item.join(',')})`}"></div>
+      <div
+        v-else
+        class="palette item"
+        :style="{ background: `linear-gradient(to right,${item.join(',')})` }"
+      ></div>
     </template>
-    <template slot="selection" slot-scope="{item}">
-      <div v-if="!continuous" class="d-flex palette" :class="{disabled}">
-        <div class="flex1 color" v-for="color of item" :key='color' :style="{background:color}">
-        </div>
+    <template slot="selection" slot-scope="{ item }">
+      <div v-if="!continuous" class="d-flex palette" :class="{ disabled }">
+        <div
+          class="flex1 color"
+          v-for="color of item"
+          :key="color"
+          :style="{ background: color }"
+        ></div>
       </div>
-      <div v-else class="palette" :style="{background:`linear-gradient(to right,${item.join(',')})`}"></div>
+      <div
+        v-else
+        class="palette"
+        :style="{ background: `linear-gradient(to right,${item.join(',')})` }"
+      ></div>
     </template>
   </v-select>
 </template>

@@ -1,12 +1,12 @@
-import Vue from 'vue';
+import Vue from "vue";
 
-export default Vue.component('slide-fade-group', {
+export default Vue.component("slide-fade-group", {
   functional: true,
-  render: function (createElement, context) {
+  render: function(createElement, context) {
     var data = {
       staticClass: context.data.staticClass,
       props: {
-        name: 'slide-fade-group',
+        name: "slide-fade-group",
         tag: context.props.tag
       },
       on: {
@@ -26,7 +26,7 @@ export default Vue.component('slide-fade-group', {
           el._parentElement.style.overflowY = null;
         }
       }
-    }
-    return createElement('transition-group', data, context.children)
+    };
+    return createElement("transition-group", data, context.children);
   }
 });

@@ -53,6 +53,7 @@ export default {
     :opacity="opacity"
     :zIndex="zIndex"
     :keepLower="false"
-    ref="geojsTileLayer">
+    ref="geojsTileLayer"
+  >
   </GeojsTileLayer>
 </template>

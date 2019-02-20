@@ -4,22 +4,19 @@ module.exports = {
     useLocalIp: true,
     public: process.env.PUBLIC_ADDRESS,
     proxy: {
-      '/api': {
+      "/api": {
         target: process.env.API_PROXY,
         secure: false
       }
     }
   },
-  publicPath: process.env.NODE_ENV === 'production'
-    ? '/static/external/'
-    : '/',
+  publicPath: process.env.NODE_ENV === "production" ? "/static/external/" : "/",
   chainWebpack: config => {
     config.module
-      .rule('js')
-      .include
-      .add(/^resonantgeo$/)
+      .rule("js")
+      .include.add(/^resonantgeo$/)
       .end()
       .use()
-      .loader('babel-loader')
+      .loader("babel-loader");
   }
-}
+};

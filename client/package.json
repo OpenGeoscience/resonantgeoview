@@ -4,7 +4,8 @@
   "private": true,
   "scripts": {
     "serve": "vue-cli-service serve",
-    "build": "vue-cli-service build"
+    "build": "vue-cli-service build",
+    "lint": "vue-cli-service lint"
   },
   "dependencies": {
     "@fortawesome/fontawesome-free": "^5.1.0",
@@ -30,6 +31,7 @@
     "@vue/cli-plugin-babel": "^3.3.0",
     "@vue/cli-plugin-eslint": "^3.3.0",
     "@vue/cli-service": "^3.3.0",
+    "@vue/eslint-config-prettier": "^4.0.1",
     "node-sass": "^4.7.2",
     "sass-loader": "^6.0.6",
     "vue-template-compiler": "^2.5.16"

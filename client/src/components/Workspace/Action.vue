@@ -1,7 +1,7 @@
 <template>
-<v-btn icon @click="look" ref="button">
-  <slot></slot>
-</v-btn>
+  <v-btn icon @click="look" ref="button">
+    <slot></slot>
+  </v-btn>
 </template>
 
 <script>

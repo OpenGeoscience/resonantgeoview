@@ -1,21 +1,23 @@
 <template>
-<li class="my-1 mx-3">
-  <div class="list-item-title subheading"
-    @click="toggle">
-    <span>{{model.name}}</span>
-    <v-spacer></v-spacer>
-    <v-icon v-if="isFolder">{{open?"expand_less":"expand_more"}}</v-icon>
-  </div>
-  <v-slide-y-transition>
-    <ul class="sub-items ml-2" v-show="open" v-if="isFolder">
-      <TreeViewItem
-      class="item"
-      v-for="(model, index) of model.children"
-      :key="index"
-      :model="model" />
-    </ul>
-  </v-slide-y-transition>
-</li>
+  <li class="my-1 mx-3">
+    <div class="list-item-title subheading" @click="toggle">
+      <span>{{ model.name }}</span>
+      <v-spacer></v-spacer>
+      <v-icon v-if="isFolder">{{
+        open ? "expand_less" : "expand_more"
+      }}</v-icon>
+    </div>
+    <v-slide-y-transition>
+      <ul class="sub-items ml-2" v-show="open" v-if="isFolder">
+        <TreeViewItem
+          class="item"
+          v-for="(model, index) of model.children"
+          :key="index"
+          :model="model"
+        />
+      </ul>
+    </v-slide-y-transition>
+  </li>
 </template>
 
 <script>

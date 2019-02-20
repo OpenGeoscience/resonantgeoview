@@ -8,12 +8,17 @@
     label="Color"
     :value="color"
     menu-props="lazy"
-    @input="$emit('update:color', $event)">
+    @input="$emit('update:color', $event)"
+  >
     <template slot="item" slot-scope="data">
-      <div class="color" :style="{background:data.item}"></div>
+      <div class="color" :style="{ background: data.item }"></div>
     </template>
     <template slot="selection" slot-scope="data">
-      <div class="color" :class="{disabled}" :style="{background:data.item}"></div>
+      <div
+        class="color"
+        :class="{ disabled }"
+        :style="{ background: data.item }"
+      ></div>
     </template>
   </v-select>
 </template>

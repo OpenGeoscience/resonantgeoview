@@ -1,53 +1,62 @@
 <template>
   <div class="vector-customize-viz-pane">
-    <v-tabs
-      grow
-      v-model="currentTab"
-      color="white">
+    <v-tabs grow v-model="currentTab" color="white">
       <v-tab key="point" :disabled="!summary.types.pointAlike">POINTS</v-tab>
       <v-tab key="line" :disabled="!summary.types.lineAlike">LINES</v-tab>
-      <v-tab key="polygon" :disabled="!summary.types.polygonAlike">POLYGONS</v-tab>
+      <v-tab key="polygon" :disabled="!summary.types.polygonAlike"
+        >POLYGONS</v-tab
+      >
       <v-tab-item key="point">
-        <Stroke :enabled.sync="vizProperties.point.stroke"
+        <Stroke
+          :enabled.sync="vizProperties.point.stroke"
           :property.sync="vizProperties.point.strokeProperty"
           :properties="summary.properties"
           :color.sync="vizProperties.point.strokeColor"
           :palette.sync="vizProperties.point.strokePalette"
           :opacity.sync="vizProperties.point.strokeOpacity"
-          :width.sync="vizProperties.point.strokeWidth" />
-        <Fill :enabled.sync="vizProperties.point.fill"
+          :width.sync="vizProperties.point.strokeWidth"
+        />
+        <Fill
+          :enabled.sync="vizProperties.point.fill"
           :property.sync="vizProperties.point.fillProperty"
           :properties="summary.properties"
           :color.sync="vizProperties.point.fillColor"
           :palette.sync="vizProperties.point.fillPalette"
           :opacity.sync="vizProperties.point.fillOpacity"
           :scale.sync="vizProperties.point.fillScale"
-          :radius.sync="vizProperties.point.radius" />
+          :radius.sync="vizProperties.point.radius"
+        />
       </v-tab-item>
       <v-tab-item key="line">
-        <Stroke :enabled.sync="vizProperties.line.stroke"
+        <Stroke
+          :enabled.sync="vizProperties.line.stroke"
           :property.sync="vizProperties.line.strokeProperty"
           :properties="summary.properties"
           :color.sync="vizProperties.line.strokeColor"
           :palette.sync="vizProperties.line.strokePalette"
           :opacity.sync="vizProperties.line.strokeOpacity"
-          :width.sync="vizProperties.line.strokeWidth" />
+          :width.sync="vizProperties.line.strokeWidth"
+        />
       </v-tab-item>
       <v-tab-item key="polygon">
-        <Stroke :enabled.sync="vizProperties.polygon.stroke"
+        <Stroke
+          :enabled.sync="vizProperties.polygon.stroke"
           :property.sync="vizProperties.polygon.strokeProperty"
           :properties="summary.properties"
           :color.sync="vizProperties.polygon.strokeColor"
           :palette.sync="vizProperties.polygon.strokePalette"
           :opacity.sync="vizProperties.polygon.strokeOpacity"
-          :width.sync="vizProperties.polygon.strokeWidth" />
-        <Fill :enabled.sync="vizProperties.polygon.fill"
+          :width.sync="vizProperties.polygon.strokeWidth"
+        />
+        <Fill
+          :enabled.sync="vizProperties.polygon.fill"
           :property.sync="vizProperties.polygon.fillProperty"
           :properties="summary.properties"
           :color.sync="vizProperties.polygon.fillColor"
           :palette.sync="vizProperties.polygon.fillPalette"
           :opacity.sync="vizProperties.polygon.fillOpacity"
-          :scale.sync="vizProperties.polygon.fillScale" />
+          :scale.sync="vizProperties.polygon.fillScale"
+        />
       </v-tab-item>
     </v-tabs>
     <v-container fluid grid-list-sm class="py-2 px-3">
@@ -58,11 +67,11 @@
             class="mt-0"
             label="Save to dataset"
             :input-value="preserve"
-            @change="$emit('update:preserve',$event)"
+            @change="$emit('update:preserve', $event)"
           ></v-checkbox>
         </v-flex>
         <v-flex xs4 offset-xs1>
-          <v-btn block outline color='primary' class='' @click="revert">
+          <v-btn block outline color="primary" class="" @click="revert">
             Revert
           </v-btn>
         </v-flex>
@@ -112,7 +121,9 @@ export default {
   created() {
     this.currentTab = this.summary.types.pointAlike
       ? 0
-      : this.summary.types.lineAlike ? 1 : 2;
+      : this.summary.types.lineAlike
+      ? 1
+      : 2;
     this.debouncedApply = debounce(this.apply, 200);
   },
   methods: {
@@ -126,5 +137,4 @@ export default {
 };
 </script>
 
-<style lang="scss">
-</style>
+<style lang="scss"></style>

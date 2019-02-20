@@ -1,29 +1,27 @@
 <template>
-  <div class='workspace' @mousedown="focus" @click="focus">
-    <div class="slot-container" :class="{focused:!onlyWorkspace && focused}">
+  <div class="workspace" @mousedown="focus" @click="focus">
+    <div class="slot-container" :class="{ focused: !onlyWorkspace && focused }">
       <slot></slot>
     </div>
     <div class="bottom-bar">
       <div class="focus-indicator" v-if="!onlyWorkspace && focused"></div>
-      <v-toolbar dark :class="{unfocused:!onlyWorkspace && !focused}">
-        <v-select class="state-selector pt-0" v-if="states"
+      <v-toolbar dark :class="{ unfocused: !onlyWorkspace && !focused }">
+        <v-select
+          class="state-selector pt-0"
+          v-if="states"
           :value="selectedState"
           @input="$emit('stateChange', $event)"
           :items="states"
           hide-details
           item-text="name"
-          item-value='value'
+          item-value="value"
           menu-props="lazy"
         ></v-select>
         <slot name="actions"></slot>
         <v-spacer />
         <v-tooltip top v-if="!onlyWorkspace">
-          <span>{{!maximized?'Maximize':'Minimize'}}</span>
-          <v-btn
-            slot="activator"
-            icon
-            @click="maximizeOrMinimize"
-          >
+          <span>{{ !maximized ? "Maximize" : "Minimize" }}</span>
+          <v-btn slot="activator" icon @click="maximizeOrMinimize">
             <v-icon v-if="!maximized">maximize</v-icon>
             <v-icon v-if="maximized">minimize</v-icon>
           </v-btn>
@@ -33,7 +31,7 @@
           <v-btn
             slot="activator"
             icon
-            v-if="workspaces.length!==max"
+            v-if="workspaces.length !== max"
             @click="split"
           >
             <v-icon>flip</v-icon>
@@ -41,11 +39,7 @@
         </v-tooltip>
         <v-tooltip top v-if="$listeners.close && !onlyWorkspace">
           <span>Close</span>
-          <v-btn
-            slot="activator"
-            icon
-            @click="close"
-          >
+          <v-btn slot="activator" icon @click="close">
             <v-icon>close</v-icon>
           </v-btn>
         </v-tooltip>
@@ -182,6 +176,7 @@ export default {
 
   .slot-container {
     flex: 1;
+    position: relative;
 
     &.focused::after {
       content: "";

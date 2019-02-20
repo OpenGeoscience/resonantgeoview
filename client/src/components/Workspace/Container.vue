@@ -3,6 +3,7 @@ export default {
   name: "WorkspaceContainer",
   components: {},
   render(h) {
+    // The reason to use render method here is becuase template syntax doesn't provide ability to iterate through default slot
     return h("div", { class: ["workspace-container"] }, [
       h(
         "transition-group",
@@ -88,7 +89,7 @@ export default {
     };
   },
   watch: {
-    workspaces(value) {
+    workspaces() {
       this.maximizedWorkspace = null;
       this.setDefaultFocus();
     }
@@ -100,7 +101,7 @@ export default {
     this.$on("workspace_maximize", identifier => {
       this.maximizedWorkspace = identifier;
     });
-    this.$on("workspace_minimize", identifier => {
+    this.$on("workspace_minimize", () => {
       this.maximizedWorkspace = null;
     });
     this.$on("workspace_focus", identifier => {

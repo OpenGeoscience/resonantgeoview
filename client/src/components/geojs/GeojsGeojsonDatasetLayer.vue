@@ -1,19 +1,18 @@
 <template>
-<GeojsGeojsonLayer
-  :geojson="geojson"
-  :zIndex="zIndex"
-  :opacity="opacity"
-  :featureStyle="style"
-  ref="geojsGeojsonLayer">
-</GeojsGeojsonLayer>
+  <GeojsGeojsonLayer
+    :geojson="geojson"
+    :zIndex="zIndex"
+    :opacity="opacity"
+    :featureStyle="style"
+    ref="geojsGeojsonLayer"
+  >
+  </GeojsGeojsonLayer>
 </template>
 
 <script>
 import geo from "geojs";
 import * as d3 from "d3";
 import isObject from "lodash-es/isObject";
-import size from "lodash-es/size";
-import sortedIndex from "lodash-es/sortedIndex";
 
 export default {
   name: "GeojsGeojsonDatasetLayer",
@@ -64,11 +63,14 @@ export default {
           });
         });
       });
-      this.$refs.geojsGeojsonLayer.$geojsLayer.geoOn(geo.event.mouseclick, e => {
-        this.$emit("click", {
-          geo: e.geo
-        });
-      });
+      this.$refs.geojsGeojsonLayer.$geojsLayer.geoOn(
+        geo.event.mouseclick,
+        e => {
+          this.$emit("click", {
+            geo: e.geo
+          });
+        }
+      );
     }
   },
   methods: {

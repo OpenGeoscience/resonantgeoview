@@ -20,9 +20,16 @@ export default {
 </script>
 
 <template>
-<v-dialog class="jobs-dialog" content-class="jobs-dialog-content" :value="value" @input="$emit('input', $event)" scrollable lazy>
-  <GirderJobList />
-</v-dialog>
+  <v-dialog
+    class="jobs-dialog"
+    content-class="jobs-dialog-content"
+    :value="value"
+    @input="$emit('input', $event)"
+    scrollable
+    lazy
+  >
+    <GirderJobList />
+  </v-dialog>
 </template>
 
 <style lang="scss">

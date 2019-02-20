@@ -76,7 +76,6 @@ export default {
   },
   methods: {
     async getCapabilities() {
-      var result = null;
       try {
         var { data: result } = await axios.get(this.url, {
           params: {
@@ -196,63 +195,89 @@ export default {
 </script>
 
 <template>
-<v-dialog :value="value" @input="$emit('input', $event)" scrollable max-width="650px" persistent lazy>
-  <v-card>
-    <v-form @submit.prevent="emitWMSDataset">
-      <v-card-title class="title">
-        <span>Add WMS</span>
-      </v-card-title>
-      <v-card-text>
-        <v-container grid-list-md class='pa-0'>
-          <v-layout>
-            <v-flex>
-              <v-text-field
-                label="WMS URL"
-                browser-autocomplete="on"
-                name="wms_url"
-                v-model="url"
-                :loading="loadingCapabilities"
-                :error-messages="validUrl?'':'Invalid WMS serivce URL'"
-                clearable
-                required></v-text-field>
-            </v-flex>
-          </v-layout>
-          <v-list two-line subheader dense v-if="layers.length" class="layers">
-            <v-subheader>Layers</v-subheader>
-            <v-list-tile
-              v-for="[layer,level] of layers"
-              :key="layer.Name+level"
-              :class="{'selected':selectedLayer===layer}"
-              @click="selectedLayer=layer">
-              <v-list-tile-content
-                :style="{paddingLeft:(15*level)+'px'}">
-                <v-list-tile-title>{{ layer.Name }}</v-list-tile-title>
-                <v-tooltip bottom :open-delay="400">
-                  <v-list-tile-sub-title slot="activator">
-                    <div>{{ layer.Title }}</div>
-                    <div v-if="!validLayer&&layer===selectedLayer"
-                      class="red--text text--darken-4">{{validLayer===false?'Missing required metadata':'May not work properly'}}</div>
-                  </v-list-tile-sub-title>
-                  <span>{{ layer.Abstract }}</span>
-                </v-tooltip>
-              </v-list-tile-content>
-            </v-list-tile>
-          </v-list>
-        </v-container>
-      </v-card-text>
-      <v-card-actions>
-        <v-spacer></v-spacer>
-        <v-btn flat
-          @click="close">Cancel</v-btn>
-        <v-btn color="primary"
-          flat
-          type="submit"
-          :disabled="!selectedLayer||validatingLayer"
-          :loading="validatingLayer">Ok</v-btn>
-      </v-card-actions>
-    </v-form>
-  </v-card>
-</v-dialog>
+  <v-dialog
+    :value="value"
+    @input="$emit('input', $event)"
+    scrollable
+    max-width="650px"
+    persistent
+    lazy
+  >
+    <v-card>
+      <v-form @submit.prevent="emitWMSDataset">
+        <v-card-title class="title">
+          <span>Add WMS</span>
+        </v-card-title>
+        <v-card-text>
+          <v-container grid-list-md class="pa-0">
+            <v-layout>
+              <v-flex>
+                <v-text-field
+                  label="WMS URL"
+                  browser-autocomplete="on"
+                  name="wms_url"
+                  v-model="url"
+                  :loading="loadingCapabilities"
+                  :error-messages="validUrl ? '' : 'Invalid WMS serivce URL'"
+                  clearable
+                  required
+                ></v-text-field>
+              </v-flex>
+            </v-layout>
+            <v-list
+              two-line
+              subheader
+              dense
+              v-if="layers.length"
+              class="layers"
+            >
+              <v-subheader>Layers</v-subheader>
+              <v-list-tile
+                v-for="[layer, level] of layers"
+                :key="layer.Name + level"
+                :class="{ selected: selectedLayer === layer }"
+                @click="selectedLayer = layer"
+              >
+                <v-list-tile-content
+                  :style="{ paddingLeft: 15 * level + 'px' }"
+                >
+                  <v-list-tile-title>{{ layer.Name }}</v-list-tile-title>
+                  <v-tooltip bottom :open-delay="400">
+                    <v-list-tile-sub-title slot="activator">
+                      <div>{{ layer.Title }}</div>
+                      <div
+                        v-if="!validLayer && layer === selectedLayer"
+                        class="red--text text--darken-4"
+                      >
+                        {{
+                          validLayer === false
+                            ? "Missing required metadata"
+                            : "May not work properly"
+                        }}
+                      </div>
+                    </v-list-tile-sub-title>
+                    <span>{{ layer.Abstract }}</span>
+                  </v-tooltip>
+                </v-list-tile-content>
+              </v-list-tile>
+            </v-list>
+          </v-container>
+        </v-card-text>
+        <v-card-actions>
+          <v-spacer></v-spacer>
+          <v-btn flat @click="close">Cancel</v-btn>
+          <v-btn
+            color="primary"
+            flat
+            type="submit"
+            :disabled="!selectedLayer || validatingLayer"
+            :loading="validatingLayer"
+            >Ok</v-btn
+          >
+        </v-card-actions>
+      </v-form>
+    </v-card>
+  </v-dialog>
 </template>
 
 <style lang="scss" scoped>

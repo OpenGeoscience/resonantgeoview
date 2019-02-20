@@ -4,68 +4,79 @@
       :focused="focusedWorkspace"
       @update:focused="setFocusedWorkspaceKey($event)"
       :autoResize="true"
-      :max="2">
+      :max="2"
+    >
       <Workspace
         v-for="(workspace, key) in workspaces"
         :key="key"
         :identifier="key"
         @split="addWorkspace()"
-        @close="removeWorkspace(key)">
-        <template slot='actions'>
+        @close="removeWorkspace(key)"
+      >
+        <template slot="actions">
           <WorkspaceAction>
             <v-icon @click="takeScreenshot(key)">camera_alt</v-icon>
           </WorkspaceAction>
         </template>
         <GeojsMapViewport
-          class='map'
-          :viewport='viewport'
-          :ref='`geojsMapViewport${key}`'>
+          class="map"
+          :viewport="viewport"
+          :ref="`geojsMapViewport${key}`"
+        >
           <AdaptedColorLegendLayer
             :layers="workspace.layers"
-            :datasetIdMetaMap="datasetIdMetaMap" />
+            :datasetIdMetaMap="datasetIdMetaMap"
+          />
           <GeojsTileLayer
-            url='https://cartodb-basemaps-{s}.global.ssl.fastly.net/light_all/{z}/{x}/{y}.png'
-            attribution='© OpenStreetMap contributors, © CARTO'
-            :zIndex='0'>
+            url="https://cartodb-basemaps-{s}.global.ssl.fastly.net/light_all/{z}/{x}/{y}.png"
+            attribution="© OpenStreetMap contributors, © CARTO"
+            :zIndex="0"
+          >
           </GeojsTileLayer>
-          <template v-for="(layer,i) in workspace.layers">
+          <template v-for="(layer, i) in workspace.layers">
             <GeojsGeojsonDatasetLayer
-              v-if="getDatasetDriver(layer.dataset)==='GeoJSON'"
+              v-if="getDatasetDriver(layer.dataset) === 'GeoJSON'"
               :key="layer.dataset._id"
               :dataset="layer.dataset"
               :geojson="datasetIdMetaMap[layer.dataset._id].geojson"
               :summary="datasetIdMetaMap[layer.dataset._id].summary"
-              :zIndex="workspace.layers.length-i"
-              :opacity='layer.opacity'
-              @click='layerClicked(layer, $event)'>
+              :zIndex="workspace.layers.length - i"
+              :opacity="layer.opacity"
+              @click="layerClicked(layer, $event)"
+            >
             </GeojsGeojsonDatasetLayer>
             <StyledGeoTIFFLayer
-              v-if="getDatasetDriver(layer.dataset)==='GeoTIFF'"
+              v-if="getDatasetDriver(layer.dataset) === 'GeoTIFF'"
               :key="layer.dataset._id"
               :dataset="layer.dataset"
               :tileURL="getTileURL(layer.dataset)"
               :opacity="layer.opacity"
               :keepLower="false"
-              :zIndex="workspace.layers.length-i"
-              @click='layerClicked(layer, $event)'>
+              :zIndex="workspace.layers.length - i"
+              @click="layerClicked(layer, $event)"
+            >
             </StyledGeoTIFFLayer>
             <StyledGeoTIFFLayer
-              v-if="getDatasetDriver(layer.dataset)==='Network Common Data Format'"
+              v-if="
+                getDatasetDriver(layer.dataset) === 'Network Common Data Format'
+              "
               :key="layer.dataset._id"
               :dataset="layer.dataset"
               :tileURL="getTileURL(layer.dataset)"
               :opacity="layer.opacity"
               :keepLower="false"
-              :zIndex="workspace.layers.length-i"
-              @click='layerClicked(layer, $event)'>
+              :zIndex="workspace.layers.length - i"
+              @click="layerClicked(layer, $event)"
+            >
             </StyledGeoTIFFLayer>
             <WMSLayer
-              v-if="getDatasetDriver(layer.dataset)==='WMS'"
+              v-if="getDatasetDriver(layer.dataset) === 'WMS'"
               :key="layer.dataset._id"
               :dataset="layer.dataset"
               :opacity="layer.opacity"
-              :zIndex="workspace.layers.length-i"
-              @click='layerClicked(layer, $event)'>
+              :zIndex="workspace.layers.length - i"
+              @click="layerClicked(layer, $event)"
+            >
             </WMSLayer>
           </template>
           <GeojsAnnotationLayer
@@ -73,26 +84,41 @@
             :editing.sync="editing"
             :editable="true"
             :annotations="annotations"
-            @update:annotations="annotations=$event"
-            :zIndex="workspace.layers.length+1">
+            @update:annotations="annotations = $event"
+            :zIndex="workspace.layers.length + 1"
+          >
           </GeojsAnnotationLayer>
           <GeojsGeojsonLayer
             v-if="filteringGeometry"
             :geojson="filteringGeometry"
-            :featureStyle="{polygon:{strokeColor:'grey',strokeWidth:1,fillColor:'#1976d2',fillOpacity:0.3}}"
-            :zIndex="workspace.layers.length+2">
+            :featureStyle="{
+              polygon: {
+                strokeColor: 'grey',
+                strokeWidth: 1,
+                fillColor: '#1976d2',
+                fillOpacity: 0.3
+              }
+            }"
+            :zIndex="workspace.layers.length + 2"
+          >
           </GeojsGeojsonLayer>
-          <template v-if="selectedDatasetPoint && focusedWorkspaceKey===key">
+          <template v-if="selectedDatasetPoint && focusedWorkspaceKey === key">
             <GeojsGeojsonLayer
               :geojson="selectedDatasetPoint"
-              :featureStyle="{point:{strokeColor:'black',strokeWidth:2,radius:3}}"
-              :zIndex="workspace.layers.length+3">
+              :featureStyle="{
+                point: { strokeColor: 'black', strokeWidth: 2, radius: 3 }
+              }"
+              :zIndex="workspace.layers.length + 3"
+            >
             </GeojsGeojsonLayer>
             <GeojsWidgetLayer
               :position="selectedDatasetPoint.coordinates"
-              :offset="{x:0,y:-20}"
-              :zIndex="workspace.layers.length+4">
-              <v-chip small color="green" text-color="white">{{selectedDataset.name}}</v-chip>
+              :offset="{ x: 0, y: -20 }"
+              :zIndex="workspace.layers.length + 4"
+            >
+              <v-chip small color="green" text-color="white">{{
+                selectedDataset.name
+              }}</v-chip>
             </GeojsWidgetLayer>
           </template>
         </GeojsMapViewport>
@@ -102,35 +128,38 @@
       app
       clipped
       class="side-panel"
-      :value="sidePanelExpanded">
+      :value="sidePanelExpanded"
+    >
       <v-toolbar flat>
-        <v-btn icon class="hidden-xs-only" v-if="customVizDataset" @click="returnFromCustomViz">
+        <v-btn
+          icon
+          class="hidden-xs-only"
+          v-if="customVizDataset"
+          @click="returnFromCustomViz"
+        >
           <v-icon>arrow_back</v-icon>
         </v-btn>
-        <v-toolbar-title>{{!customVizDataset?"Datasets":"Customize"}}</v-toolbar-title>
+        <v-toolbar-title>{{
+          !customVizDataset ? "Datasets" : "Customize"
+        }}</v-toolbar-title>
         <v-spacer></v-spacer>
         <v-menu lazy offset-y>
-          <v-btn
-            slot="activator"
-            icon>
+          <v-btn slot="activator" icon>
             <v-icon>more_vert</v-icon>
           </v-btn>
           <v-list>
-            <v-list-tile
-              @click="uploadDialog=true">
+            <v-list-tile @click="uploadDialog = true">
               <v-list-tile-content>
                 <v-list-tile-title>Upload</v-list-tile-title>
               </v-list-tile-content>
             </v-list-tile>
-            <v-list-tile
-              @click="addWMSDialog=true">
+            <v-list-tile @click="addWMSDialog = true">
               <v-list-tile-content>
                 <v-list-tile-title>Add WMS dataset</v-list-tile-title>
               </v-list-tile-content>
             </v-list-tile>
             <v-divider />
-            <v-list-tile
-              @click="jobsDialog=true">
+            <v-list-tile @click="jobsDialog = true">
               <v-list-tile-content>
                 <v-list-tile-title>Jobs</v-list-tile-title>
               </v-list-tile-content>
@@ -148,58 +177,86 @@
       </v-container>
       <div class="main">
         <transition name="slide-fade" mode="out-in">
-          <div v-if="!customVizDataset" class="datasets-layers-pane" key="datasets">
+          <div
+            v-if="!customVizDataset"
+            class="datasets-layers-pane"
+            key="datasets"
+          >
             <transition name="fade">
               <div v-if="filteredDatasetIds">
-                <v-switch hide-details label="Filtering" :input-value="!!filteringGeometry" @change="filteringGeometry=null" class="mt-0 mx-1"></v-switch>
+                <v-switch
+                  hide-details
+                  label="Filtering"
+                  :input-value="!!filteringGeometry"
+                  @change="filteringGeometry = null"
+                  class="mt-0 mx-1"
+                ></v-switch>
               </div>
             </transition>
-            <DatasetModule class="datasets"
-              :filteredDatasetIds="filteredDatasetIds" />
-            <LayerModule class="layers" 
-              v-if="focusedWorkspace &&focusedWorkspace.layers.length"
+            <DatasetModule
+              class="datasets"
+              :filteredDatasetIds="filteredDatasetIds"
+            />
+            <LayerModule
+              class="layers"
+              v-if="focusedWorkspace && focusedWorkspace.layers.length"
               @zoomToDataset="zoomToDataset"
-              @customDataset="customVizDataset=$event" />
+              @customDataset="customVizDataset = $event"
+            />
           </div>
           <VectorCustomVizPane
-            v-if="customVizDataset && getDatasetDriver(customVizDataset) === 'GeoJSON'"
+            v-if="
+              customVizDataset &&
+                getDatasetDriver(customVizDataset) === 'GeoJSON'
+            "
             :dataset="customVizDataset"
             :summary="datasetIdMetaMap[customVizDataset._id].summary"
             :preserve.sync="preserveCustomViz"
-            />
+          />
           <GeotiffCustomVizPane
-            v-if="customVizDataset && getDatasetDriver(customVizDataset) === 'GeoTIFF'"
+            v-if="
+              customVizDataset &&
+                getDatasetDriver(customVizDataset) === 'GeoTIFF'
+            "
             :dataset="customVizDataset"
             :meta="datasetIdMetaMap[customVizDataset._id]"
             :preserve.sync="preserveCustomViz"
-            />
+          />
           <GeotiffCustomVizPane
-            v-if="customVizDataset && getDatasetDriver(customVizDataset) === 'Network Common Data Format'"
+            v-if="
+              customVizDataset &&
+                getDatasetDriver(customVizDataset) ===
+                  'Network Common Data Format'
+            "
             :dataset="customVizDataset"
             :meta="datasetIdMetaMap[customVizDataset._id]"
             :preserve.sync="preserveCustomViz"
-            />
+          />
         </transition>
       </div>
     </VNavigationDrawer>
     <v-dialog v-model="uploadDialog" scrollable max-width="400px" lazy>
       <GirderUpload
-      v-if="datasetFolder"
-      :dest="datasetFolder"
-      @done="loadDatasets();uploadDialog=false;" />
-    <MapScreenshotDialog
-      v-model="mapScreenshotDialog"
-      :map="screenshotMap" />
-    <ClickInfoDialog
-      right="15px"
-      bottom="60px"
-      :datasetClickEvents="datasetClickEvents" />
+        v-if="datasetFolder"
+        :dest="datasetFolder"
+        @done="
+          loadDatasets();
+          uploadDialog = false;
+        "
+      />
+      <MapScreenshotDialog v-model="mapScreenshotDialog" :map="screenshotMap" />
+      <ClickInfoDialog
+        right="15px"
+        bottom="60px"
+        :datasetClickEvents="datasetClickEvents"
+      />
     </v-dialog>
     <AddWMSDatasetDialog v-model="addWMSDialog" @dataset="createWMSdataset" />
-    <GaiaProcessingDialog 
+    <GaiaProcessingDialog
       v-if="datasetFolder"
       :dest="datasetFolder"
-      v-model="processingDialog" />
+      v-model="processingDialog"
+    />
     <JobsDialog v-model="jobsDialog" />
   </FullScreenViewport>
 </template>
@@ -255,7 +312,7 @@ export default {
     ClickInfoDialog,
     AddWMSDatasetDialog,
     GaiaProcessingDialog,
-    JobsDialog,
+    JobsDialog
     // ResizableVNavigationDrawer
   },
   inject: ["girderRest", "notificationBus"],
@@ -403,7 +460,7 @@ export default {
           folderId: this.datasetFolder._id
         })
       );
-      var { data: item } = await this.girderRest.put(
+      await this.girderRest.put(
         `/item/${item._id}/geometa`,
         stringify({
           geometa: JSON.stringify(geometa)
@@ -425,7 +482,6 @@ export default {
   }
 };
 </script>
-
 
 <style lang="scss" scoped>
 .map {

@@ -1,20 +1,20 @@
 <template>
-<v-app>
-  <AppToolbar
-  title='ResonantGeoView'
-  :panelButton="true"
-  @click-panel="toggleSidePanel">
-    <template slot="right">
-      <UserButton
-        @user="girderRest.logout()" />
-    </template>
-  </AppToolbar>
+  <v-app>
+    <AppToolbar
+      title="ResonantGeoView"
+      :panelButton="true"
+      @click-panel="toggleSidePanel"
+    >
+      <template slot="right">
+        <UserButton @user="girderRest.logout()" />
+      </template>
+    </AppToolbar>
 
-  <transition name="fade" mode='out-in'>
-    <router-view></router-view>
-  </transition>
-  <Prompt />
-</v-app>
+    <transition name="fade" mode="out-in">
+      <router-view></router-view>
+    </transition>
+    <Prompt />
+  </v-app>
 </template>
 
 <style lang="scss">

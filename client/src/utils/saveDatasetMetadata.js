@@ -1,8 +1,11 @@
-import girder from '../girder';
+import girder from "../girder";
 
-const saveDatasetMetadata = async (dataset) => {
-    var { data: dataset } = await girder.rest.put(`item/${dataset._id}/metadata`, dataset.meta);
-    return dataset;
-}
+const saveDatasetMetadata = async dataset => {
+  var { data: newDataset } = await girder.rest.put(
+    `item/${dataset._id}/metadata`,
+    dataset.meta
+  );
+  return newDataset;
+};
 
 export default saveDatasetMetadata;

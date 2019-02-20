@@ -3,10 +3,7 @@
     <v-subheader class="pl-2">Type</v-subheader>
     <v-layout class="px-3">
       <v-flex>
-        <v-radio-group
-          class="mt-0"
-          hide-details
-          v-model="mode">
+        <v-radio-group class="mt-0" hide-details v-model="mode">
           <v-radio label="Default" value="default"></v-radio>
           <v-radio label="Custom" value="custom"></v-radio>
         </v-radio-group>
@@ -23,25 +20,31 @@
               label="Band"
               placeholder=" "
               menu-props="lazy"
-              v-model="vizProperties.band" />
+              v-model="vizProperties.band"
+            />
           </v-flex>
         </v-layout>
         <v-layout>
           <v-flex xs6>
             <PalettePicker
               :palette.sync="vizProperties.palette"
-              :continuous="vizProperties.type==='linear'" />
+              :continuous="vizProperties.type === 'linear'"
+            />
           </v-flex>
           <v-flex xs6>
             <v-select
-              :items="[{name:'Continuous',value:'linear'},{name:'Discrete',value:'discrete'}]"
+              :items="[
+                { name: 'Continuous', value: 'linear' },
+                { name: 'Discrete', value: 'discrete' }
+              ]"
               item-text="name"
               item-value="value"
               hide-details
               label="Type"
               placeholder=" "
               menu-props="lazy"
-              v-model="vizProperties.type" />
+              v-model="vizProperties.type"
+            />
           </v-flex>
         </v-layout>
         <v-layout class="mt-2">
@@ -67,11 +70,11 @@
         <v-layout class="mt-2">
           <v-flex>
             <v-range-slider
-            v-model="vizProperties.range"
-            :max="max"
-            :min="min"
-            :step="1"
-          ></v-range-slider>
+              v-model="vizProperties.range"
+              :max="max"
+              :min="min"
+              :step="1"
+            ></v-range-slider>
           </v-flex>
         </v-layout>
       </div>
@@ -83,11 +86,11 @@
           class="mt-0"
           label="Save to dataset"
           :input-value="preserve"
-          @change="$emit('update:preserve',$event)"
+          @change="$emit('update:preserve', $event)"
         ></v-checkbox>
       </v-flex>
       <v-flex xs4 offset-xs1>
-        <v-btn block outline color='primary' class='' @click="revert">
+        <v-btn block outline color="primary" class="" @click="revert">
           Revert
         </v-btn>
       </v-flex>
@@ -223,5 +226,4 @@ export default {
 };
 </script>
 
-<style>
-</style>
+<style></style>

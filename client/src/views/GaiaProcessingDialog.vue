@@ -1,6 +1,6 @@
 <script>
 // This is an initial proof of concept so many things are hard coded
-import { mapState, mapMutations, mapActions, mapGetters } from "vuex";
+import { mapState } from "vuex";
 
 export default {
   name: "GaiaProcessingDialog",
@@ -59,14 +59,21 @@ export default {
 </script>
 
 <template>
-<v-dialog :value="value" @input="$emit('input', $event)" scrollable max-width="500px" persistent lazy>
-  <v-card>
-    <v-form @submit.prevent="startGaiaProcessing">
-      <v-card-title class="title">
-        <span>Processing</span>
-      </v-card-title>
-      <!-- <v-card-text> -->
-        <v-container grid-list-md class=''>
+  <v-dialog
+    :value="value"
+    @input="$emit('input', $event)"
+    scrollable
+    max-width="500px"
+    persistent
+    lazy
+  >
+    <v-card>
+      <v-form @submit.prevent="startGaiaProcessing">
+        <v-card-title class="title">
+          <span>Processing</span>
+        </v-card-title>
+        <!-- <v-card-text> -->
+        <v-container grid-list-md class="">
           <v-layout>
             <v-flex>
               <v-select
@@ -76,7 +83,8 @@ export default {
                 item-value="name"
                 label="Process"
                 menu-props="lazy"
-                v-model="selectedProcessing" />
+                v-model="selectedProcessing"
+              />
             </v-flex>
           </v-layout>
           <v-layout>
@@ -85,25 +93,27 @@ export default {
                 :items="datasets"
                 hide-details
                 item-text="name"
-                :item-value="(value)=>value"
+                :item-value="value => value"
                 label="Target dataset"
                 menu-props="lazy"
-                v-model="dataset1" />
+                v-model="dataset1"
+              />
             </v-flex>
           </v-layout>
         </v-container>
         <v-subheader class="mt-2" style="height:32px;">Parameters</v-subheader>
-        <v-container grid-list-md class='pt-0'>
+        <v-container grid-list-md class="pt-0">
           <v-layout>
             <v-flex>
               <v-select
                 :items="datasets"
                 hide-details
                 item-text="name"
-                :item-value="(value)=>value"
+                :item-value="value => value"
                 label="By dataset"
                 menu-props="lazy"
-                v-model="dataset2" />
+                v-model="dataset2"
+              />
             </v-flex>
           </v-layout>
         </v-container>
@@ -115,21 +125,31 @@ export default {
                 browser-autocomplete="on"
                 name="processing_dataset_name"
                 v-model="newDatasetName"
-                required></v-text-field>
+                required
+              ></v-text-field>
             </v-flex>
           </v-layout>
         </v-container>
-      <!-- </v-card-text> -->
-      <v-card-actions>
-        <v-spacer></v-spacer>
-        <v-btn flat
-          @click="close">Cancel</v-btn>
-        <v-btn color="primary"
-          flat
-          type="submit"
-          :disabled="!newDatasetName||!selectedProcessing||!dataset1||dataset1.geometa.driver!=='GeoJSON'||!dataset2||dataset2.geometa.driver!=='GeoJSON'">Start</v-btn>
-      </v-card-actions>
-    </v-form>
-  </v-card>
-</v-dialog>
+        <!-- </v-card-text> -->
+        <v-card-actions>
+          <v-spacer></v-spacer>
+          <v-btn flat @click="close">Cancel</v-btn>
+          <v-btn
+            color="primary"
+            flat
+            type="submit"
+            :disabled="
+              !newDatasetName ||
+                !selectedProcessing ||
+                !dataset1 ||
+                dataset1.geometa.driver !== 'GeoJSON' ||
+                !dataset2 ||
+                dataset2.geometa.driver !== 'GeoJSON'
+            "
+            >Start</v-btn
+          >
+        </v-card-actions>
+      </v-form>
+    </v-card>
+  </v-dialog>
 </template>

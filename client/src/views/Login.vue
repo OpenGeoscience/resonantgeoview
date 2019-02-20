@@ -14,7 +14,7 @@ export default {
     };
   },
   watch: {
-    'girderRest.user'(user) {
+    "girderRest.user"(user) {
       if (user) {
         this.$router.push("/");
       }
@@ -24,17 +24,11 @@ export default {
 </script>
 
 <template>
-<FullScreenViewport>
-  <v-container>
-  <v-dialog
-    :value="userDialog"
-    persistent
-    lazy
-    max-width="500px"
-    >
-    <GirderAuth
-      :register="true" />
-  </v-dialog>
-  </v-container>
-</FullScreenViewport>
+  <FullScreenViewport>
+    <v-container>
+      <v-dialog :value="userDialog" persistent lazy max-width="500px">
+        <GirderAuth :register="true" />
+      </v-dialog>
+    </v-container>
+  </FullScreenViewport>
 </template>

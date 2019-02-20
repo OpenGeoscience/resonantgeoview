@@ -1,43 +1,50 @@
 <template>
-<PositionedDialog
-  :value="show"
-  scrollable
-  @input="show=false"
-  :right="this.right"
-  :left="this.left"
-  :top="this.top"
-  :bottom="this.bottom"
-  hide-overlay
-  persistent
-  max-width="400px">
-  <v-card>
-    <v-card-title>
-      <span class="title">Info</span>
-      <v-spacer></v-spacer>
-      <v-btn icon @click="show=false">
-        <v-icon>close</v-icon>
-      </v-btn>
-    </v-card-title>
-    <v-card-text>
-      <transition-group name="fade" tag="div">
-        <div class="dataset" v-for="(datasetInfo) of datasetsInfo" :key="Math.random(datasetInfo)">
-          <div class="subheading">{{datasetInfo.dataset.name}}</div>
-          <div class="info-table">
-            <div class="table-row" v-for="(value, key) in datasetInfo.info" :key="key">
-              <div class="row-key">{{key}}</div>
-              <div class="row-value">{{value}}</div>
+  <PositionedDialog
+    :value="show"
+    scrollable
+    @input="show = false"
+    :right="this.right"
+    :left="this.left"
+    :top="this.top"
+    :bottom="this.bottom"
+    hide-overlay
+    persistent
+    max-width="400px"
+  >
+    <v-card>
+      <v-card-title>
+        <span class="title">Info</span>
+        <v-spacer></v-spacer>
+        <v-btn icon @click="show = false">
+          <v-icon>close</v-icon>
+        </v-btn>
+      </v-card-title>
+      <v-card-text>
+        <transition-group name="fade" tag="div">
+          <div
+            class="dataset"
+            v-for="datasetInfo of datasetsInfo"
+            :key="Math.random(datasetInfo)"
+          >
+            <div class="subheading">{{ datasetInfo.dataset.name }}</div>
+            <div class="info-table">
+              <div
+                class="table-row"
+                v-for="(value, key) in datasetInfo.info"
+                :key="key"
+              >
+                <div class="row-key">{{ key }}</div>
+                <div class="row-value">{{ value }}</div>
+              </div>
             </div>
           </div>
-        </div>
-      </transition-group>
-    </v-card-text>
-  </v-card>
-</PositionedDialog>
+        </transition-group>
+      </v-card-text>
+    </v-card>
+  </PositionedDialog>
 </template>
 
 <script>
-import groupBy from "lodash-es/groupBy";
-
 import PositionedDialog from "../components/PositionedDialog";
 import { ignoreProperties } from "../utils/geojsonUtil";
 import getDatasetDriver from "../utils/getDatasetDriver";
@@ -75,9 +82,8 @@ export default {
   watch: {
     async datasetClickEvents() {
       if (!this.datasetClickEvents.length) {
-        return new Promise((resolve, reject) => {
-          this.datasetsInfo = null;
-        });
+        this.datasetsInfo = null;
+        return new Promise.resolve();
       } else {
         var datasetsInfo = await Promise.all(
           this.datasetClickEvents.map(async datasetClickEvent => {
@@ -87,13 +93,11 @@ export default {
                   dataset: datasetClickEvent.dataset,
                   info: await this.getGeojsonLayersInfo(datasetClickEvent)
                 };
-                break;
               case "GeoTIFF":
                 return {
                   dataset: datasetClickEvent.dataset,
                   info: await this.getGeotiffLayersInfo(datasetClickEvent)
                 };
-                break;
             }
           })
         );
@@ -114,13 +118,11 @@ export default {
         return Promise.resolve(null);
       }
       var output = {};
-      var filtered = Object.entries(geojson.properties).forEach(
-        ([key, value]) => {
-          if (ignoreProperties.indexOf(key) === -1) {
-            output[key] = value;
-          }
+      Object.entries(geojson.properties).forEach(([key, value]) => {
+        if (ignoreProperties.indexOf(key) === -1) {
+          output[key] = value;
         }
-      );
+      });
       return Promise.resolve(output);
     },
     getGeotiffLayersInfo(datasetClickEvent) {

@@ -1,11 +1,12 @@
 <template>
-<GeojsTileLayer
-  :url="styledURL"
-  :opacity="opacity"
-  :keepLower="keepLower"
-  :zIndex="zIndex"
-  ref="geojsTileLayer">
-</GeojsTileLayer>
+  <GeojsTileLayer
+    :url="styledURL"
+    :opacity="opacity"
+    :keepLower="keepLower"
+    :zIndex="zIndex"
+    ref="geojsTileLayer"
+  >
+  </GeojsTileLayer>
 </template>
 
 <script>
@@ -47,5 +48,4 @@ export default {
 };
 </script>
 
-<style>
-</style>
+<style></style>

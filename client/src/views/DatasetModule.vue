@@ -1,21 +1,32 @@
 <template>
-  <div class='datasets'>
+  <div class="datasets">
     <v-list dense expand>
       <transition-group name="fade" tag="div">
         <v-list-group
           v-for="group in groupedDatasets"
           :key="group.key"
           prepend-icon="folder"
-          no-action>
-          <v-list-tile
-            class="group"
-            slot="activator">
+          no-action
+        >
+          <v-list-tile class="group" slot="activator">
             <v-list-tile-content>
               <v-list-tile-title>{{ group.name }}</v-list-tile-title>
             </v-list-tile-content>
             <v-list-tile-action v-if="group.group" @click.stop>
-              <v-menu lazy offset-y absolute :nudge-bottom="20" :nudge-left="20">
-                <v-btn class="group-menu-button" slot="activator" flat icon color="grey darken-2">
+              <v-menu
+                lazy
+                offset-y
+                absolute
+                :nudge-bottom="20"
+                :nudge-left="20"
+              >
+                <v-btn
+                  class="group-menu-button"
+                  slot="activator"
+                  flat
+                  icon
+                  color="grey darken-2"
+                >
                   <v-icon>more_vert</v-icon>
                 </v-btn>
                 <v-list>
@@ -40,36 +51,91 @@
             :key="dataset._id"
             @click="123"
             @mouseenter.native="debouncedSetSelectedDataset(dataset)"
-            @mouseleave.native="debouncedSetSelectedDataset.cancel(),setSelectedDataset(null)">
+            @mouseleave.native="
+              debouncedSetSelectedDataset.cancel(), setSelectedDataset(null)
+            "
+          >
             <v-list-tile-action>
-              <v-btn flat icon
+              <v-btn
+                flat
+                icon
                 key="add"
-                v-if="focusedWorkspace && focusedWorkspace.layers.map(layer=>layer.dataset).indexOf(dataset)===-1" color="grey lighten-2"
-                @click="addDatasetToWorkspace({dataset,workspace:focusedWorkspace})"
+                v-if="
+                  focusedWorkspace &&
+                    focusedWorkspace.layers
+                      .map(layer => layer.dataset)
+                      .indexOf(dataset) === -1
+                "
+                color="grey lighten-2"
+                @click="
+                  addDatasetToWorkspace({
+                    dataset,
+                    workspace: focusedWorkspace
+                  })
+                "
                 :loading="loadingDatasetIds[dataset._id]"
-                :disabled="loadingDatasetIds[dataset._id]">
+                :disabled="loadingDatasetIds[dataset._id]"
+              >
                 <v-icon>fa-globe-americas</v-icon>
               </v-btn>
-              <v-btn flat icon key="remove" v-else color="grey darken-2" @click="removeDatasetFromWorkspace({dataset,workspace:focusedWorkspace})">
+              <v-btn
+                flat
+                icon
+                key="remove"
+                v-else
+                color="grey darken-2"
+                @click="
+                  removeDatasetFromWorkspace({
+                    dataset,
+                    workspace: focusedWorkspace
+                  })
+                "
+              >
                 <v-icon>fa-globe-americas</v-icon>
               </v-btn>
             </v-list-tile-action>
             <v-list-tile-content>
-              <v-list-tile-title 
-              :class="{
-                'grey--text text--lighten-2':filteredDatasetIds && filteredDatasetIds.indexOf(dataset._id)===-1
-                }">{{dataset.name}}</v-list-tile-title>
+              <v-list-tile-title
+                :class="{
+                  'grey--text text--lighten-2':
+                    filteredDatasetIds &&
+                    filteredDatasetIds.indexOf(dataset._id) === -1
+                }"
+                >{{ dataset.name }}</v-list-tile-title
+              >
             </v-list-tile-content>
             <v-list-tile-action v-if="!dataset._id.startsWith('adhoc_')">
-              <v-menu lazy offset-y absolute :nudge-bottom="20" :nudge-left="20">
-                <v-btn class="dataset-menu-button" slot="activator" flat icon color="grey darken-2">
+              <v-menu
+                lazy
+                offset-y
+                absolute
+                :nudge-bottom="20"
+                :nudge-left="20"
+              >
+                <v-btn
+                  class="dataset-menu-button"
+                  slot="activator"
+                  flat
+                  icon
+                  color="grey darken-2"
+                >
                   <v-icon>more_vert</v-icon>
                 </v-btn>
                 <v-list>
-                  <v-list-tile @click="selectedDataset=dataset;showAddToGroup=true;">
+                  <v-list-tile
+                    @click="
+                      selectedDataset = dataset;
+                      showAddToGroup = true;
+                    "
+                  >
                     <v-list-tile-title>Add to group</v-list-tile-title>
                   </v-list-tile>
-                  <v-list-tile v-if="group.group" @click="removeDatasetFromGroup({group: group.group, dataset})">
+                  <v-list-tile
+                    v-if="group.group"
+                    @click="
+                      removeDatasetFromGroup({ group: group.group, dataset })
+                    "
+                  >
                     <v-list-tile-title>Remove from group</v-list-tile-title>
                   </v-list-tile>
                   <v-divider />
@@ -78,7 +144,8 @@
                   </v-list-tile>
                   <v-list-tile
                     :href="`${API_URL}/item/${dataset._id}/download`"
-                    target="_blank">
+                    target="_blank"
+                  >
                     <v-list-tile-title>Download</v-list-tile-title>
                   </v-list-tile>
                 </v-list>
@@ -88,7 +155,11 @@
         </v-list-group>
       </transition-group>
     </v-list>
-    <DatasetGroupDialog v-if='showAddToGroup' v-model='showAddToGroup' :dataset="selectedDataset"/>
+    <DatasetGroupDialog
+      v-if="showAddToGroup"
+      v-model="showAddToGroup"
+      :dataset="selectedDataset"
+    />
   </div>
 </template>
 
@@ -97,7 +168,6 @@ import { mapState, mapMutations, mapActions, mapGetters } from "vuex";
 import groupBy from "lodash-es/groupBy";
 import debounce from "lodash-es/debounce";
 import keyBy from "lodash-es/keyBy";
-import mapValues from "lodash-es/mapValues";
 
 import { API_URL } from "../constants";
 import DatasetGroupDialog from "./DatasetGroupDialog";
@@ -129,9 +199,7 @@ export default {
       });
       var typeGroups = Object.entries(
         groupBy(
-          this.datasets.filter(
-            dataset => !dataset._id.startsWith("adhoc_")
-          ),
+          this.datasets.filter(dataset => !dataset._id.startsWith("adhoc_")),
           dataset => dataset.geometa.type_
         )
       ).map(([type, datasets]) => {
@@ -153,7 +221,7 @@ export default {
       }
       return [...typeGroups, ...namedGroups];
     },
-    ...mapState(["datasets", "groups", "datasetSortBy","loadingDatasetIds"]),
+    ...mapState(["datasets", "groups", "datasetSortBy", "loadingDatasetIds"]),
     ...mapGetters(["focusedWorkspace"])
   },
   watch: {},

@@ -1,13 +1,13 @@
-import Vue from 'vue';
-import Vuex from 'vuex';
-import pointOnFeature from '@turf/point-on-feature';
+import Vue from "vue";
+import Vuex from "vuex";
+import pointOnFeature from "@turf/point-on-feature";
 import bbox from "@turf/bbox";
 import bboxPolygon from "@turf/bbox-polygon";
 
-import girder from '../girder';
-import { remove } from '../utils/array';
-import prompt from '../components/prompt/module';
-import loadDatasets from '../utils/loadDataset';
+import girder from "../girder";
+import { remove } from "../utils/array";
+import prompt from "../components/prompt/module";
+import loadDatasets from "../utils/loadDataset";
 import loadDatasetData from "../utils/loadDatasetData";
 import { summarize, normalize } from "../utils/geojsonUtil";
 import { getDefaultGeojsonVizProperties } from "../utils/getDefaultGeojsonVizProperties";
@@ -22,16 +22,16 @@ export default new Vuex.Store({
     sidePanelExpanded: true,
     datasets: [],
     datasetIdMetaMap: {},
-    datasetSortBy: 'type',
+    datasetSortBy: "type",
     groups: [],
     selectedDataset: null,
     loadingDatasetIds: {},
     workspaces: {
-      '0': {
+      "0": {
         layers: []
       }
     },
-    focusedWorkspaceKey: '0',
+    focusedWorkspaceKey: "0",
     datasetFolder: null
   },
   mutations: {
@@ -39,11 +39,13 @@ export default new Vuex.Store({
       state.sidePanelExpanded = !state.sidePanelExpanded;
     },
     setDatasets(state, datasets) {
-      datasets.forEach((dataset) => {
+      datasets.forEach(dataset => {
         switch (getDatasetDriver(dataset)) {
           case "GeoJSON":
             if (!dataset.meta || !dataset.meta.vizProperties) {
-              Object.assign(dataset, { meta: { vizProperties: getDefaultGeojsonVizProperties() } });
+              Object.assign(dataset, {
+                meta: { vizProperties: getDefaultGeojsonVizProperties() }
+              });
             }
             break;
           default:
@@ -57,11 +59,15 @@ export default new Vuex.Store({
     },
     addAdhocGeojsonDataset(state, { name, geojson }) {
       var dataset = {
-        _id: 'adhoc_' + Math.random().toString(36).substring(7),
+        _id:
+          "adhoc_" +
+          Math.random()
+            .toString(36)
+            .substring(7),
         name,
         geometa: {
-          type_: 'vector',
-          driver: 'GeoJSON',
+          type_: "vector",
+          driver: "GeoJSON",
           bounds: bboxPolygon(bbox(geojson)).geometry
         },
         meta: {
@@ -77,9 +83,15 @@ export default new Vuex.Store({
       state.selectedDataset = dataset;
     },
     addWorkspace(state) {
-      Vue.set(state.workspaces, Math.random().toString(36).substring(7), {
-        layers: []
-      })
+      Vue.set(
+        state.workspaces,
+        Math.random()
+          .toString(36)
+          .substring(7),
+        {
+          layers: []
+        }
+      );
     },
     removeWorkspace(state, key) {
       Vue.delete(state.workspaces, key);
@@ -91,7 +103,9 @@ export default new Vuex.Store({
       workspace.layers.push({ dataset, opacity: 1 });
     },
     removeDatasetFromWorkspace(state, { dataset, workspace }) {
-      var index = workspace.layers.map(layers => layers.dataset).indexOf(dataset);
+      var index = workspace.layers
+        .map(layers => layers.dataset)
+        .indexOf(dataset);
       if (index !== -1) {
         workspace.layers.splice(index, 1);
       }
@@ -121,45 +135,52 @@ export default new Vuex.Store({
   },
   actions: {
     async loadDatasets({ commit }) {
-      commit('setDatasets', await loadDatasets());
+      commit("setDatasets", await loadDatasets());
     },
     async loadGroups({ commit }) {
-      commit('setGroup', (await girder.rest.get('dataset_group')).data);
+      commit("setGroup", (await girder.rest.get("dataset_group")).data);
     },
     async createGroup({ commit }, name) {
-      commit('addGroup', (await girder.rest.post('dataset_group', { name, datasetIds: [] })).data);
+      commit(
+        "addGroup",
+        (await girder.rest.post("dataset_group", { name, datasetIds: [] })).data
+      );
     },
     async deleteGroup({ commit }, group) {
       await girder.rest.delete(`dataset_group/${group._id}`);
-      commit('removeGroup', group);
+      commit("removeGroup", group);
     },
-    async addDatasetToGroup({ state, commit }, { group, dataset }) {
-      commit('addDatasetToGroup', { group, dataset });
+    async addDatasetToGroup({ commit }, { group, dataset }) {
+      commit("addDatasetToGroup", { group, dataset });
       return girder.rest.put(`dataset_group/${group._id}`, group);
     },
-    async removeDatasetFromGroup({ state, commit }, { group, dataset }) {
-      commit('removeDatasetFromGroup', { group, dataset });
+    async removeDatasetFromGroup({ commit }, { group, dataset }) {
+      commit("removeDatasetFromGroup", { group, dataset });
       return girder.rest.put(`dataset_group/${group._id}`, group);
     },
-    async addDatasetToWorkspace({ state, commit }, { dataset, workspace }) {
+    async addDatasetToWorkspace({ state }, { dataset, workspace }) {
       Vue.set(state.loadingDatasetIds, dataset._id, true);
       if (!(dataset._id in state.datasetIdMetaMap)) {
-        Vue.set(state.datasetIdMetaMap, dataset._id, await getDatasetMeta(dataset, state.datasetIdMetaMap));
+        Vue.set(
+          state.datasetIdMetaMap,
+          dataset._id,
+          await getDatasetMeta(dataset, state.datasetIdMetaMap)
+        );
       }
       workspace.layers.unshift({ dataset, opacity: 1 });
       Vue.delete(state.loadingDatasetIds, dataset._id);
     },
-    async setDatasetFolder({ state, commit }) {
-      var { data: folder } = await girder.rest.get('dataset/folder');
+    async setDatasetFolder({ state }) {
+      var { data: folder } = await girder.rest.get("dataset/folder");
       state.datasetFolder = folder;
     },
     async deleteDataset({ state, commit }, dataset) {
       Object.values(state.workspaces).forEach(workspace => {
-        commit('removeDatasetFromWorkspace', { dataset, workspace });
+        commit("removeDatasetFromWorkspace", { dataset, workspace });
       });
       await girder.rest.delete(`item/${dataset._id}`);
       remove(state.datasets, dataset);
-    },
+    }
   },
   getters: {
     focusedWorkspace(state) {
@@ -177,20 +198,16 @@ export default new Vuex.Store({
   }
 });
 
-
 async function getDatasetMeta(dataset) {
   switch (getDatasetDriver(dataset)) {
     case "GeoJSON":
       var geojson = normalize(await loadDatasetData(dataset));
       var summary = summarize(geojson);
       return { geojson, summary };
-      break;
     case "GeoTIFF":
       return await getLargeImageMeta(dataset);
-      break;
     case "Network Common Data Format":
       return await getLargeImageMeta(dataset);
-      break;
     default:
       return null;
   }
