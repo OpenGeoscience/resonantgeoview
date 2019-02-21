@@ -142,6 +142,9 @@
             :texture="workspace.texture"
           />
         </VTKViewport>
+        <CesiumViewport v-if="workspace.type === 'cesium'">
+          <Tileset3D v-for="(layer, i) in workspace.layers" :key="i" :dataset="layer.dataset" />
+        </CesiumViewport>
       </Workspace>
     </WorkspaceContainer>
     <VNavigationDrawer
@@ -176,6 +179,11 @@
             <v-list-tile @click="addWMSDialog = true">
               <v-list-tile-content>
                 <v-list-tile-title>Add WMS dataset</v-list-tile-title>
+              </v-list-tile-content>
+            </v-list-tile>
+            <v-list-tile @click="addCesiumDialog = true">
+              <v-list-tile-content>
+                <v-list-tile-title>Add Cesium tileset</v-list-tile-title>
               </v-list-tile-content>
             </v-list-tile>
             <v-divider />
@@ -278,6 +286,10 @@
       v-model="addWMSDialog"
       @dataset="createDatasetWithGeometa"
     />
+    <AddCesiumTilesetDialog
+      v-model="addCesiumDialog"
+      @dataset="createDatasetWithGeometa"
+    />
     <GaiaProcessingDialog
       v-if="datasetFolder"
       :dest="datasetFolder"
@@ -314,6 +326,7 @@ import saveDatasetMetadata from "../utils/saveDatasetMetadata";
 import MapScreenshotDialog from "./MapScreenshotDialog";
 import ClickInfoDialog from "./ClickInfoDialog";
 import AddWMSDatasetDialog from "../components/AddWMSDatasetDialog";
+import AddCesiumTilesetDialog from "../components/AddCesiumTilesetDialog";
 import GaiaProcessingDialog from "./GaiaProcessingDialog";
 import JobsDialog from "../components/girder/JobsDialog";
 // import ResizableVNavigationDrawer from "../components/ResizableVNavigationDrawer";
@@ -321,6 +334,8 @@ import getDatasetDriver from "../utils/getDatasetDriver";
 import VTKViewport from "../components/vtk/VTKViewport";
 import OBJMultiItemActor from "../components/vtk/OBJMultiItemActor";
 import Palette from "../components/vtk/Palette";
+import CesiumViewport from "../components/cesium/CesiumViewport";
+import Tileset3D from "../components/cesium/Tileset3D";
 
 export default {
   name: "Explore",
@@ -340,11 +355,14 @@ export default {
     MapScreenshotDialog,
     ClickInfoDialog,
     AddWMSDatasetDialog,
+    AddCesiumTilesetDialog,
     GaiaProcessingDialog,
     JobsDialog,
     VTKViewport,
     OBJMultiItemActor,
-    Palette
+    Palette,
+    CesiumViewport,
+    Tileset3D
   },
   inject: ["girderRest", "notificationBus"],
   data() {
@@ -365,6 +383,7 @@ export default {
       uploadDialog: false,
       jobsDialog: false,
       addWMSDialog: false,
+      addCesiumDialog: false,
       processingDialog: false
     };
   },
