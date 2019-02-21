@@ -1,8 +1,9 @@
 import Vue from "vue";
 import Router from "vue-router";
 
-import Explore from "./views/Explore.vue";
 import girder from "./girder";
+import Explore from "./views/Explore.vue";
+import CesiumContainer from "./views/CesiumContainer.vue";
 import Login from "./views/Login.vue";
 
 Vue.use(Router);
@@ -21,6 +22,12 @@ export default new Router({
       path: "/",
       name: "explore",
       component: Explore,
+      beforeEnter
+    },
+    {
+      path: "/cesium",
+      name: "cesium",
+      component: CesiumContainer,
       beforeEnter
     },
     {

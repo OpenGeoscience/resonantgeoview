@@ -257,6 +257,9 @@ export default {
       if (getDatasetDriver(dataset) === "OBJ") {
         workspaceType = "vtk";
       }
+      if (getDatasetDriver(dataset) === "Cesium") {
+        workspaceType = "cesium";
+      }
       if (
         Object.keys(this.workspaces).length < 2 ||
         this.focusedWorkspace.type === workspaceType

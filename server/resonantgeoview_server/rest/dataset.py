@@ -26,7 +26,7 @@ class DatasetResource(Resource):
     def getAll(self, params):
         return self._getAll()
 
-    supportedDriver = ['GeoJSON', 'GeoTIFF', 'WMS', 'Network Common Data Format', 'OBJ']
+    supportedDriver = ['GeoJSON', 'GeoTIFF', 'WMS', 'Network Common Data Format', 'OBJ', 'Cesium']
 
     def _getAll(self):
         cursor = Item().find({'$or':
