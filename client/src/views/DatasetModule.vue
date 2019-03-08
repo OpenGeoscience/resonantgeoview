@@ -247,17 +247,16 @@ export default {
         return false;
       }
       var workspaceType = null;
+      var driver = getDatasetDriver(dataset);
       if (
-        ["GeoJSON", "GeoTIFF", "Network Common Data Format"].includes(
-          getDatasetDriver(dataset)
-        )
+        ["GeoJSON", "GeoTIFF", "Network Common Data Format"].includes(driver)
       ) {
         workspaceType = "geojs";
       }
-      if (getDatasetDriver(dataset) === "OBJ") {
+      if (driver === "OBJ") {
         workspaceType = "vtk";
       }
-      if (getDatasetDriver(dataset) === "Cesium") {
+      if (["Cesium", "gltf"].includes(driver)) {
         workspaceType = "cesium";
       }
       if (

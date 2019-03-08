@@ -143,7 +143,14 @@
           />
         </VTKViewport>
         <CesiumViewport v-if="workspace.type === 'cesium'">
-          <Tileset3D v-for="(layer, i) in workspace.layers" :key="i" :dataset="layer.dataset" />
+          <template v-for="(layer, i) in workspace.layers">
+            <Tileset3D 
+                v-if="getDatasetDriver(layer.dataset) === 'Cesium'"
+                :key="i" :dataset="layer.dataset" />
+            <Model 
+                v-if="getDatasetDriver(layer.dataset) === 'gltf'"
+                :key="i" :dataset="layer.dataset" />
+          </template>
         </CesiumViewport>
       </Workspace>
     </WorkspaceContainer>
@@ -336,6 +343,7 @@ import OBJMultiItemActor from "../components/vtk/OBJMultiItemActor";
 import Palette from "../components/vtk/Palette";
 import CesiumViewport from "../components/cesium/CesiumViewport";
 import Tileset3D from "../components/cesium/Tileset3D";
+import Model from "../components/cesium/Model";
 
 export default {
   name: "Explore",
@@ -362,7 +370,8 @@ export default {
     OBJMultiItemActor,
     Palette,
     CesiumViewport,
-    Tileset3D
+    Tileset3D,
+    Model
   },
   inject: ["girderRest", "notificationBus"],
   data() {
