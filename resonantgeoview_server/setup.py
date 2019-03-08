@@ -11,7 +11,8 @@ setup(name='resonantgeoview_server',
         'girder-plugin-geometa',
         'girder-plugin-geometa-vector',
         'girder-plugin-geometa-raster',
-        'large_image'
+        'large_image',
+        'shapely'
     ],
     extras_require={
         'worker': [
@@ -36,6 +37,9 @@ setup(name='resonantgeoview_server',
         ],
         'girder_worker_plugins': [
             'gaia_task = gaia_task:GaiaTasks',
+        ],
+        'geometa.types': [
+            'vector=geometa_OBJ_handler.schema:handler'
         ]
     },
     packages=find_packages(exclude=['tests*', 'server*', 'docs']),
