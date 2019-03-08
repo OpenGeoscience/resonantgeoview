@@ -67,14 +67,9 @@
                       .indexOf(dataset) === -1
                 "
                 color="grey lighten-2"
-                @click="
-                  addDatasetToWorkspace({
-                    dataset,
-                    workspace: focusedWorkspace
-                  })
-                "
+                @click="tryAddDatasetToWorkspace(dataset)"
                 :loading="loadingDatasetIds[dataset._id]"
-                :disabled="loadingDatasetIds[dataset._id]"
+                :disabled="!allowAddToWorkspace(dataset)"
               >
                 <v-icon>fa-globe-americas</v-icon>
               </v-btn>
@@ -171,6 +166,7 @@ import keyBy from "lodash-es/keyBy";
 
 import { API_URL } from "../constants";
 import DatasetGroupDialog from "./DatasetGroupDialog";
+import getDatasetDriver from "../utils/getDatasetDriver";
 
 export default {
   name: "DatasetModule",
@@ -221,7 +217,13 @@ export default {
       }
       return [...typeGroups, ...namedGroups];
     },
-    ...mapState(["datasets", "groups", "datasetSortBy", "loadingDatasetIds"]),
+    ...mapState([
+      "datasets",
+      "groups",
+      "datasetSortBy",
+      "loadingDatasetIds",
+      "workspaces"
+    ]),
     ...mapGetters(["focusedWorkspace"])
   },
   watch: {},
@@ -229,13 +231,51 @@ export default {
     this.debouncedSetSelectedDataset = debounce(this.setSelectedDataset, 200);
   },
   methods: {
-    ...mapMutations(["setSelectedDataset", "removeDatasetFromWorkspace"]),
+    ...mapMutations([
+      "addWorkspace",
+      "setSelectedDataset",
+      "removeDatasetFromWorkspace"
+    ]),
     ...mapActions([
       "deleteGroup",
       "deleteDataset",
       "addDatasetToWorkspace",
       "removeDatasetFromGroup"
-    ])
+    ]),
+    allowAddToWorkspace(dataset) {
+      if (this.loadingDatasetIds[dataset._id]) {
+        return false;
+      }
+      var workspaceType = null;
+      if (
+        ["GeoJSON", "GeoTIFF", "Network Common Data Format"].includes(
+          getDatasetDriver(dataset)
+        )
+      ) {
+        workspaceType = "geojs";
+      }
+      if (getDatasetDriver(dataset) === "OBJ") {
+        workspaceType = "vtk";
+      }
+      if (
+        Object.keys(this.workspaces).length < 2 ||
+        this.focusedWorkspace.type === workspaceType
+      ) {
+        return workspaceType;
+      } else {
+        return false;
+      }
+    },
+    tryAddDatasetToWorkspace(dataset) {
+      var workspaceType = this.allowAddToWorkspace(dataset);
+      if (workspaceType !== this.focusedWorkspace.type) {
+        this.addWorkspace(workspaceType);
+      }
+      this.addDatasetToWorkspace({
+        dataset,
+        workspace: this.focusedWorkspace
+      });
+    }
   }
 };
 </script>

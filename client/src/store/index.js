@@ -28,6 +28,7 @@ export default new Vuex.Store({
     loadingDatasetIds: {},
     workspaces: {
       "0": {
+        type: "geojs",
         layers: []
       }
     },
@@ -82,16 +83,23 @@ export default new Vuex.Store({
     setSelectedDataset(state, dataset) {
       state.selectedDataset = dataset;
     },
-    addWorkspace(state) {
-      Vue.set(
-        state.workspaces,
-        Math.random()
-          .toString(36)
-          .substring(7),
-        {
-          layers: []
-        }
-      );
+    addWorkspace(state, type) {
+      var key = Math.random()
+        .toString(36)
+        .substring(7);
+      var workspace = {
+        type,
+        layers: []
+      };
+      switch (type) {
+        case "geojs":
+          break;
+        case "vtk":
+          workspace.vtkBGColor = "#000000";
+          break;
+      }
+      Vue.set(state.workspaces, key, workspace);
+      state.focusedWorkspaceKey = key;
     },
     removeWorkspace(state, key) {
       Vue.delete(state.workspaces, key);
