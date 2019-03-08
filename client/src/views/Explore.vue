@@ -10,16 +10,28 @@
         v-for="(workspace, key) in workspaces"
         :key="key"
         :identifier="key"
-        @split="addWorkspace()"
+        @split="addWorkspace(workspace.type)"
         @close="removeWorkspace(key)"
       >
         <template slot="actions">
-          <WorkspaceAction>
+          <WorkspaceAction v-if="workspace.type === 'geojs'">
             <v-icon @click="takeScreenshot(key)">camera_alt</v-icon>
+          </WorkspaceAction>
+          <WorkspaceAction v-if="workspace.type === 'vtk'">
+            <v-menu top offset-y origin="center center">
+              <v-icon slot="activator">palette</v-icon>
+              <v-card width="130px">
+                <Palette
+                  :value="workspace.vtkBGColor"
+                  @input="workspace.vtkBGColor = $event"
+                />
+              </v-card>
+            </v-menu>
           </WorkspaceAction>
         </template>
         <GeojsMapViewport
           class="map"
+          v-if="workspace.type === 'geojs'"
           :viewport="viewport"
           :ref="`geojsMapViewport${key}`"
         >
@@ -122,6 +134,13 @@
             </GeojsWidgetLayer>
           </template>
         </GeojsMapViewport>
+        <VTKViewport v-if="workspace.type === 'vtk'" :background="workspace.vtkBGColor">
+          <OBJMultiItemActor
+            v-for="layer in workspace.layers"
+            :key="layer.dataset._id"
+            :item="layer.dataset"
+          />
+        </VTKViewport>
       </Workspace>
     </WorkspaceContainer>
     <VNavigationDrawer
@@ -168,7 +187,10 @@
         </v-menu>
       </v-toolbar>
       <v-container class="action-buttons pa-0">
-        <SidePanelAction @click="drawing = 'rectangle'">
+        <SidePanelAction
+          @click="drawing = 'rectangle'"
+          v-if="focusedWorkspace && focusedWorkspace.type === 'geojs'"
+        >
           <v-icon>aspect_ratio</v-icon>
         </SidePanelAction>
         <SidePanelAction @click="processingDialog = true">
@@ -251,7 +273,10 @@
         :datasetClickEvents="datasetClickEvents"
       />
     </v-dialog>
-    <AddWMSDatasetDialog v-model="addWMSDialog" @dataset="createWMSdataset" />
+    <AddWMSDatasetDialog
+      v-model="addWMSDialog"
+      @dataset="createDatasetWithGeometa"
+    />
     <GaiaProcessingDialog
       v-if="datasetFolder"
       :dest="datasetFolder"
@@ -292,6 +317,9 @@ import GaiaProcessingDialog from "./GaiaProcessingDialog";
 import JobsDialog from "../components/girder/JobsDialog";
 // import ResizableVNavigationDrawer from "../components/ResizableVNavigationDrawer";
 import getDatasetDriver from "../utils/getDatasetDriver";
+import VTKViewport from "../components/vtk/VTKViewport";
+import OBJMultiItemActor from "../components/vtk/OBJMultiItemActor";
+import Palette from "../components/vtk/Palette";
 
 export default {
   name: "Explore",
@@ -312,8 +340,10 @@ export default {
     ClickInfoDialog,
     AddWMSDatasetDialog,
     GaiaProcessingDialog,
-    JobsDialog
-    // ResizableVNavigationDrawer
+    JobsDialog,
+    VTKViewport,
+    OBJMultiItemActor,
+    Palette
   },
   inject: ["girderRest", "notificationBus"],
   data() {
@@ -452,7 +482,7 @@ export default {
         this.debounceSetdatasetClickEvents();
       }
     },
-    async createWMSdataset({ name, geometa }) {
+    async createDatasetWithGeometa({ name, geometa }) {
       var { data: item } = await this.girderRest.post(
         "/item",
         stringify({
