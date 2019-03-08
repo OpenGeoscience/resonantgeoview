@@ -2,6 +2,8 @@
 // This is an initial proof of concept so many things are hard coded
 import { mapState } from "vuex";
 
+import getDatasetDriver from "../utils/getDatasetDriver";
+
 export default {
   name: "GaiaProcessingDialog",
   components: {},
@@ -31,7 +33,10 @@ export default {
     };
   },
   computed: {
-    ...mapState(["datasets"])
+    ...mapState(["datasets"]),
+    geojsonDatasets() {
+      return this.datasets.filter(dataset => getDatasetDriver(dataset) === "GeoJSON");
+    }
   },
   methods: {
     startGaiaProcessing() {
@@ -90,7 +95,7 @@ export default {
           <v-layout>
             <v-flex>
               <v-select
-                :items="datasets"
+                :items="geojsonDatasets"
                 hide-details
                 item-text="name"
                 :item-value="value => value"
@@ -106,7 +111,7 @@ export default {
           <v-layout>
             <v-flex>
               <v-select
-                :items="datasets"
+                :items="geojsonDatasets"
                 hide-details
                 item-text="name"
                 :item-value="value => value"

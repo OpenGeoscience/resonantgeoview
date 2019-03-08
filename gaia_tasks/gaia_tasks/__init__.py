@@ -15,4 +15,4 @@ class GaiaTasks(GirderWorkerPluginABC):
         self.app = app
 
     def task_imports(self):
-        return ['gaia_task.tasks']
+        return ['gaia_tasks.tasks']

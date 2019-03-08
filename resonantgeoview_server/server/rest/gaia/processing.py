@@ -6,7 +6,7 @@ from girder.models.item import Item
 from girder.models.folder import Folder
 from girder_worker_utils.transforms.girder_io import GirderFileId
 from girder_worker_utils.transforms.girder_io import GirderUploadToItem
-from gaia_task.tasks import crop_task
+from gaia_tasks.tasks import crop_task
 
 
 class ProcessingResource(Resource):
