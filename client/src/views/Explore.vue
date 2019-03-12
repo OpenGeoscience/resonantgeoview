@@ -266,13 +266,13 @@
           uploadDialog = false;
         "
       />
-      <MapScreenshotDialog v-model="mapScreenshotDialog" :map="screenshotMap" />
-      <ClickInfoDialog
-        right="15px"
-        bottom="60px"
-        :datasetClickEvents="datasetClickEvents"
-      />
     </v-dialog>
+    <MapScreenshotDialog v-model="mapScreenshotDialog" :map="screenshotMap" />
+    <ClickInfoDialog
+      right="15px"
+      bottom="60px"
+      :datasetClickEvents="datasetClickEvents"
+    />
     <AddWMSDatasetDialog
       v-model="addWMSDialog"
       @dataset="createDatasetWithGeometa"
