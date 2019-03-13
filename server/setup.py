@@ -5,13 +5,15 @@ setup(name='resonantgeoview_server',
     description='',
     url='',
     install_requires=[
-        'girder>=3.0.0a1',
+        'girder==3.0.0a6.dev11',
         'girder_worker',
         'girder_worker_utils',
         'girder-plugin-geometa',
         'girder-plugin-geometa-vector',
         'girder-plugin-geometa-raster',
         'large_image',
+        'large-image-source-mapnik',
+        'girder-large-image',
         'shapely'
     ],
     extras_require={

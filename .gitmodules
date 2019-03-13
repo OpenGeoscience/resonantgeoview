@@ -1,0 +1,6 @@
+[submodule "submodules/girder_geospatial"]
+	path = submodules/girder_geospatial
+	url = https://github.com/OpenGeoscience/girder_geospatial.git
+[submodule "submodules/gaia"]
+	path = submodules/gaia
+	url = https://github.com/OpenDataAnalytics/gaia.git

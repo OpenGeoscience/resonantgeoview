@@ -36,7 +36,6 @@ class ProcessingResource(Resource):
         driver = item.get('geometa', {}).get('driver', None)
         if not driver:
             raise ValidationException('Unsupported target dataset')
-
         result = crop_task.delay(GirderFileId(str(target_file['_id'])),
                                  driver,
                                  GirderFileId(str(by_file['_id'])),

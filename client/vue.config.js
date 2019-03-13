@@ -10,7 +10,7 @@ module.exports = {
       }
     }
   },
-  publicPath: process.env.NODE_ENV === "production" ? "/static/external/" : "/",
+  publicPath: process.env.VUE_APP_STATIC_PATH,
   chainWebpack: config => {
     config.module
       .rule("js")
