@@ -1,0 +1,50 @@
+version: "2"
+
+services:
+  database:
+    image: mongo:3.4
+    volumes:
+      - "${DATA_PERSISTENCE_DIRECTORY}/database:/data/db"
+
+  web_server:
+    build:
+      context: ../..
+      dockerfile: devops/docker/girder/Dockerfile
+    ports:
+      - "${PORT}:8080"
+    links:
+      - database
+      - broker
+    command: --host 0.0.0.0 --database mongodb://database:27017/girder
+    volumes:
+      - "${DATA_PERSISTENCE_DIRECTORY}/assetstore:/assetstore"
+
+  provision:
+    build:
+      context: ../..
+      dockerfile: devops/docker/provision/Dockerfile
+    links:
+      - database
+      - web_server
+    command:
+      [
+        "ghost=web_server gport=8080 gscheme=http assetstore=/assetstore broker=amqp://guest@broker admin_name=${GIRDER_ADMIN_NAME} admin_pass=${GIRDER_ADMIN_PASS}"]
+
+  broker:
+    image: rabbitmq
+    command: [
+      "rabbitmq-server",
+      "--hostname", "broker",
+      "--name"    , "broker"
+    ]
+
+  worker:
+    build:
+      context: ../..
+      dockerfile: devops/docker/worker/Dockerfile
+    links:
+      - broker
+    environment:
+      - "BROKER=amqp://guest@broker"
+    command: [
+    ]
