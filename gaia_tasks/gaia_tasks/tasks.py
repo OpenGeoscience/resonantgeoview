@@ -31,7 +31,6 @@ def crop_task(self, target_file, target_driver, by_file, name):
     cropped = preprocess.crop(target, by_file)
 
     tempName = getTempFileNameWithExtention(target_driver, name)
-
     # A bug with geopandas and fiona that throws an error like
     # fiona.errors.GeometryTypeValidationError: Record's geometry type does not match collection schema's geometry type: 'MultiPolygon' != 'Polygon'
     if(target_driver == 'GeoJSON'):
