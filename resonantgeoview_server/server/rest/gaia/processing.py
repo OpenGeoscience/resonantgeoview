@@ -1,6 +1,7 @@
 from girder.api import access
 from girder.api.describe import autoDescribeRoute, Description
 from girder.api.rest import Resource
+from girder.exceptions import ValidationException
 from girder.constants import AccessType
 from girder.models.item import Item
 from girder.models.folder import Folder
@@ -17,7 +18,7 @@ class ProcessingResource(Resource):
 
     @access.public
     @autoDescribeRoute(
-        Description('Clip a raster with a json geometry')
+        Description('Crop a vector geojson or raster with a geojson')
         .modelParam('itemId', 'The ID of the item that has a geojson file',
                     model=Item, level=AccessType.READ, destName='item', paramType='query')
         .modelParam('byitemId', 'The ID of the item that has a geojson file',
@@ -32,10 +33,15 @@ class ProcessingResource(Resource):
         output = Item().createItem(name,
                                    creator=self.getCurrentUser(),
                                    folder=folder)
+        driver = item.get('geometa', {}).get('driver', None)
+        if not driver:
+            raise ValidationException('Unsupported target dataset')
+
         result = crop_task.delay(GirderFileId(str(target_file['_id'])),
+                                 driver,
                                  GirderFileId(str(by_file['_id'])),
                                  name,
                                  girder_result_hooks=[
-                                     GirderUploadToItem(str(output['_id']))
+            GirderUploadToItem(str(output['_id']))
         ])
         return result.job

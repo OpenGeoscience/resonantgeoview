@@ -23,11 +23,11 @@ export default {
       newDatasetName: "",
       processings: [
         {
-          name: "within",
-          label: "Within"
+          name: "crop",
+          label: "Crop"
         }
       ],
-      selectedProcessing: "within",
+      selectedProcessing: "crop",
       dataset1: null,
       dataset2: null
     };
@@ -95,7 +95,7 @@ export default {
           <v-layout>
             <v-flex>
               <v-select
-                :items="geojsonDatasets"
+                :items="datasets"
                 hide-details
                 item-text="name"
                 :item-value="value => value"
@@ -147,7 +147,6 @@ export default {
               !newDatasetName ||
                 !selectedProcessing ||
                 !dataset1 ||
-                dataset1.geometa.driver !== 'GeoJSON' ||
                 !dataset2 ||
                 dataset2.geometa.driver !== 'GeoJSON'
             "
