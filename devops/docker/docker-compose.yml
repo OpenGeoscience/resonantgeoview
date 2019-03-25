@@ -15,6 +15,9 @@ services:
     links:
       - database
       - broker
+    environment:
+      - 'GIRDER_WORKER_BROKER=amqp://guest@broker'
+      - 'GIRDER_WORKER_BACKEND=amqp://guest@broker'
     command: --host 0.0.0.0 --database mongodb://database:27017/girder
     volumes:
       - "${DATA_PERSISTENCE_DIRECTORY}/assetstore:/assetstore"
@@ -32,11 +35,6 @@ services:
 
   broker:
     image: rabbitmq
-    command: [
-      "rabbitmq-server",
-      "--hostname", "broker",
-      "--name"    , "broker"
-    ]
 
   worker:
     build:
