@@ -87,14 +87,19 @@
       state: present
 
     with_items:
-      - key: "worker.broker"
-        value: "{{ broker }}"
+      # girder worker won't pickup these three for some reason
+      # - key: "worker.broker"
+      #   value: "{{ broker }}"
 
-      - key: "worker.backend"
-        value: "{{ broker }}"
+      # - key: "worker.backend"
+      #   value: "{{ broker }}"
 
-      - key: "worker.api_url"
-        value: "http://{{ ghost }}:{{ gport }}/api/v1"
+      # - key: "worker.api_url"
+      #   value: "http://{{ ghost }}:{{ gport }}/api/v1"
+
+      # Fix for above issue
+      - key: "core.server_root"
+        value: http://{{ ghost }}:{{ gport }}/
 
       # - key: "core.registration_policy"
       #   value: "closed"
