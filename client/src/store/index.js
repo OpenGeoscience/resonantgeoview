@@ -6,7 +6,6 @@ import bboxPolygon from "@turf/bbox-polygon";
 
 import girder from "../girder";
 import { remove } from "../utils/array";
-import prompt from "../components/prompt/module";
 import loadDatasets from "../utils/loadDataset";
 import loadDatasetData from "../utils/loadDatasetData";
 import { summarize, normalize } from "../utils/geojsonUtil";
@@ -196,9 +195,6 @@ export default new Vuex.Store({
       }
       return pointOnFeature(state.selectedDataset.geometa.bounds).geometry;
     }
-  },
-  modules: {
-    prompt
   }
 });
 

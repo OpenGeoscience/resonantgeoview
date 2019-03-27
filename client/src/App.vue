@@ -1,7 +1,6 @@
 <template>
   <v-app>
     <router-view></router-view>
-    <Prompt />
   </v-app>
 </template>
 
@@ -33,14 +32,11 @@ body,
 </style>
 
 <script>
-import Prompt from "./components/prompt/Prompt";
 
 import "./transitions.scss";
 
 export default {
   name: "App",
-  components: { Prompt },
-  inject: ["girderRest"],
   data() {
     return {};
   }
