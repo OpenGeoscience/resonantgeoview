@@ -534,14 +534,18 @@ export default {
     display: flex;
     flex-direction: column;
 
-    .datasets {
-      overflow-y: auto;
-    }
-
     .datasets-layers-pane {
       flex: 1;
       display: flex;
       flex-direction: column;
+
+      .datasets {
+        overflow-y: auto;
+      }
+
+      .layers {
+        flex: 1;
+      }
     }
   }
 }
