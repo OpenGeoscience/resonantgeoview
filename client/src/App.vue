@@ -1,18 +1,6 @@
 <template>
   <v-app>
-    <AppToolbar
-      title="ResonantGeoView"
-      :panelButton="true"
-      @click-panel="toggleSidePanel"
-    >
-      <template slot="right">
-        <UserButton @user="girderRest.logout()" />
-      </template>
-    </AppToolbar>
-
-    <transition name="fade" mode="out-in">
-      <router-view></router-view>
-    </transition>
+    <router-view></router-view>
     <Prompt />
   </v-app>
 </template>
@@ -46,20 +34,15 @@ body,
 
 <script>
 import Prompt from "./components/prompt/Prompt";
-import { mapMutations } from "vuex";
 
-import UserButton from "./components/girder/UserButton";
 import "./transitions.scss";
 
 export default {
   name: "App",
-  components: { Prompt, UserButton },
+  components: { Prompt },
   inject: ["girderRest"],
   data() {
     return {};
-  },
-  methods: {
-    ...mapMutations(["toggleSidePanel"])
   }
 };
 </script>

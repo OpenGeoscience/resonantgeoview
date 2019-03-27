@@ -19,7 +19,6 @@ Vue.use(Vuex);
 export default new Vuex.Store({
   strict: false,
   state: {
-    sidePanelExpanded: true,
     datasets: [],
     datasetIdMetaMap: {},
     datasetSortBy: "type",
@@ -36,9 +35,6 @@ export default new Vuex.Store({
     datasetFolder: null
   },
   mutations: {
-    toggleSidePanel(state) {
-      state.sidePanelExpanded = !state.sidePanelExpanded;
-    },
     setDatasets(state, datasets) {
       datasets.forEach(dataset => {
         switch (getDatasetDriver(dataset)) {
