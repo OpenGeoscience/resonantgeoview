@@ -33,7 +33,7 @@ setup(name='resonantgeoview_server',
     ],
     entry_points={
         'girder.plugin': [
-            'server = server:GirderPlugin'
+            'resonantgeoview_server = resonantgeoview_server:GirderPlugin'
         ],
         'girder_worker_plugins': [
             'gaia_task = gaia_task:GaiaTasks',
