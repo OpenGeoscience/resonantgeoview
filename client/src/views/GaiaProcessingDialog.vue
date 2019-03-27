@@ -35,7 +35,9 @@ export default {
   computed: {
     ...mapState(["datasets"]),
     geojsonDatasets() {
-      return this.datasets.filter(dataset => getDatasetDriver(dataset) === "GeoJSON");
+      return this.datasets.filter(
+        dataset => getDatasetDriver(dataset) === "GeoJSON"
+      );
     }
   },
   methods: {
