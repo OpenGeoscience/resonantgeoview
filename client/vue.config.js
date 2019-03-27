@@ -1,3 +1,5 @@
+var webpack = require("webpack");
+
 module.exports = {
   devServer: {
     port: 8081,
@@ -26,5 +28,16 @@ module.exports = {
       .end()
       .use()
       .loader("shader-loader");
+  },
+  configureWebpack: () => {
+    return {
+      plugins: [
+        new webpack.DefinePlugin({
+          "process.env": {
+            VERSION: JSON.stringify(require("./package.json").version)
+          }
+        })
+      ]
+    };
   }
 };
