@@ -41,6 +41,7 @@ setup(name='resonantgeoview_server',
             'gaia_task = gaia_task:GaiaTasks',
         ],
         'geometa.types': [
+            'dummy=geometa_OBJ_handler.dummy:handler',
             'obj=geometa_OBJ_handler.schema:handler'
         ]
     },
