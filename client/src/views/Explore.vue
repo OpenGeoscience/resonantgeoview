@@ -1,5 +1,15 @@
 <template>
   <FullScreenViewport>
+    <AppToolbar
+      title="ResonantGeoView"
+      :panelButton="true"
+      @click-panel="sidePanelExpanded = !sidePanelExpanded"
+    >
+      <template slot="right">
+        <UserButton @user="girderRest.logout()" />
+      </template>
+    </AppToolbar>
+
     <WorkspaceContainer
       :focused="focusedWorkspace"
       @update:focused="setFocusedWorkspaceKey($event)"
@@ -134,7 +144,10 @@
             </GeojsWidgetLayer>
           </template>
         </GeojsMapViewport>
-        <VTKViewport v-if="workspace.type === 'vtk'" :background="workspace.vtkBGColor">
+        <VTKViewport
+          v-if="workspace.type === 'vtk'"
+          :background="workspace.vtkBGColor"
+        >
           <OBJMultiItemActor
             v-for="layer in workspace.layers"
             :key="layer.dataset._id"
@@ -147,7 +160,7 @@
       app
       clipped
       class="side-panel"
-      :value="sidePanelExpanded"
+      v-model="sidePanelExpanded"
     >
       <v-toolbar flat>
         <v-btn
@@ -298,6 +311,7 @@ import debounce from "lodash-es/debounce";
 import { Upload as GirderUpload } from "@girder/components/src/components";
 
 import { API_URL } from "../constants";
+import UserButton from "../components/girder/UserButton";
 import WorkspaceContainer from "../components/Workspace/Container";
 import Workspace from "../components/Workspace/Workspace";
 import WorkspaceAction from "../components/Workspace/Action";
@@ -324,6 +338,7 @@ import Palette from "../components/vtk/Palette";
 export default {
   name: "Explore",
   components: {
+    UserButton,
     DatasetModule,
     LayerModule,
     WorkspaceContainer,
@@ -349,6 +364,7 @@ export default {
   data() {
     return {
       getDatasetDriver,
+      sidePanelExpanded: true,
       viewport: {
         center: [-100, 30],
         zoom: 4
@@ -379,7 +395,6 @@ export default {
       }
     },
     ...mapState([
-      "sidePanelExpanded",
       "datasetIdMetaMap",
       "selectedDataset",
       "workspaces",
