@@ -1,12 +1,22 @@
 <template>
   <FullScreenViewport>
     <AppToolbar
-      title="ResonantGeoView"
+      title=""
       :panelButton="true"
       @click-panel="sidePanelExpanded = !sidePanelExpanded"
     >
       <template slot="right">
         <UserButton @user="girderRest.logout()" />
+      </template>
+      <template slot="title">
+        <v-toolbar-title>
+          <v-tooltip open-delay="2000" right>
+            <template #activator="{ on }">
+              <span v-on="on">ResonantGeoView</span>
+            </template>
+            <span>v{{ version }}</span>
+          </v-tooltip>
+        </v-toolbar-title>
       </template>
     </AppToolbar>
 
@@ -385,6 +395,9 @@ export default {
     };
   },
   computed: {
+    version() {
+      return process.env.VERSION;
+    },
     mapScreenshotDialog: {
       get() {
         return !!this.screenshotMap;
