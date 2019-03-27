@@ -12,10 +12,12 @@ def findNamedFolder(currentUser, user, parent, parentType, name, create=False, p
     # user folder for a folder with a certain name
     if len(folders) == 0:
         if create and currentUser:
-            folder = Folder().createFolder(
+            Folder().createFolder(
                 parent, name, parentType=parentType, public=public,
                 creator=currentUser)
-            return folder
+            # newly created folder object miss _modelType property
+            # better to get it again
+            return findNamedFolder(currentUser, user, parent, parentType, name, create, public)
         else:
             return None
     else:
