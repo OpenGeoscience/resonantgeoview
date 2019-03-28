@@ -32,7 +32,6 @@ body,
 </style>
 
 <script>
-
 import "./transitions.scss";
 
 export default {

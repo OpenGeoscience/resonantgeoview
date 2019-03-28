@@ -42,7 +42,8 @@ setup(name='resonantgeoview_server',
         ],
         'geometa.types': [
             'dummy=geometa_OBJ_handler.dummy:handler',
-            'obj=geometa_OBJ_handler.schema:handler'
+            'obj=geometa_OBJ_handler.schema:handler',
+            'tileset=geometa_3dtiles.handler:handler'
         ]
     },
     packages=find_packages(exclude=['tests*', 'server*', 'docs']),
