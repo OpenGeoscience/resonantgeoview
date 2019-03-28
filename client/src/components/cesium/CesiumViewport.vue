@@ -1,8 +1,5 @@
 <script>
-// import Cesium from "cesium/Cesium";
-// import "cesium/Widgets/widgets.css";
-
-Cesium.Ion.defaultAccessToken = process.env.VUE_APP_CESIUM_API_KEY;
+// Cesium.Ion.defaultAccessToken = process.env.VUE_APP_CESIUM_API_KEY;
 
 export default {
   name: "CesiumViewport",
@@ -36,7 +33,8 @@ export default {
       navigationHelpButton: false,
       geocoder: false,
       homeButton: false,
-      baseLayerPicker: false
+      baseLayerPicker: false,
+      imageryProvider: Cesium.createOpenStreetMapImageryProvider()
     });
     this.$viewer = viewer;
     this.ready = true;
