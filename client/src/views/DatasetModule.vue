@@ -49,7 +49,6 @@
             class="dataset"
             v-for="dataset in group.datasets"
             :key="dataset._id"
-            @click="123"
             @mouseenter.native="debouncedSetSelectedDataset(dataset)"
             @mouseleave.native="
               debouncedSetSelectedDataset.cancel(), setSelectedDataset(null)
@@ -60,13 +59,14 @@
                 flat
                 icon
                 key="add"
+                class="add-button"
                 v-if="
                   focusedWorkspace &&
                     focusedWorkspace.layers
                       .map(layer => layer.dataset)
                       .indexOf(dataset) === -1
                 "
-                color="grey lighten-2"
+                color="grey lighten-1"
                 @click="tryAddDatasetToWorkspace(dataset)"
                 :loading="loadingDatasetIds[dataset._id]"
                 :disabled="!allowAddToWorkspace(dataset)"
@@ -248,7 +248,7 @@ export default {
       }
       var workspaceType = null;
       if (
-        ["GeoJSON", "GeoTIFF", "Network Common Data Format"].includes(
+        ["GeoJSON", "GeoTIFF", "WMS", "Network Common Data Format"].includes(
           getDatasetDriver(dataset)
         )
       ) {
@@ -327,6 +327,10 @@ export default {
 
   .v-list--dense .v-list__tile .icon.fa {
     font-size: 20px;
+  }
+
+  .add-button.theme--light.v-btn.v-btn--disabled .v-icon {
+    color: rgba(199, 199, 199, 0.26) !important;
   }
 }
 </style>
