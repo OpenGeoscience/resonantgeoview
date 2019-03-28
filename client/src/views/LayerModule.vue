@@ -43,7 +43,15 @@
                   v-text="layer.dataset.name"
                 ></v-list-tile-title>
               </v-list-tile-content>
-              <v-list-tile-action class="hover-show-child" @click.stop>
+              <v-list-tile-action
+                v-if="
+                  ['GeoTIFF', 'GeoJSON', 'Network Common Data Format'].includes(
+                    getDatasetDriver(layer.dataset)
+                  )
+                "
+                class="hover-show-child"
+                @click.stop
+              >
                 <v-menu
                   lazy
                   offset-y
@@ -61,16 +69,7 @@
                     <v-icon>more_vert</v-icon>
                   </v-btn>
                   <v-list>
-                    <v-list-tile
-                      v-if="
-                        [
-                          'GeoTIFF',
-                          'GeoJSON',
-                          'Network Common Data Format'
-                        ].indexOf(getDatasetDriver(layer.dataset)) !== -1
-                      "
-                      @click="$emit('customDataset', layer.dataset)"
-                    >
+                    <v-list-tile @click="$emit('customDataset', layer.dataset)">
                       <v-list-tile-title>Customize</v-list-tile-title>
                     </v-list-tile>
                     <v-list-tile @click="$emit('zoomToDataset', layer.dataset)">
@@ -79,12 +78,15 @@
                   </v-list>
                 </v-menu>
               </v-list-tile-action>
-              <v-list-tile-action class="drag-handle hover-show-child">
+              <v-list-tile-action
+                v-if="type === 'geojs'"
+                class="drag-handle hover-show-child"
+              >
                 <v-icon>drag_indicator</v-icon>
               </v-list-tile-action>
             </v-list-tile>
 
-            <v-list-tile @click="123">
+            <v-list-tile v-if="type === 'geojs'" @click="123">
               <v-list-tile-content>
                 <v-list-tile-title>
                   <v-layout>
@@ -137,6 +139,7 @@ export default {
     };
   },
   computed: {
+    ...mapGetters(["focusedWorkspace"]),
     layers: {
       get() {
         return this.focusedWorkspace.layers;
@@ -148,7 +151,9 @@ export default {
         });
       }
     },
-    ...mapGetters(["focusedWorkspace"])
+    type() {
+      return this.focusedWorkspace.type;
+    }
   },
   watch: {},
   created() {
