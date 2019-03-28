@@ -5,8 +5,8 @@ setup(name='gaia_tasks',
     description='',
     url='',
     install_requires=[
-        'girder_worker',
-        'girder_worker_utils',
+        'girder_worker==0.6.0',
+        'girder_worker_utils==0.8.4',
     ],
     extras_require={
         'worker': [

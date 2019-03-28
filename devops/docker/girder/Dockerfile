@@ -22,14 +22,15 @@ ENV LANG=C.UTF-8
 RUN mkdir /resonantgeoview
 COPY submodules /resonantgeoview/submodules
 
-# Needed by girder_geospatial
-RUN pip install rasterio osr 
+# Needed by geometa
+RUN pip install rasterio osr
+# Install geometa
 RUN pip install -e /resonantgeoview/submodules/girder_geospatial \
     /resonantgeoview/submodules/girder_geospatial/types/vector \
     /resonantgeoview/submodules/girder_geospatial/types/raster \
     /resonantgeoview/submodules/girder_geospatial/types/grid
 
-RUN pip install libtiff openslide_python pyvips gdal mapnik large-image[sources] -f https://manthey.github.io/large_image_wheels
+RUN pip install libtiff openslide_python pyvips gdal mapnik large-image[sources]==1.0.0.dev21 -f https://manthey.github.io/large_image_wheels
 
 COPY gaia_tasks /resonantgeoview/gaia_tasks
 RUN pip install -e /resonantgeoview/gaia_tasks

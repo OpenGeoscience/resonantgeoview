@@ -6,7 +6,7 @@ ResonantGeoView is a geospatial web application and framework created to enable 
 Some of the highlights of ResonantGeoView include using a web-enabled data management [Girder](http://www.github.com/Girder/girder) to manage data, metadata, sessions and employing high-performance geospatial data visualization library [GeoJS](http://www.github.com/OpenGeoscience/geojs)
 to provide fast interactive visualization of geospatial data on a map. ResonantGeoView backend uses open-source tools such as Gaia, GDAL, Shapely, and Fiona for performing geospatial data I/O, filtering, and spatial analysis.
 
-## Video demo
+## Video screen capture
 <kbd><img src="https://user-images.githubusercontent.com/3123478/48492062-f39e2980-e7f6-11e8-9325-7d96107dfd88.gif" /></kbd>
 
 ## Screenshots
@@ -16,12 +16,14 @@ to provide fast interactive visualization of geospatial data on a map. ResonantG
 
 ![ResonantGeoView](https://user-images.githubusercontent.com/3123478/48425102-1c102000-e732-11e8-8ec6-7056dbfc3444.jpg)
 
+# Deployment
+ResonantGeoView can be deployed as Docker containers with these [scripts](devops/docker/README.md).
 
 # Contact
 Contact kitware@kitware.com for questions regarding using ResonantGeoView and deploying it in a cloud environment.
 
 # License
-Copyright 2017 Kitware Inc.
+Copyright 2019 Kitware Inc.
 
 Licensed under the Apache License, Version 2.0 (the "License"); you may not use this file except in compliance with the License. You may obtain a copy of the License at
 
