@@ -11,9 +11,9 @@ setup(name='resonantgeoview_server',
         'girder-plugin-geometa',
         'girder-plugin-geometa-vector',
         'girder-plugin-geometa-raster',
-        'large_image',
-        'large-image-source-mapnik',
-        'girder-large-image',
+        'large_image==1.0.0.dev30',
+        'large-image-source-mapnik==1.0.0.dev30',
+        'girder-large-image==1.0.0.dev30',
         'shapely'
     ],
     extras_require={

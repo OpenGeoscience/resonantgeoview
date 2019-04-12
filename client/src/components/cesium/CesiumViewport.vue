@@ -34,7 +34,10 @@ export default {
       geocoder: false,
       homeButton: false,
       baseLayerPicker: false,
-      imageryProvider: Cesium.createOpenStreetMapImageryProvider()
+      imageryProvider: new Cesium.ArcGisMapServerImageryProvider({
+        url:
+          "https://services.arcgisonline.com/ArcGIS/rest/services/World_Imagery/MapServer"
+      })
     });
     this.$viewer = viewer;
     this.ready = true;
